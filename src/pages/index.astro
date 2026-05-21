@@ -1,0 +1,81 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="la Soci — Associació del Personal de CaixaBank">
+
+  <!-- HERO -->
+  <section class="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-24 px-6">
+    <div class="max-w-5xl mx-auto text-center">
+      <img src="/logo-lasoci.png" alt="la Soci" class="h-16 mx-auto mb-8" />
+      <h1 class="text-4xl md:text-5xl font-bold mb-6">
+        Bienvenido a <span class="text-orange-400">la Soci</span>
+      </h1>
+      <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
+        La associació del personal de CaixaBank. Activitats, cultura, esport i molt més per als seus associats.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/socios/registro" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-lg transition">
+          Fes-te soci
+        </a>
+        <a href="/socios/login" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-3 rounded-lg border border-white/30 transition">
+          Accés socis
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIONS -->
+  <section class="py-20 px-6 bg-gray-50">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-4">Les nostres seccions</h2>
+      <p class="text-center text-gray-500 mb-12">Activitats per a tots els gustos</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          { nom: 'Senderisme', icon: '🥾', desc: 'Rutes i excursions per la natura' },
+          { nom: 'Cultura', icon: '🎭', desc: 'Visites culturals, teatre i música' },
+          { nom: 'Esport', icon: '⚽', desc: 'Activitats esportives i tornejos' },
+          { nom: 'Viatges', icon: '✈️', desc: 'Viatges i escapades organitzades' },
+          { nom: 'Gastronomia', icon: '🍷', desc: 'Sopars, tastaments i events' },
+          { nom: 'Família', icon: '👨‍👩‍👧', desc: 'Activitats per a tota la família' },
+        ].map(s => (
+          <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition border border-gray-100">
+            <div class="text-4xl mb-3">{s.icon}</div>
+            <h3 class="text-lg font-bold text-gray-800 mb-1">{s.nom}</h3>
+            <p class="text-gray-500 text-sm">{s.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- POR QUÉ ASOCIARSE -->
+  <section class="py-20 px-6 bg-white">
+    <div class="max-w-5xl mx-auto">
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Per què associar-se?</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          { icon: '🎟️', title: 'Descomptes exclusius', desc: 'Accés a preus especials en activitats i serveis' },
+          { icon: '📅', title: 'Agenda d\'activitats', desc: 'Participa en events i activitats durant tot l\'any' },
+          { icon: '👥', title: 'Comunitat', desc: 'Connecta amb altres empleats de CaixaBank' },
+        ].map(b => (
+          <div class="text-center">
+            <div class="text-5xl mb-4">{b.icon}</div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">{b.title}</h3>
+            <p class="text-gray-500">{b.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 px-6 bg-blue-900 text-white text-center">
+    <h2 class="text-3xl font-bold mb-4">Ja ets soci?</h2>
+    <p class="text-blue-200 mb-8">Accedeix al teu àrea privada per gestionar les teves inscripcions</p>
+    <a href="/socios/login" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-lg transition">
+      Accedeix ara
+    </a>
+  </section>
+
+</Layout>

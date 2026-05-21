@@ -1,0 +1,307 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+---
+
+<Layout title="Dashboard — la Soci">
+  <div class="min-h-screen bg-gray-50">
+
+    <!-- TOP BAR -->
+    <div class="bg-blue-900 text-white px-6 py-4">
+      <div class="max-w-5xl mx-auto flex items-center justify-between">
+        <div>
+          <h1 class="text-lg font-bold" id="welcome-msg">Benvingut/da</h1>
+          <p class="text-blue-300 text-sm" id="user-email"></p>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="estat-badge" class="hidden text-xs px-3 py-1 rounded-full font-medium"></span>
+          <button onclick="logout()" class="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition" id="btn-logout">Tancar sessió</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-6 py-8 space-y-8">
+
+      <!-- ESTAT COMPTE -->
+      <div id="pending-alert" class="hidden bg-yellow-50 border border-yellow-300 rounded-xl p-4 flex items-start gap-3">
+        <span class="text-2xl">⏳</span>
+        <div>
+          <p class="font-semibold text-yellow-800" id="pending-title">Compte pendent d'aprovació</p>
+          <p class="text-yellow-700 text-sm" id="pending-desc">El teu compte està sent revisat per l'administrador. Rebràs un correu quan estigui actiu.</p>
+        </div>
+      </div>
+
+      <!-- DADES PERSONALS -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-bold text-gray-800" id="title-dades">Les meves dades</h2>
+          <button onclick="toggleEditDades()" class="text-sm text-blue-600 hover:underline" id="btn-edit-dades">Editar</button>
+        </div>
+        <!-- Vista -->
+        <div id="dades-view" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+          <div><span class="text-gray-500" id="lbl-nombre">Nom</span><p class="font-medium text-gray-800 mt-0.5" id="val-nombre">—</p></div>
+          <div><span class="text-gray-500" id="lbl-apellidos">Cognoms</span><p class="font-medium text-gray-800 mt-0.5" id="val-apellidos">—</p></div>
+          <div><span class="text-gray-500" id="lbl-dni">DNI</span><p class="font-medium text-gray-800 mt-0.5" id="val-dni">—</p></div>
+          <div><span class="text-gray-500" id="lbl-vinculacion">Vinculació</span><p class="font-medium text-gray-800 mt-0.5" id="val-vinculacion">—</p></div>
+          <div><span class="text-gray-500" id="lbl-telefon">Telèfon</span><p class="font-medium text-gray-800 mt-0.5" id="val-telefon">—</p></div>
+          <div><span class="text-gray-500">IBAN</span><p class="font-medium text-gray-800 mt-0.5" id="val-iban">—</p></div>
+        </div>
+        <!-- Edit form -->
+        <div id="dades-edit" class="hidden space-y-3 mt-4">
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="text-xs text-gray-500" id="lbl-edit-nombre">Nom</label><input id="edit-nombre" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+            <div><label class="text-xs text-gray-500" id="lbl-edit-apellidos">Cognoms</label><input id="edit-apellidos" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+          </div>
+          <div><label class="text-xs text-gray-500" id="lbl-edit-telefon">Telèfon</label><input id="edit-telefon" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+          <div id="edit-error" class="hidden text-red-600 text-sm"></div>
+          <div class="flex gap-2">
+            <button onclick="saveDades()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition" id="btn-save-dades">Desar</button>
+            <button onclick="toggleEditDades()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm transition" id="btn-cancel-dades">Cancel·lar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROPERS ESDEVENIMENTS -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-4" id="title-events">Propers esdeveniments</h2>
+        <div id="events-list" class="space-y-3">
+          <p class="text-gray-400 text-sm" id="no-events">No tens esdeveniments pròxims.</p>
+        </div>
+      </div>
+
+      <!-- LES MEVES SECCIONS -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-4" id="title-meves">Les meves seccions</h2>
+        <div id="meves-seccions" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <p class="text-gray-400 text-sm col-span-2" id="no-seccions">Encara no estàs apuntat/da a cap secció.</p>
+        </div>
+      </div>
+
+      <!-- TOTES LES SECCIONS - APUNTA'T -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-1" id="title-totes">Apunta't a una secció</h2>
+        <p class="text-gray-500 text-sm mb-4" id="sub-totes">Descobreix totes les activitats disponibles</p>
+        <div id="totes-seccions" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script define:vars={{ supabaseUrl, supabaseKey }}>
+    window.__SB_URL = supabaseUrl;
+    window.__SB_KEY = supabaseKey;
+  </script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+    const db = createClient(window.__SB_URL, window.__SB_KEY);
+
+    const ICONS = ['🥾','🎭','⚽','✈️','🍷','👨‍👩‍👧','📚','🎵','🎨','🏊'];
+    const VINC = { empleado:'Empleat/da CaixaBank', jubilado:'Jubilat/da CaixaBank', beneficiario:'Beneficiari/a' };
+
+    const T = {
+      es: {
+        welcome:'Bienvenido/a', logout:'Cerrar sesión',
+        pending_title:'Cuenta pendiente de aprobación', pending_desc:'Tu cuenta está siendo revisada por el administrador.',
+        title_dades:'Mis datos', btn_edit:'Editar', btn_save:'Guardar', btn_cancel:'Cancelar',
+        lbl_nombre:'Nombre', lbl_apellidos:'Apellidos', lbl_dni:'DNI', lbl_vinculacion:'Vinculación', lbl_telefon:'Teléfono',
+        title_events:'Próximos eventos', no_events:'No tienes eventos próximos.',
+        title_meves:'Mis secciones', no_seccions:'Aún no estás apuntado/a a ninguna sección.',
+        title_totes:"Apúntate a una sección", sub_totes:'Descubre todas las actividades disponibles',
+        btn_apuntar:'Apuntarme', btn_desapuntar:'Darme de baja', apuntat:'✓ Apuntado/a',
+        vinc: { empleado:'Empleado/a CaixaBank', jubilado:'Jubilado/a CaixaBank', beneficiario:'Beneficiario/a' },
+        estat_actiu:'Activo', estat_pendent:'Pendiente',
+      },
+      ca: {
+        welcome:'Benvingut/da', logout:'Tancar sessió',
+        pending_title:"Compte pendent d'aprovació", pending_desc:"El teu compte està sent revisat per l'administrador.",
+        title_dades:'Les meves dades', btn_edit:'Editar', btn_save:'Desar', btn_cancel:"Cancel·lar",
+        lbl_nombre:'Nom', lbl_apellidos:'Cognoms', lbl_dni:'DNI', lbl_vinculacion:'Vinculació', lbl_telefon:'Telèfon',
+        title_events:'Propers esdeveniments', no_events:"No tens esdeveniments pròxims.",
+        title_meves:'Les meves seccions', no_seccions:"Encara no estàs apuntat/da a cap secció.",
+        title_totes:"Apunta't a una secció", sub_totes:'Descobreix totes les activitats disponibles',
+        btn_apuntar:"Apuntar-me", btn_desapuntar:'Donar-me de baixa', apuntat:'✓ Apuntat/da',
+        vinc: { empleado:'Empleat/da CaixaBank', jubilado:'Jubilat/da CaixaBank', beneficiario:'Beneficiari/a' },
+        estat_actiu:'Actiu', estat_pendent:'Pendent',
+      }
+    };
+
+    let currentUser = null;
+    let currentSoci = null;
+    let mySeccions = [];
+    let allSeccions = [];
+
+    function t(key) {
+      const lang = localStorage.getItem('lasoci_lang') || 'ca';
+      return T[lang]?.[key] || T.ca[key] || key;
+    }
+
+    function applyLang() {
+      const lang = localStorage.getItem('lasoci_lang') || 'ca';
+      const tr = T[lang] || T.ca;
+      document.getElementById('btn-logout').textContent = tr.logout;
+      document.getElementById('pending-title').textContent = tr.pending_title;
+      document.getElementById('pending-desc').textContent = tr.pending_desc;
+      document.getElementById('title-dades').textContent = tr.title_dades;
+      document.getElementById('btn-edit-dades').textContent = tr.btn_edit;
+      document.getElementById('btn-save-dades').textContent = tr.btn_save;
+      document.getElementById('btn-cancel-dades').textContent = tr.btn_cancel;
+      document.getElementById('lbl-nombre').textContent = tr.lbl_nombre;
+      document.getElementById('lbl-apellidos').textContent = tr.lbl_apellidos;
+      document.getElementById('lbl-dni').textContent = tr.lbl_dni;
+      document.getElementById('lbl-vinculacion').textContent = tr.lbl_vinculacion;
+      document.getElementById('lbl-telefon').textContent = tr.lbl_telefon;
+      document.getElementById('lbl-edit-nombre').textContent = tr.lbl_nombre;
+      document.getElementById('lbl-edit-apellidos').textContent = tr.lbl_apellidos;
+      document.getElementById('lbl-edit-telefon').textContent = tr.lbl_telefon;
+      document.getElementById('title-events').textContent = tr.title_events;
+      document.getElementById('no-events').textContent = tr.no_events;
+      document.getElementById('title-meves').textContent = tr.title_meves;
+      document.getElementById('no-seccions').textContent = tr.no_seccions;
+      document.getElementById('title-totes').textContent = tr.title_totes;
+      document.getElementById('sub-totes').textContent = tr.sub_totes;
+      renderSeccions();
+    }
+
+    // ── Auth check ──
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { window.location.href = '/socios/login'; }
+    else {
+      currentUser = session.user;
+      await loadProfile();
+      await loadSeccions();
+      applyLang();
+    }
+
+    window.addEventListener('langchange', applyLang);
+
+    async function loadProfile() {
+      const { data } = await db.from('socios').select('*').eq('id', currentUser.id).single();
+      currentSoci = data;
+      const lang = localStorage.getItem('lasoci_lang') || 'ca';
+      const tr = T[lang] || T.ca;
+
+      document.getElementById('welcome-msg').textContent = `${t('welcome')}, ${data?.nombre || ''}!`;
+      document.getElementById('user-email').textContent = currentUser.email;
+      document.getElementById('val-nombre').textContent = data?.nombre || '—';
+      document.getElementById('val-apellidos').textContent = data?.apellidos || '—';
+      document.getElementById('val-dni').textContent = data?.dni || '—';
+      document.getElementById('val-vinculacion').textContent = tr.vinc?.[data?.vinculacion] || data?.vinculacion || '—';
+      document.getElementById('val-telefon').textContent = data?.telefono || '—';
+      document.getElementById('val-iban').textContent = data?.iban ? data.iban.replace(/(.{4})/g,'$1 ').trim() : '—';
+
+      // Estat badge
+      const badge = document.getElementById('estat-badge');
+      if (data?.activo) {
+        badge.textContent = t('estat_actiu'); badge.className = 'text-xs px-3 py-1 rounded-full font-medium bg-green-100 text-green-700';
+      } else {
+        badge.textContent = t('estat_pendent'); badge.className = 'text-xs px-3 py-1 rounded-full font-medium bg-yellow-100 text-yellow-700';
+        document.getElementById('pending-alert').classList.remove('hidden');
+      }
+      badge.classList.remove('hidden');
+
+      // Fill edit form
+      document.getElementById('edit-nombre').value = data?.nombre || '';
+      document.getElementById('edit-apellidos').value = data?.apellidos || '';
+      document.getElementById('edit-telefon').value = data?.telefono || '';
+    }
+
+    async function loadSeccions() {
+      // Todas las secciones
+      const { data: all } = await db.from('secciones').select('*').eq('activa', true).order('nombre');
+      allSeccions = all || [];
+
+      // Mis inscripciones (usando tabla socios_secciones si existe, sino campo seccion)
+      // Por simplicidad usamos el campo seccion del socio
+      if (currentSoci?.seccion) {
+        mySeccions = currentSoci.seccion.split(',').map(s => s.trim()).filter(Boolean);
+      }
+    }
+
+    function renderSeccions() {
+      const lang = localStorage.getItem('lasoci_lang') || 'ca';
+      const tr = T[lang] || T.ca;
+
+      // Mis secciones
+      const misEl = document.getElementById('meves-seccions');
+      const myList = allSeccions.filter(s => mySeccions.includes(s.id));
+      if (myList.length === 0) {
+        misEl.innerHTML = `<p class="text-gray-400 text-sm col-span-2">${tr.no_seccions}</p>`;
+      } else {
+        misEl.innerHTML = myList.map((s, i) => `
+          <div class="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <span class="text-3xl">${ICONS[i % ICONS.length]}</span>
+            <div class="flex-1">
+              <p class="font-semibold text-gray-800">${s.nombre}</p>
+              <p class="text-xs text-gray-500">${s.descripcion || ''}</p>
+            </div>
+            <button onclick="toggleSeccio('${s.id}', false)"
+              class="text-xs text-red-500 hover:text-red-700 border border-red-200 px-2 py-1 rounded-lg">
+              ${tr.btn_desapuntar}
+            </button>
+          </div>
+        `).join('');
+      }
+
+      // Todas las secciones
+      const totesEl = document.getElementById('totes-seccions');
+      totesEl.innerHTML = allSeccions.map((s, i) => {
+        const joined = mySeccions.includes(s.id);
+        return `
+          <div class="border ${joined ? 'border-blue-300 bg-blue-50' : 'border-gray-200 bg-white'} rounded-xl p-4 flex flex-col gap-2">
+            <div class="text-3xl">${ICONS[i % ICONS.length]}</div>
+            <p class="font-bold text-gray-800">${s.nombre}</p>
+            <p class="text-xs text-gray-500 flex-1">${s.descripcion || ''}</p>
+            ${joined
+              ? `<span class="text-xs text-blue-600 font-medium">${tr.apuntat}</span>`
+              : `<button onclick="toggleSeccio('${s.id}', true)"
+                  class="mt-1 w-full bg-orange-500 hover:bg-orange-600 text-white text-sm py-2 rounded-lg transition">
+                  ${tr.btn_apuntar}
+                </button>`
+            }
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.toggleSeccio = async function(seccioId, join) {
+      if (join) {
+        mySeccions.push(seccioId);
+      } else {
+        mySeccions = mySeccions.filter(id => id !== seccioId);
+      }
+      // Guardar en bbdd
+      await db.from('socios').update({ seccion: mySeccions.join(',') }).eq('id', currentUser.id);
+      renderSeccions();
+    };
+
+    // ── Editar dades ──
+    window.toggleEditDades = function() {
+      document.getElementById('dades-view').classList.toggle('hidden');
+      document.getElementById('dades-edit').classList.toggle('hidden');
+    };
+
+    window.saveDades = async function() {
+      const nombre = document.getElementById('edit-nombre').value.trim();
+      const apellidos = document.getElementById('edit-apellidos').value.trim();
+      const telefono = document.getElementById('edit-telefon').value.trim();
+      const errEl = document.getElementById('edit-error');
+      errEl.classList.add('hidden');
+
+      const { error } = await db.from('socios').update({ nombre, apellidos, telefono }).eq('id', currentUser.id);
+      if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); return; }
+
+      document.getElementById('val-nombre').textContent = nombre;
+      document.getElementById('val-apellidos').textContent = apellidos;
+      document.getElementById('val-telefon').textContent = telefono || '—';
+      document.getElementById('welcome-msg').textContent = `${t('welcome')}, ${nombre}!`;
+      toggleEditDades();
+    };
+
+    // ── Logout ──
+    window.logout = async function() {
+      await db.auth.signOut();
+      window.location.href = '/socios/login';
+    };
+  </script>
+</Layout>

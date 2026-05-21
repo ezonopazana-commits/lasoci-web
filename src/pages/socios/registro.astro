@@ -1,0 +1,434 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+console.log('ENV CHECK - URL:', supabaseUrl ? 'OK' : 'MISSING');
+---
+
+<Layout title="Registrar-se — la Soci">
+  <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-lg" id="reg-root" data-sb-url="{supabaseUrl}" data-sb-key="{supabaseKey}">
+      <div class="bg-white rounded-2xl shadow-lg p-8">
+
+        <!-- Header -->
+        <div class="text-center mb-8">
+          <a href="/"><span class="text-3xl font-bold text-orange-500">la</span><span class="text-3xl font-bold text-blue-900">Soci</span></a>
+          <h1 class="text-xl font-bold text-gray-800 mt-3" id="reg-title">Registra't</h1>
+          <p class="text-gray-500 text-sm mt-1" id="reg-sub">Crea el teu compte de soci</p>
+        </div>
+
+        <form id="reg-form" class="space-y-4">
+
+          <!-- Nom / Cognoms -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1" id="label-nombre">Nom *</label>
+              <input type="text" id="nombre" required class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Joan" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1" id="label-apellidos">Cognoms *</label>
+              <input type="text" id="apellidos" required class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Garcia López" />
+            </div>
+          </div>
+
+          <!-- DNI -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-dni">DNI *</label>
+            <input type="text" id="dni" required maxlength="9"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm uppercase"
+              placeholder="12345678A" />
+            <p id="dni-error" class="text-red-500 text-xs mt-1 hidden"></p>
+          </div>
+
+          <!-- Vinculació -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-vinculacion">Vinculació *</label>
+            <select id="vinculacion" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
+              <option value="" id="opt-select">-- Selecciona --</option>
+              <option value="empleado" id="opt-empleado">Empleat/da CaixaBank</option>
+              <option value="jubilado" id="opt-jubilado">Jubilat/da CaixaBank</option>
+              <option value="beneficiario" id="opt-beneficiario">Beneficiari/a</option>
+            </select>
+          </div>
+
+          <!-- BENEFICIARIO: buscar titular -->
+          <div id="titular-section" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3">
+            <p class="text-sm font-medium text-blue-800" id="label-buscar-titular">Busca el teu titular (Empleat o Jubilat)</p>
+            <div class="relative">
+              <input type="text" id="buscar-titular"
+                class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                placeholder="Escriu cognoms o nom..." />
+              <div id="titular-resultados" class="absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-lg mt-1 hidden max-h-48 overflow-y-auto"></div>
+            </div>
+            <!-- Titular seleccionado -->
+            <div id="titular-selected" class="hidden bg-white border border-green-300 rounded-lg p-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-sm font-semibold text-gray-800" id="titular-nombre"></p>
+                  <p class="text-xs text-gray-500" id="titular-vinculacion"></p>
+                </div>
+                <button type="button" onclick="clearTitular()" class="text-red-400 hover:text-red-600 text-xs">✕</button>
+              </div>
+            </div>
+            <input type="hidden" id="titular-dni" />
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-email">Correu electrònic *</label>
+            <input type="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="nom@caixabank.com" />
+          </div>
+
+          <!-- Telèfon -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-telefon">Telèfon</label>
+            <input type="tel" id="telefon" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="+34 600 000 000" />
+          </div>
+
+          <!-- IBAN -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-iban">IBAN</label>
+            <input type="text" id="iban" maxlength="34"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm uppercase tracking-wider"
+              placeholder="ES00 0000 0000 0000 0000 0000" />
+            <p id="iban-error" class="text-red-500 text-xs mt-1 hidden"></p>
+            <p id="iban-ok" class="text-green-600 text-xs mt-1 hidden">✓ IBAN vàlid</p>
+          </div>
+
+          <!-- Idioma -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-idioma">Idioma preferit</label>
+            <select id="idioma" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
+              <option value="es">🇪🇸 Español</option>
+              <option value="ca">🏴󠁥󠁳󠁣󠁴󠁿 Català</option>
+            </select>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-pwd">Contrasenya *</label>
+            <input type="password" id="password" required minlength="8" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Mínim 8 caràcters" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-pwd2">Repetir contrasenya *</label>
+            <input type="password" id="password2" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="••••••••" />
+          </div>
+
+          <!-- Errors / Success -->
+          <div id="reg-error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
+          <div id="reg-success" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm"></div>
+
+          <button type="submit" id="reg-btn" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition text-sm">
+            <span id="reg-btn-text">Crear compte</span>
+          </button>
+        </form>
+
+        <p class="text-center text-sm text-gray-500 mt-6">
+          <span id="ya-socio">Ja tens compte?</span>
+          <a href="/socios/login" class="text-orange-500 hover:underline font-medium ml-1" id="link-login">Inicia sessió</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script define:vars={{ supabaseUrl, supabaseKey }}>
+    window.__SB_URL = supabaseUrl;
+    window.__SB_KEY = supabaseKey;
+  </script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+    const db = createClient(window.__SB_URL, window.__SB_KEY);
+
+    const T = {
+      es: {
+        title:'Regístrate', sub:'Crea tu cuenta de socio',
+        label_nombre:'Nombre *', label_apellidos:'Apellidos *', label_dni:'DNI *',
+        label_vinculacion:'Vinculación *', label_buscar_titular:'Busca tu titular (Empleado o Jubilado)',
+        opt_select:'-- Selecciona --', opt_empleado:'Empleado/a CaixaBank', opt_jubilado:'Jubilado/a CaixaBank', opt_beneficiario:'Beneficiario/a',
+        label_email:'Correo electrónico *', label_telefon:'Teléfono', label_iban:'IBAN',
+        label_idioma:'Idioma preferido', label_pwd:'Contraseña *', label_pwd2:'Repetir contraseña *',
+        btn:'Crear cuenta', loading:'Creando cuenta...',
+        ya_socio:'¿Ya tienes cuenta?', link_login:'Inicia sesión',
+        err_pwd:'Las contraseñas no coinciden',
+        err_dni:'DNI inválido',
+        err_dni_exists:'Este DNI ya está registrado',
+        err_iban:'IBAN inválido',
+        err_iban_exists:'Este IBAN pertenece a otro titular',
+        err_titular:'Debes seleccionar un titular para el beneficiario',
+        err_generic:'Error al registrarse. Inténtalo de nuevo.',
+        success:'¡Cuenta creada! Revisa tu correo para confirmarla.',
+        iban_ok:'✓ IBAN válido',
+        buscar_placeholder:'Escribe apellidos o nombre...',
+      },
+      ca: {
+        title:"Registra't", sub:'Crea el teu compte de soci',
+        label_nombre:'Nom *', label_apellidos:'Cognoms *', label_dni:'DNI *',
+        label_vinculacion:'Vinculació *', label_buscar_titular:'Busca el teu titular (Empleat o Jubilat)',
+        opt_select:'-- Selecciona --', opt_empleado:'Empleat/da CaixaBank', opt_jubilado:'Jubilat/da CaixaBank', opt_beneficiario:'Beneficiari/a',
+        label_email:'Correu electrònic *', label_telefon:'Telèfon', label_iban:'IBAN',
+        label_idioma:'Idioma preferit', label_pwd:'Contrasenya *', label_pwd2:'Repetir contrasenya *',
+        btn:'Crear compte', loading:'Creant compte...',
+        ya_socio:'Ja tens compte?', link_login:'Inicia sessió',
+        err_pwd:'Les contrasenyes no coincideixen',
+        err_dni:'DNI invàlid',
+        err_dni_exists:'Aquest DNI ja està registrat',
+        err_iban:'IBAN invàlid',
+        err_iban_exists:"Aquest IBAN pertany a un altre titular",
+        err_titular:'Has de seleccionar un titular per al beneficiari',
+        err_generic:"Error en registrar-se. Torna-ho a intentar.",
+        success:'Compte creat! Revisa el teu correu per confirmar-lo.',
+        iban_ok:'✓ IBAN vàlid',
+        buscar_placeholder:'Escriu cognoms o nom...',
+      }
+    };
+
+    // ── Idioma ──
+    const storedLang = localStorage.getItem('lasoci_lang') || 'es';
+    document.getElementById('idioma').value = storedLang;
+
+    function applyLang(lang) {
+      const t = T[lang] || T.es;
+      document.getElementById('reg-title').textContent = t.title;
+      document.getElementById('reg-sub').textContent = t.sub;
+      document.getElementById('label-nombre').textContent = t.label_nombre;
+      document.getElementById('label-apellidos').textContent = t.label_apellidos;
+      document.getElementById('label-dni').textContent = t.label_dni;
+      document.getElementById('label-vinculacion').textContent = t.label_vinculacion;
+      document.getElementById('label-buscar-titular').textContent = t.label_buscar_titular;
+      document.getElementById('opt-select').textContent = t.opt_select;
+      document.getElementById('opt-empleado').textContent = t.opt_empleado;
+      document.getElementById('opt-jubilado').textContent = t.opt_jubilado;
+      document.getElementById('opt-beneficiario').textContent = t.opt_beneficiario;
+      document.getElementById('label-email').textContent = t.label_email;
+      document.getElementById('label-telefon').textContent = t.label_telefon;
+      document.getElementById('label-iban').textContent = t.label_iban;
+      document.getElementById('label-idioma').textContent = t.label_idioma;
+      document.getElementById('label-pwd').textContent = t.label_pwd;
+      document.getElementById('label-pwd2').textContent = t.label_pwd2;
+      document.getElementById('reg-btn-text').textContent = t.btn;
+      document.getElementById('ya-socio').textContent = t.ya_socio;
+      document.getElementById('link-login').textContent = t.link_login;
+      document.getElementById('buscar-titular').placeholder = t.buscar_placeholder;
+      const ibanOk = document.getElementById('iban-ok');
+      if (!ibanOk.classList.contains('hidden')) ibanOk.textContent = t.iban_ok;
+    }
+
+    applyLang(storedLang);
+    window.addEventListener('langchange', (e) => applyLang(e.detail.lang));
+    document.getElementById('idioma').addEventListener('change', () => {
+      const l = document.getElementById('idioma').value;
+      localStorage.setItem('lasoci_lang', l);
+      applyLang(l);
+    });
+
+    // ── DNI ──
+    function validateDNI(dni) {
+      const clean = dni.toUpperCase().trim();
+      if (!/^\d{8}[A-Z]$/.test(clean)) return false;
+      const letters = 'TRWAGMYFPDXBNJZSQVHLCKE';
+      const num = parseInt(clean.substring(0, 8));
+      return clean[8] === letters[num % 23];
+    }
+
+    document.getElementById('dni').addEventListener('input', (e) => {
+      e.target.value = e.target.value.toUpperCase();
+      const lang = localStorage.getItem('lasoci_lang') || 'es';
+      const t = T[lang] || T.es;
+      const err = document.getElementById('dni-error');
+      if (e.target.value.length === 9) {
+        if (!validateDNI(e.target.value)) {
+          err.textContent = t.err_dni; err.classList.remove('hidden');
+        } else {
+          err.classList.add('hidden');
+        }
+      } else {
+        err.classList.add('hidden');
+      }
+    });
+
+    // ── IBAN ──
+    function validateIBAN(iban) {
+      const clean = iban.toUpperCase().replace(/\s/g, '');
+      if (!/^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/.test(clean)) return false;
+      const rearranged = clean.slice(4) + clean.slice(0, 4);
+      let numeric = '';
+      for (const c of rearranged) {
+        numeric += isNaN(c) ? (c.charCodeAt(0) - 55).toString() : c;
+      }
+      let remainder = 0;
+      for (const digit of numeric) {
+        remainder = (remainder * 10 + parseInt(digit)) % 97;
+      }
+      return remainder === 1;
+    }
+
+    document.getElementById('iban').addEventListener('input', (e) => {
+      const raw = e.target.value.toUpperCase().replace(/\s/g, '');
+      // Format with spaces every 4 chars
+      e.target.value = raw.match(/.{1,4}/g)?.join(' ') || raw;
+      const lang = localStorage.getItem('lasoci_lang') || 'es';
+      const t = T[lang] || T.es;
+      const err = document.getElementById('iban-error');
+      const ok = document.getElementById('iban-ok');
+      if (raw.length >= 15) {
+        if (!validateIBAN(raw)) {
+          err.textContent = t.err_iban; err.classList.remove('hidden'); ok.classList.add('hidden');
+        } else {
+          err.classList.add('hidden'); ok.textContent = t.iban_ok; ok.classList.remove('hidden');
+        }
+      } else {
+        err.classList.add('hidden'); ok.classList.add('hidden');
+      }
+    });
+
+    // ── clearTitular (definida antes de usarse) ──
+    window.clearTitular = function() {
+      document.getElementById('titular-dni').value = '';
+      document.getElementById('titular-selected').classList.add('hidden');
+      document.getElementById('buscar-titular').value = '';
+    };
+
+    // ── Vinculació → mostrar buscador titular ──
+    document.getElementById('vinculacion').addEventListener('change', () => {
+      const val = document.getElementById('vinculacion').value;
+      const section = document.getElementById('titular-section');
+      if (val === 'beneficiario') {
+        section.classList.remove('hidden');
+      } else {
+        section.classList.add('hidden');
+        window.clearTitular();
+      }
+    });
+
+    // ── Buscar titular ──
+    let searchTimeout;
+    document.getElementById('buscar-titular').addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      const q = e.target.value.trim();
+      if (q.length < 2) { document.getElementById('titular-resultados').classList.add('hidden'); return; }
+      searchTimeout = setTimeout(() => buscarTitular(q), 300);
+    });
+
+    async function buscarTitular(q) {
+      const { data, error } = await db
+        .from('socios')
+        .select('dni, nombre, apellidos, vinculacion')
+        .eq('activo', true)
+        .in('vinculacion', ['empleado', 'jubilado'])
+        .or(`apellidos.ilike.%${q}%,nombre.ilike.%${q}%`)
+        .limit(10);
+
+      const container = document.getElementById('titular-resultados');
+      if (!data || data.length === 0) {
+        container.innerHTML = '<p class="px-4 py-3 text-sm text-gray-500">No s\'han trobat resultats</p>';
+        container.classList.remove('hidden');
+        return;
+      }
+      container.innerHTML = data.map(s => `
+        <button type="button" onclick="selectTitular('${s.dni}','${s.nombre} ${s.apellidos}','${s.vinculacion}')"
+          class="w-full text-left px-4 py-3 hover:bg-blue-50 text-sm border-b border-gray-100 last:border-0">
+          <span class="font-medium text-gray-800">${s.apellidos}, ${s.nombre}</span>
+          <span class="text-xs text-gray-500 ml-2">${s.vinculacion === 'empleado' ? '👔 Empleat' : '🏖️ Jubilat'}</span>
+        </button>
+      `).join('');
+      container.classList.remove('hidden');
+    }
+
+    window.selectTitular = function(dni, nombre, vinculacion) {
+      document.getElementById('titular-dni').value = dni;
+      document.getElementById('titular-nombre').textContent = nombre;
+      document.getElementById('titular-vinculacion').textContent = vinculacion === 'empleado' ? '👔 Empleat CaixaBank' : '🏖️ Jubilat CaixaBank';
+      document.getElementById('titular-selected').classList.remove('hidden');
+      document.getElementById('titular-resultados').classList.add('hidden');
+      document.getElementById('buscar-titular').value = '';
+      // Intentar precargar IBAN del titular
+      precargarIBANTitular(dni);
+    };
+
+    async function precargarIBANTitular(dni) {
+      const { data } = await db.from('socios').select('iban').eq('dni', dni).single();
+      if (data?.iban) {
+        const ibanInput = document.getElementById('iban');
+        const formatted = data.iban.match(/.{1,4}/g)?.join(' ') || data.iban;
+        ibanInput.value = formatted;
+        ibanInput.dispatchEvent(new Event('input'));
+      }
+    }
+
+
+
+    // ── Submit ──
+    document.getElementById('reg-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const lang = localStorage.getItem('lasoci_lang') || 'es';
+      const t = T[lang] || T.es;
+
+      const nombre = document.getElementById('nombre').value.trim();
+      const apellidos = document.getElementById('apellidos').value.trim();
+      const dni = document.getElementById('dni').value.trim().toUpperCase();
+      const vinculacion = document.getElementById('vinculacion').value;
+      const titular_dni = document.getElementById('titular-dni').value || null;
+      const email = document.getElementById('email').value.trim();
+      const telefon = document.getElementById('telefon').value.trim();
+      const iban_raw = document.getElementById('iban').value.replace(/\s/g, '').toUpperCase();
+      const idioma = document.getElementById('idioma').value;
+      const pwd = document.getElementById('password').value;
+      const pwd2 = document.getElementById('password2').value;
+
+      const errDiv = document.getElementById('reg-error');
+      const okDiv = document.getElementById('reg-success');
+      const btn = document.getElementById('reg-btn-text');
+      errDiv.classList.add('hidden'); okDiv.classList.add('hidden');
+
+      // Validaciones frontend
+      if (!validateDNI(dni)) { errDiv.textContent = t.err_dni; errDiv.classList.remove('hidden'); return; }
+      if (pwd !== pwd2) { errDiv.textContent = t.err_pwd; errDiv.classList.remove('hidden'); return; }
+      if (iban_raw && !validateIBAN(iban_raw)) { errDiv.textContent = t.err_iban; errDiv.classList.remove('hidden'); return; }
+      if (vinculacion === 'beneficiario' && !titular_dni) { errDiv.textContent = t.err_titular; errDiv.classList.remove('hidden'); return; }
+
+      btn.textContent = t.loading;
+
+      // Registrar en Supabase Auth
+      const { data, error } = await db.auth.signUp({
+        email, password: pwd,
+        options: { data: { nombre, apellidos, dni, vinculacion, idioma } }
+      });
+
+      if (error) {
+        errDiv.textContent = t.err_generic + ' ' + error.message;
+        errDiv.classList.remove('hidden');
+        btn.textContent = t.btn;
+        return;
+      }
+
+      // Guardar perfil via API servidor (usa service role key)
+      if (data.user) {
+        const res = await fetch('/api/registro', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: data.user.id, email, nombre, apellidos,
+            dni, telefono: telefon || null,
+            iban: iban_raw || null,
+            vinculacion, titular_dni: titular_dni || null,
+          })
+        });
+        const result = await res.json();
+        if (!result.ok) {
+          console.error('Insert error:', result.error);
+          errDiv.textContent = t.err_generic + ' ' + result.error;
+          errDiv.classList.remove('hidden');
+          btn.textContent = t.btn;
+          return;
+        }
+        localStorage.setItem('lasoci_lang', idioma);
+      }
+
+      okDiv.textContent = t.success;
+      okDiv.classList.remove('hidden');
+      btn.textContent = t.btn;
+      document.getElementById('reg-form').reset();
+      document.getElementById('titular-section').classList.add('hidden');
+    });
+  </script>
+</Layout>
