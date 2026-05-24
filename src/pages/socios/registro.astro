@@ -2,194 +2,497 @@
 import Layout from '../../layouts/Layout.astro';
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
-console.log('ENV CHECK - URL:', supabaseUrl ? 'OK' : 'MISSING');
 ---
 
 <Layout title="Registrar-se — la Soci">
-  <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
-    <div class="w-full max-w-lg" id="reg-root" data-sb-url="{supabaseUrl}" data-sb-key="{supabaseKey}">
-      <div class="bg-white rounded-2xl shadow-lg p-8">
 
-        <!-- Header -->
-        <div class="text-center mb-8">
-          <a href="/"><span class="text-3xl font-bold text-orange-500">la</span><span class="text-3xl font-bold text-blue-900">Soci</span></a>
-          <h1 class="text-xl font-bold text-gray-800 mt-3" id="reg-title">Registra't</h1>
-          <p class="text-gray-500 text-sm mt-1" id="reg-sub">Crea el teu compte de soci</p>
+  <!-- SECURITY BANNER -->
+  <div class="bg-orange-500 text-white py-2 px-4 flex items-center justify-center gap-2 text-sm font-medium">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+    </svg>
+    <span id="banner-text">Estàs en un entorn 100% segur</span>
+  </div>
+
+  <div class="min-h-screen bg-gray-50 py-10 px-4">
+    <div class="max-w-5xl mx-auto">
+
+      <!-- Title -->
+      <div class="text-center mb-8">
+        <a href="/"><span class="text-3xl font-bold text-orange-500">la</span><span class="text-3xl font-bold text-blue-900">Soci</span></a>
+        <h1 class="text-2xl font-bold text-gray-800 mt-3" id="reg-title">Registra't</h1>
+      </div>
+
+      <div class="flex gap-8 items-start">
+
+        <!-- SIDEBAR STEPS -->
+        <div class="hidden md:block w-64 bg-white rounded-2xl shadow-sm p-6 sticky top-24">
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4" id="sidebar-title">Procés de registre</h2>
+          <div class="space-y-3" id="steps-sidebar"></div>
         </div>
 
-        <form id="reg-form" class="space-y-4">
+        <!-- FORM AREA -->
+        <div class="flex-1">
 
-          <!-- Nom / Cognoms -->
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1" id="label-nombre">Nom *</label>
-              <input type="text" id="nombre" required class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Joan" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1" id="label-apellidos">Cognoms *</label>
-              <input type="text" id="apellidos" required class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Garcia López" />
-            </div>
+          <!-- Progress bar -->
+          <div class="h-1.5 bg-gray-200 rounded-full mb-6 overflow-hidden">
+            <div id="progress-bar" class="h-full bg-orange-500 rounded-full transition-all duration-500" style="width: 20%"></div>
           </div>
 
-          <!-- DNI -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-dni">DNI *</label>
-            <input type="text" id="dni" required maxlength="9"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm uppercase"
-              placeholder="12345678A" />
-            <p id="dni-error" class="text-red-500 text-xs mt-1 hidden"></p>
-          </div>
-
-          <!-- Vinculació -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-vinculacion">Vinculació *</label>
-            <select id="vinculacion" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
-              <option value="" id="opt-select">-- Selecciona --</option>
-              <option value="empleado" id="opt-empleado">Empleat/da CaixaBank</option>
-              <option value="jubilado" id="opt-jubilado">Jubilat/da CaixaBank</option>
-              <option value="beneficiario" id="opt-beneficiario">Beneficiari/a</option>
-            </select>
-          </div>
-
-          <!-- BENEFICIARIO: buscar titular -->
-          <div id="titular-section" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3">
-            <p class="text-sm font-medium text-blue-800" id="label-buscar-titular">Busca el teu titular (Empleat o Jubilat)</p>
-            <div class="relative">
-              <input type="text" id="buscar-titular"
-                class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                placeholder="Escriu cognoms o nom..." />
-              <div id="titular-resultados" class="absolute z-10 w-full bg-white border border-gray-200 rounded-lg shadow-lg mt-1 hidden max-h-48 overflow-y-auto"></div>
-            </div>
-            <!-- Titular seleccionado -->
-            <div id="titular-selected" class="hidden bg-white border border-green-300 rounded-lg p-3">
-              <div class="flex items-center justify-between">
-                <div>
-                  <p class="text-sm font-semibold text-gray-800" id="titular-nombre"></p>
-                  <p class="text-xs text-gray-500" id="titular-vinculacion"></p>
-                </div>
-                <button type="button" onclick="clearTitular()" class="text-red-400 hover:text-red-600 text-xs">✕</button>
+          <!-- STEP 1: Dades de contacte -->
+          <div id="step-1" class="step-panel bg-white rounded-2xl shadow-sm p-8">
+            <div class="flex items-start gap-4 mb-6 pb-6 border-b border-gray-100">
+              <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-800" id="s1-title">Dades de contacte</h3>
+                <p class="text-sm text-gray-500" id="s1-sub">Les farem servir per enviar-te informació necessària</p>
               </div>
             </div>
-            <input type="hidden" id="titular-dni" />
+
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex gap-3">
+              <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <p class="text-sm text-amber-700" id="s1-info">Els demanem perquè puguis recuperar el procés en qualsevol moment</p>
+            </div>
+
+            <div class="space-y-5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-email">Correu electrònic *</label>
+                  <input type="email" id="email" required
+                    class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors"
+                    placeholder="nom@caixabank.com" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-telefon">Mòbil</label>
+                  <div class="flex gap-2">
+                    <div class="flex items-center gap-1 border-2 border-orange-300 rounded-xl px-3 py-3 bg-white text-sm">
+                      <span>🇪🇸</span><span class="text-gray-600">+34</span>
+                    </div>
+                    <input type="tel" id="telefon"
+                      class="form-input flex-1 px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors"
+                      placeholder="666 000 000" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-start gap-3 pt-2">
+                <input type="checkbox" id="rgpd" class="mt-0.5 w-5 h-5 accent-orange-500 cursor-pointer flex-shrink-0" />
+                <label for="rgpd" class="text-sm text-gray-600 cursor-pointer">
+                  <span id="rgpd-text">Afirmo que he llegit i accepto la </span>
+                  <button type="button" id="open-privacy" class="text-blue-600 hover:underline font-medium">informació bàsica sobre protecció de dades</button>
+                </label>
+              </div>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+              <button type="button" onclick="nextStep(1)" id="btn-next-1"
+                class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
+                <span id="btn-continuar-1">Continuar</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
           </div>
 
-          <!-- Email -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-email">Correu electrònic *</label>
-            <input type="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="nom@caixabank.com" />
+          <!-- STEP 2: Dades personals -->
+          <div id="step-2" class="step-panel hidden bg-white rounded-2xl shadow-sm p-8">
+            <div class="flex items-start gap-4 mb-6 pb-6 border-b border-gray-100">
+              <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-800" id="s2-title">Dades personals</h3>
+                <p class="text-sm text-gray-500" id="s2-sub">Comprova que la informació és correcta</p>
+              </div>
+            </div>
+
+            <div class="space-y-5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-nombre">Nom *</label>
+                  <input type="text" id="nombre" required
+                    class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors"
+                    placeholder="Joan" />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-apellidos">Cognoms *</label>
+                  <input type="text" id="apellidos" required
+                    class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors"
+                    placeholder="Garcia López" />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-dni">DNI *</label>
+                <input type="text" id="dni" required maxlength="9"
+                  class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm uppercase transition-colors"
+                  placeholder="12345678A" />
+                <p id="dni-error" class="text-red-500 text-xs mt-1 hidden"></p>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-vinculacion">Vinculació *</label>
+                <select id="vinculacion" required
+                  class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm bg-white transition-colors">
+                  <option value="" id="opt-select">-- Selecciona --</option>
+                  <option value="empleado" id="opt-empleado">Empleat/da CaixaBank</option>
+                  <option value="jubilado" id="opt-jubilado">Jubilat/da CaixaBank</option>
+                  <option value="beneficiario" id="opt-beneficiario">Beneficiari/a</option>
+                  <option value="empleado_lasoci" id="opt-empleado-lasoci">Empleat/da LaSoci</option>
+                </select>
+              </div>
+
+              <!-- BENEFICIARIO: buscar titular -->
+              <div id="titular-section" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3">
+                <p class="text-sm font-medium text-blue-800" id="label-buscar-titular">Busca el teu titular</p>
+                <div class="relative">
+                  <input type="text" id="buscar-titular"
+                    class="form-input w-full px-3 py-2.5 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors"
+                    placeholder="Escriu cognoms o nom..." />
+                  <div id="titular-resultados" class="absolute z-10 w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-1 hidden max-h-48 overflow-y-auto"></div>
+                </div>
+                <div id="titular-selected" class="hidden bg-white border border-green-300 rounded-xl p-3">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-semibold text-gray-800" id="titular-nombre"></p>
+                      <p class="text-xs text-gray-500" id="titular-vinculacion"></p>
+                    </div>
+                    <button type="button" onclick="clearTitular()" class="text-red-400 hover:text-red-600 text-xs">✕</button>
+                  </div>
+                </div>
+                <input type="hidden" id="titular-dni" />
+              </div>
+            </div>
+
+            <div class="mt-8 flex justify-between">
+              <button type="button" onclick="prevStep(2)"
+                class="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-medium px-4 py-3 rounded-xl transition text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                <span id="btn-anterior-2">Anterior</span>
+              </button>
+              <button type="button" onclick="nextStep(2)"
+                class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
+                <span id="btn-continuar-2">Continuar</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
           </div>
 
-          <!-- Telèfon -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-telefon">Telèfon</label>
-            <input type="tel" id="telefon" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="+34 600 000 000" />
+          <!-- STEP 3: Dades bancàries -->
+          <div id="step-3" class="step-panel hidden bg-white rounded-2xl shadow-sm p-8">
+            <div class="flex items-start gap-4 mb-6 pb-6 border-b border-gray-100">
+              <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-800" id="s3-title">Dades bancàries</h3>
+                <p class="text-sm text-gray-500" id="s3-sub">Per gestionar la quota de soci (opcional)</p>
+              </div>
+            </div>
+
+            <div class="space-y-5">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-iban">IBAN</label>
+                <input type="text" id="iban" maxlength="34"
+                  class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm uppercase tracking-wider transition-colors"
+                  placeholder="ES00 0000 0000 0000 0000 0000" />
+                <p id="iban-error" class="text-red-500 text-xs mt-1 hidden"></p>
+                <p id="iban-ok" class="text-green-600 text-xs mt-1 hidden">✓ IBAN vàlid</p>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-idioma">Idioma preferit</label>
+                <select id="idioma"
+                  class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm bg-white transition-colors">
+                  <option value="es">🇪🇸 Español</option>
+                  <option value="ca">🏴󠁥󠁳󠁣󠁴󠁿 Català</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-8 flex justify-between">
+              <button type="button" onclick="prevStep(3)"
+                class="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-medium px-4 py-3 rounded-xl transition text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                <span id="btn-anterior-3">Anterior</span>
+              </button>
+              <button type="button" onclick="nextStep(3)"
+                class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
+                <span id="btn-continuar-3">Continuar</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
           </div>
 
-          <!-- IBAN -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-iban">IBAN</label>
-            <input type="text" id="iban" maxlength="34"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm uppercase tracking-wider"
-              placeholder="ES00 0000 0000 0000 0000 0000" />
-            <p id="iban-error" class="text-red-500 text-xs mt-1 hidden"></p>
-            <p id="iban-ok" class="text-green-600 text-xs mt-1 hidden">✓ IBAN vàlid</p>
+          <!-- STEP 4: Contrasenya -->
+          <div id="step-4" class="step-panel hidden bg-white rounded-2xl shadow-sm p-8">
+            <div class="flex items-start gap-4 mb-6 pb-6 border-b border-gray-100">
+              <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-800" id="s4-title">Crea la teva contrasenya</h3>
+                <p class="text-sm text-gray-500" id="s4-sub">Mínim 8 caràcters</p>
+              </div>
+            </div>
+
+            <div class="space-y-5">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-pwd">Contrasenya *</label>
+                <div class="relative">
+                  <input type="password" id="password" required minlength="8"
+                    class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm pr-12 transition-colors"
+                    placeholder="Mínim 8 caràcters" />
+                  <button type="button" id="toggle-pwd" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-pwd2">Repetir contrasenya *</label>
+                <input type="password" id="password2" required
+                  class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors"
+                  placeholder="••••••••" />
+                <p id="pwd-error" class="text-red-500 text-xs mt-1 hidden"></p>
+              </div>
+            </div>
+
+            <div class="mt-8 flex justify-between">
+              <button type="button" onclick="prevStep(4)"
+                class="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-medium px-4 py-3 rounded-xl transition text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                <span id="btn-anterior-4">Anterior</span>
+              </button>
+              <button type="button" onclick="submitForm()"
+                class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
+                <span id="btn-crear">Crear compte</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+              </button>
+            </div>
+
+            <div id="reg-error" class="hidden mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"></div>
+            <div id="reg-success" class="hidden mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm"></div>
           </div>
 
-          <!-- Idioma -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-idioma">Idioma preferit</label>
-            <select id="idioma" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white">
-              <option value="es">🇪🇸 Español</option>
-              <option value="ca">🏴󠁥󠁳󠁣󠁴󠁿 Català</option>
-            </select>
-          </div>
-
-          <!-- Password -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-pwd">Contrasenya *</label>
-            <input type="password" id="password" required minlength="8" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="Mínim 8 caràcters" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1" id="label-pwd2">Repetir contrasenya *</label>
-            <input type="password" id="password2" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm" placeholder="••••••••" />
-          </div>
-
-          <!-- Errors / Success -->
-          <div id="reg-error" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm"></div>
-          <div id="reg-success" class="hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm"></div>
-
-          <button type="submit" id="reg-btn" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg transition text-sm">
-            <span id="reg-btn-text">Crear compte</span>
-          </button>
-        </form>
-
-        <p class="text-center text-sm text-gray-500 mt-6">
-          <span id="ya-socio">Ja tens compte?</span>
-          <a href="/socios/login" class="text-orange-500 hover:underline font-medium ml-1" id="link-login">Inicia sessió</a>
-        </p>
+          <p class="text-center text-sm text-gray-500 mt-6">
+            <span id="ya-socio">Ja tens compte?</span>
+            <a href="/socios/login" class="text-orange-500 hover:underline font-medium ml-1" id="link-login">Inicia sessió</a>
+          </p>
+        </div>
       </div>
     </div>
   </div>
+
+  <!-- PRIVACY MODAL -->
+  <div id="privacy-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+        <div class="bg-blue-900 text-white px-6 py-4 rounded-t-2xl flex items-center justify-between flex-shrink-0">
+          <div>
+            <div class="text-xs font-medium text-blue-300 uppercase tracking-wide mb-1">PDF</div>
+            <h3 class="font-bold text-lg" id="modal-title">Informació bàsica sobre protecció de dades</h3>
+          </div>
+          <button onclick="closePrivacy()" class="text-blue-200 hover:text-white ml-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+        <div class="bg-amber-50 border-b border-amber-200 px-6 py-3 flex items-center gap-2 flex-shrink-0">
+          <svg class="w-4 h-4 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
+          </svg>
+          <p class="text-sm text-amber-700" id="modal-warning">Has d'arribar al final del document i prémer Acceptar</p>
+        </div>
+        <div id="privacy-content" class="overflow-y-auto flex-1 p-8 text-sm text-gray-700 leading-relaxed" onscroll="checkScroll()">
+          <h4 class="text-base font-bold text-blue-900 mb-4" id="privacy-heading">INFORMACIÓ BÀSICA SOBRE PROTECCIÓ DE DADES</h4>
+          <p class="font-semibold mb-2">Responsable del tractament</p>
+          <p class="mb-4">Identitat: la Soci — Associació del Personal de CaixaBank</p>
+          <p class="font-semibold mb-2">Per què i per a què tractem les seves dades?</p>
+          <p class="mb-4">L'associació tracta les seves dades personals amb les finalitats següents:</p>
+          <p class="font-semibold mb-2 uppercase text-xs tracking-wide text-gray-500">Finalitat de naturalesa contractual i obligació legal:</p>
+          <ul class="list-disc pl-5 mb-4 space-y-2">
+            <li>Gestionar la seva condició de soci/sòcia, incloent-hi el cobrament de quotes i la prestació de serveis associatius.</li>
+            <li>Complir les obligacions legals aplicables a les associacions sense ànim de lucre.</li>
+            <li>Enviar comunicacions relacionades amb les activitats, seccions i esdeveniments de l'associació.</li>
+          </ul>
+          <p class="font-semibold mb-2 uppercase text-xs tracking-wide text-gray-500">Finalitats basades en interès legítim:</p>
+          <ul class="list-disc pl-5 mb-4 space-y-2">
+            <li>Mantenir actualitzada la seva informació com a associat/da.</li>
+            <li>Millorar els serveis i activitats oferts per l'associació.</li>
+            <li>Gestionar consultes i sol·licituds realitzades pels socis.</li>
+          </ul>
+          <p class="font-semibold mb-2">Quant de temps conservarem les seves dades?</p>
+          <p class="mb-4">Les seves dades es conservaran mentre mantingui la condició de soci/sòcia i, posteriorment, durant els terminis legalment establerts.</p>
+          <p class="font-semibold mb-2">A qui comunicarem les seves dades?</p>
+          <p class="mb-4">Les seves dades no es cediran a tercers, excepte en els casos previstos legalment o quan sigui necessari per a la prestació dels serveis associatius.</p>
+          <p class="font-semibold mb-2">Quins són els seus drets?</p>
+          <ul class="list-disc pl-5 mb-4 space-y-2">
+            <li>Dret d'accés: obtenir confirmació sobre si tractem les seves dades.</li>
+            <li>Dret de rectificació: sol·licitar la correcció de dades inexactes.</li>
+            <li>Dret de supressió: sol·licitar l'eliminació de les seves dades.</li>
+            <li>Dret d'oposició: oposar-se al tractament de les seves dades.</li>
+            <li>Dret de portabilitat: rebre les seves dades en format estructurat.</li>
+          </ul>
+          <p class="mb-4">Per exercir els seus drets, pot contactar amb nosaltres a través de la secció de contacte de la web.</p>
+          <p class="font-semibold mb-2">Dret a presentar una reclamació</p>
+          <p class="mb-8">Té dret a presentar una reclamació davant l'Agència Espanyola de Protecció de Dades (www.aepd.es) si considera que el tractament de les seves dades no s'ajusta a la normativa vigent.</p>
+          <div class="h-4"></div>
+        </div>
+        <div class="px-6 py-4 border-t border-gray-100 flex justify-center flex-shrink-0">
+          <button id="btn-accept-privacy" onclick="acceptPrivacy()" disabled
+            class="bg-gray-300 text-gray-500 font-semibold px-10 py-3 rounded-xl transition text-sm cursor-not-allowed">
+            Acceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button id="scroll-btn" onclick="scrollPrivacy()" class="fixed bottom-8 right-8 z-50 hidden w-12 h-12 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg flex items-center justify-center transition">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+    </svg>
+  </button>
 
   <script define:vars={{ supabaseUrl, supabaseKey }}>
     window.__SB_URL = supabaseUrl;
     window.__SB_KEY = supabaseKey;
   </script>
+
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
     const db = createClient(window.__SB_URL, window.__SB_KEY);
 
     const T = {
       es: {
-        title:'Regístrate', sub:'Crea tu cuenta de socio',
-        label_nombre:'Nombre *', label_apellidos:'Apellidos *', label_dni:'DNI *',
-        label_vinculacion:'Vinculación *', label_buscar_titular:'Busca tu titular (Empleado o Jubilado)',
-        opt_select:'-- Selecciona --', opt_empleado:'Empleado/a CaixaBank', opt_jubilado:'Jubilado/a CaixaBank', opt_beneficiario:'Beneficiario/a',
-        label_email:'Correo electrónico *', label_telefon:'Teléfono', label_iban:'IBAN',
-        label_idioma:'Idioma preferido', label_pwd:'Contraseña *', label_pwd2:'Repetir contraseña *',
-        btn:'Crear cuenta', loading:'Creando cuenta...',
-        ya_socio:'¿Ya tienes cuenta?', link_login:'Inicia sesión',
-        err_pwd:'Las contraseñas no coinciden',
-        err_dni:'DNI inválido',
-        err_dni_exists:'Este DNI ya está registrado',
-        err_iban:'IBAN inválido',
-        err_iban_exists:'Este IBAN pertenece a otro titular',
-        err_titular:'Debes seleccionar un titular para el beneficiario',
-        err_generic:'Error al registrarse. Inténtalo de nuevo.',
-        success:'¡Cuenta creada! Revisa tu correo para confirmarla.',
-        iban_ok:'✓ IBAN válido',
-        buscar_placeholder:'Escribe apellidos o nombre...',
+        banner: 'Estás en un entorno 100% seguro',
+        sidebar_title: 'Proceso de registro',
+        steps: ['Datos de contacto', 'Datos personales', 'Datos bancarios', 'Contraseña'],
+        reg_title: 'Regístrate',
+        s1_title: 'Datos de contacto', s1_sub: 'Los usaremos para enviarte información necesaria',
+        s1_info: 'Te los pedimos para que puedas recuperar el proceso en cualquier momento',
+        s2_title: 'Datos personales', s2_sub: 'Comprueba que la información es correcta',
+        s3_title: 'Datos bancarios', s3_sub: 'Para gestionar la cuota de socio (opcional)',
+        s4_title: 'Crea tu contraseña', s4_sub: 'Mínimo 8 caracteres',
+        label_email: 'Correo electrónico *', label_telefon: 'Móvil',
+        label_nombre: 'Nombre *', label_apellidos: 'Apellidos *', label_dni: 'DNI *',
+        label_vinculacion: 'Vinculación *', label_buscar_titular: 'Busca tu titular (Empleado o Jubilado)',
+        opt_select: '-- Selecciona --', opt_empleado: 'Empleado/a CaixaBank',
+        opt_jubilado: 'Jubilado/a CaixaBank', opt_beneficiario: 'Beneficiario/a',
+        opt_empleado_lasoci: 'Empleado/a LaSoci',
+        label_iban: 'IBAN', label_idioma: 'Idioma preferido',
+        label_pwd: 'Contraseña *', label_pwd2: 'Repetir contraseña *',
+        btn_continuar: 'Continuar', btn_anterior: 'Anterior', btn_crear: 'Crear cuenta',
+        ya_socio: '¿Ya tienes cuenta?', link_login: 'Inicia sesión',
+        rgpd_text: 'Afirmo que he leído y acepto la ',
+        rgpd_link: 'información básica sobre protección de datos',
+        modal_title: 'Información básica sobre protección de datos',
+        modal_warning: 'Debes llegar al final del documento y pulsar en Aceptar',
+        privacy_heading: 'INFORMACIÓN BÁSICA SOBRE PROTECCIÓN DE DATOS',
+        btn_accept: 'Aceptar',
+        err_rgpd: 'Debes aceptar la política de protección de datos',
+        err_pwd: 'Las contraseñas no coinciden',
+        err_dni: 'DNI inválido',
+        err_titular: 'Debes seleccionar un titular para el beneficiario',
+        err_iban: 'IBAN inválido',
+        err_generic: 'Error al registrarse. Inténtalo de nuevo.',
+        success: '¡Cuenta creada! Revisa tu correo para confirmarla.',
+        iban_ok: '✓ IBAN válido',
+        loading: 'Creando cuenta...',
+        buscar_placeholder: 'Escribe apellidos o nombre...',
       },
       ca: {
-        title:"Registra't", sub:'Crea el teu compte de soci',
-        label_nombre:'Nom *', label_apellidos:'Cognoms *', label_dni:'DNI *',
-        label_vinculacion:'Vinculació *', label_buscar_titular:'Busca el teu titular (Empleat o Jubilat)',
-        opt_select:'-- Selecciona --', opt_empleado:'Empleat/da CaixaBank', opt_jubilado:'Jubilat/da CaixaBank', opt_beneficiario:'Beneficiari/a',
-        label_email:'Correu electrònic *', label_telefon:'Telèfon', label_iban:'IBAN',
-        label_idioma:'Idioma preferit', label_pwd:'Contrasenya *', label_pwd2:'Repetir contrasenya *',
-        btn:'Crear compte', loading:'Creant compte...',
-        ya_socio:'Ja tens compte?', link_login:'Inicia sessió',
-        err_pwd:'Les contrasenyes no coincideixen',
-        err_dni:'DNI invàlid',
-        err_dni_exists:'Aquest DNI ja està registrat',
-        err_iban:'IBAN invàlid',
-        err_iban_exists:"Aquest IBAN pertany a un altre titular",
-        err_titular:'Has de seleccionar un titular per al beneficiari',
-        err_generic:"Error en registrar-se. Torna-ho a intentar.",
-        success:'Compte creat! Revisa el teu correu per confirmar-lo.',
-        iban_ok:'✓ IBAN vàlid',
-        buscar_placeholder:'Escriu cognoms o nom...',
+        banner: "Estàs en un entorn 100% segur",
+        sidebar_title: 'Procés de registre',
+        steps: ['Dades de contacte', 'Dades personals', 'Dades bancàries', 'Contrasenya'],
+        reg_title: "Registra't",
+        s1_title: 'Dades de contacte', s1_sub: "Les farem servir per enviar-te informació necessària",
+        s1_info: "Els demanem perquè puguis recuperar el procés en qualsevol moment",
+        s2_title: 'Dades personals', s2_sub: 'Comprova que la informació és correcta',
+        s3_title: 'Dades bancàries', s3_sub: 'Per gestionar la quota de soci (opcional)',
+        s4_title: 'Crea la teva contrasenya', s4_sub: 'Mínim 8 caràcters',
+        label_email: 'Correu electrònic *', label_telefon: 'Mòbil',
+        label_nombre: 'Nom *', label_apellidos: 'Cognoms *', label_dni: 'DNI *',
+        label_vinculacion: 'Vinculació *', label_buscar_titular: 'Busca el teu titular (Empleat o Jubilat)',
+        opt_select: '-- Selecciona --', opt_empleado: 'Empleat/da CaixaBank',
+        opt_jubilado: 'Jubilat/da CaixaBank', opt_beneficiario: 'Beneficiari/a',
+        opt_empleado_lasoci: 'Empleat/da LaSoci',
+        label_iban: 'IBAN', label_idioma: 'Idioma preferit',
+        label_pwd: 'Contrasenya *', label_pwd2: 'Repetir contrasenya *',
+        btn_continuar: 'Continuar', btn_anterior: 'Anterior', btn_crear: 'Crear compte',
+        ya_socio: 'Ja tens compte?', link_login: 'Inicia sessió',
+        rgpd_text: 'Afirmo que he llegit i accepto la ',
+        rgpd_link: 'informació bàsica sobre protecció de dades',
+        modal_title: 'Informació bàsica sobre protecció de dades',
+        modal_warning: "Has d'arribar al final del document i prémer Acceptar",
+        privacy_heading: 'INFORMACIÓ BÀSICA SOBRE PROTECCIÓ DE DADES',
+        btn_accept: 'Acceptar',
+        err_rgpd: "Has d'acceptar la política de protecció de dades",
+        err_pwd: 'Les contrasenyes no coincideixen',
+        err_dni: 'DNI invàlid',
+        err_titular: 'Has de seleccionar un titular per al beneficiari',
+        err_iban: 'IBAN invàlid',
+        err_generic: "Error en registrar-se. Torna-ho a intentar.",
+        success: 'Compte creat! Revisa el teu correu per confirmar-lo.',
+        iban_ok: '✓ IBAN vàlid',
+        loading: 'Creant compte...',
+        buscar_placeholder: 'Escriu cognoms o nom...',
       }
     };
 
-    // ── Idioma ──
-    const storedLang = localStorage.getItem('lasoci_lang') || 'es';
-    document.getElementById('idioma').value = storedLang;
+    let currentStep = 1;
+    const totalSteps = 4;
+    let privacyAccepted = false;
+    let privacyScrolled = false;
+
+    function getLang() { return localStorage.getItem('lasoci_lang') || 'es'; }
 
     function applyLang(lang) {
       const t = T[lang] || T.es;
-      document.getElementById('reg-title').textContent = t.title;
-      document.getElementById('reg-sub').textContent = t.sub;
+      document.getElementById('banner-text').textContent = t.banner;
+      document.getElementById('sidebar-title').textContent = t.sidebar_title;
+      document.getElementById('reg-title').textContent = t.reg_title;
+      document.getElementById('s1-title').textContent = t.s1_title;
+      document.getElementById('s1-sub').textContent = t.s1_sub;
+      document.getElementById('s1-info').textContent = t.s1_info;
+      document.getElementById('s2-title').textContent = t.s2_title;
+      document.getElementById('s2-sub').textContent = t.s2_sub;
+      document.getElementById('s3-title').textContent = t.s3_title;
+      document.getElementById('s3-sub').textContent = t.s3_sub;
+      document.getElementById('s4-title').textContent = t.s4_title;
+      document.getElementById('s4-sub').textContent = t.s4_sub;
+      document.getElementById('label-email').textContent = t.label_email;
+      document.getElementById('label-telefon').textContent = t.label_telefon;
       document.getElementById('label-nombre').textContent = t.label_nombre;
       document.getElementById('label-apellidos').textContent = t.label_apellidos;
       document.getElementById('label-dni').textContent = t.label_dni;
@@ -199,108 +502,185 @@ console.log('ENV CHECK - URL:', supabaseUrl ? 'OK' : 'MISSING');
       document.getElementById('opt-empleado').textContent = t.opt_empleado;
       document.getElementById('opt-jubilado').textContent = t.opt_jubilado;
       document.getElementById('opt-beneficiario').textContent = t.opt_beneficiario;
-      document.getElementById('label-email').textContent = t.label_email;
-      document.getElementById('label-telefon').textContent = t.label_telefon;
+      document.getElementById('opt-empleado-lasoci').textContent = t.opt_empleado_lasoci;
       document.getElementById('label-iban').textContent = t.label_iban;
       document.getElementById('label-idioma').textContent = t.label_idioma;
       document.getElementById('label-pwd').textContent = t.label_pwd;
       document.getElementById('label-pwd2').textContent = t.label_pwd2;
-      document.getElementById('reg-btn-text').textContent = t.btn;
+      document.getElementById('btn-continuar-1').textContent = t.btn_continuar;
+      document.getElementById('btn-continuar-2').textContent = t.btn_continuar;
+      document.getElementById('btn-continuar-3').textContent = t.btn_continuar;
+      document.getElementById('btn-anterior-2').textContent = t.btn_anterior;
+      document.getElementById('btn-anterior-3').textContent = t.btn_anterior;
+      document.getElementById('btn-anterior-4').textContent = t.btn_anterior;
+      document.getElementById('btn-crear').textContent = t.btn_crear;
       document.getElementById('ya-socio').textContent = t.ya_socio;
       document.getElementById('link-login').textContent = t.link_login;
+      document.getElementById('rgpd-text').textContent = t.rgpd_text;
+      document.getElementById('open-privacy').textContent = t.rgpd_link;
+      document.getElementById('modal-title').textContent = t.modal_title;
+      document.getElementById('modal-warning').textContent = t.modal_warning;
+      document.getElementById('privacy-heading').textContent = t.privacy_heading;
+      document.getElementById('btn-accept-privacy').textContent = t.btn_accept;
       document.getElementById('buscar-titular').placeholder = t.buscar_placeholder;
-      const ibanOk = document.getElementById('iban-ok');
-      if (!ibanOk.classList.contains('hidden')) ibanOk.textContent = t.iban_ok;
+      renderSidebar(lang);
     }
 
-    applyLang(storedLang);
-    window.addEventListener('langchange', (e) => applyLang(e.detail.lang));
-    document.getElementById('idioma').addEventListener('change', () => {
-      const l = document.getElementById('idioma').value;
-      localStorage.setItem('lasoci_lang', l);
-      applyLang(l);
+    function renderSidebar(lang) {
+      const t = T[lang] || T.es;
+      const container = document.getElementById('steps-sidebar');
+      container.innerHTML = t.steps.map((name, i) => {
+        const step = i + 1;
+        const isActive = step === currentStep;
+        const isDone = step < currentStep;
+        return `
+          <div class="flex items-center gap-3 py-2">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-all
+              ${isDone ? 'bg-green-500 text-white' : isActive ? 'bg-orange-500 text-white' : 'border-2 border-gray-200 text-gray-400'}">
+              ${isDone ? '✓' : step}
+            </div>
+            <span class="text-sm ${isActive ? 'font-bold text-gray-800' : isDone ? 'text-green-600 font-medium' : 'text-gray-400'}">${name}</span>
+          </div>
+          ${step < totalSteps ? '<div class="ml-4 w-px h-4 bg-gray-200"></div>' : ''}
+        `;
+      }).join('');
+    }
+
+    function updateProgress() {
+      const pct = (currentStep / totalSteps) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
+    }
+
+    function showStep(step) {
+      document.querySelectorAll('.step-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('step-' + step).classList.remove('hidden');
+      currentStep = step;
+      updateProgress();
+      renderSidebar(getLang());
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.nextStep = function(from) {
+      const t = T[getLang()] || T.es;
+      if (from === 1) {
+        const email = document.getElementById('email').value.trim();
+        if (!email) { alert(t.label_email); return; }
+        if (!privacyAccepted) { alert(t.err_rgpd); return; }
+      }
+      if (from === 2) {
+        const nombre = document.getElementById('nombre').value.trim();
+        const apellidos = document.getElementById('apellidos').value.trim();
+        const dni = document.getElementById('dni').value.trim();
+        const vinculacion = document.getElementById('vinculacion').value;
+        if (!nombre || !apellidos || !dni) return;
+        if (!validateDNI(dni)) { document.getElementById('dni-error').textContent = t.err_dni; document.getElementById('dni-error').classList.remove('hidden'); return; }
+        if (vinculacion === 'beneficiario' && !document.getElementById('titular-dni').value) { alert(t.err_titular); return; }
+      }
+      showStep(from + 1);
+    };
+
+    window.prevStep = function(from) { showStep(from - 1); };
+
+    document.getElementById('open-privacy').addEventListener('click', () => {
+      document.getElementById('privacy-modal').classList.remove('hidden');
+      document.getElementById('scroll-btn').classList.remove('hidden');
+      privacyScrolled = false;
+      document.getElementById('btn-accept-privacy').disabled = true;
+      document.getElementById('btn-accept-privacy').className = 'bg-gray-300 text-gray-500 font-semibold px-10 py-3 rounded-xl transition text-sm cursor-not-allowed';
     });
 
-    // ── DNI ──
+    window.closePrivacy = function() {
+      document.getElementById('privacy-modal').classList.add('hidden');
+      document.getElementById('scroll-btn').classList.add('hidden');
+    };
+
+    window.checkScroll = function() {
+      const el = document.getElementById('privacy-content');
+      const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 50;
+      if (atBottom && !privacyScrolled) {
+        privacyScrolled = true;
+        const btn = document.getElementById('btn-accept-privacy');
+        btn.disabled = false;
+        btn.className = 'bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-3 rounded-xl transition text-sm cursor-pointer';
+      }
+    };
+
+    window.scrollPrivacy = function() {
+      document.getElementById('privacy-content').scrollBy({ top: 300, behavior: 'smooth' });
+    };
+
+    window.acceptPrivacy = function() {
+      privacyAccepted = true;
+      document.getElementById('rgpd').checked = true;
+      closePrivacy();
+    };
+
+    document.getElementById('rgpd').addEventListener('change', (e) => {
+      if (e.target.checked && !privacyAccepted) {
+        e.target.checked = false;
+        document.getElementById('open-privacy').click();
+      } else if (!e.target.checked) {
+        privacyAccepted = false;
+      }
+    });
+
     function validateDNI(dni) {
       const clean = dni.toUpperCase().trim();
       if (!/^\d{8}[A-Z]$/.test(clean)) return false;
       const letters = 'TRWAGMYFPDXBNJZSQVHLCKE';
-      const num = parseInt(clean.substring(0, 8));
-      return clean[8] === letters[num % 23];
+      return clean[8] === letters[parseInt(clean.substring(0, 8)) % 23];
     }
 
     document.getElementById('dni').addEventListener('input', (e) => {
       e.target.value = e.target.value.toUpperCase();
-      const lang = localStorage.getItem('lasoci_lang') || 'es';
-      const t = T[lang] || T.es;
       const err = document.getElementById('dni-error');
+      const t = T[getLang()] || T.es;
       if (e.target.value.length === 9) {
-        if (!validateDNI(e.target.value)) {
-          err.textContent = t.err_dni; err.classList.remove('hidden');
-        } else {
-          err.classList.add('hidden');
-        }
-      } else {
-        err.classList.add('hidden');
-      }
+        if (!validateDNI(e.target.value)) { err.textContent = t.err_dni; err.classList.remove('hidden'); }
+        else { err.classList.add('hidden'); }
+      } else { err.classList.add('hidden'); }
     });
 
-    // ── IBAN ──
     function validateIBAN(iban) {
       const clean = iban.toUpperCase().replace(/\s/g, '');
       if (!/^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/.test(clean)) return false;
       const rearranged = clean.slice(4) + clean.slice(0, 4);
       let numeric = '';
-      for (const c of rearranged) {
-        numeric += isNaN(c) ? (c.charCodeAt(0) - 55).toString() : c;
-      }
+      for (const c of rearranged) numeric += isNaN(c) ? (c.charCodeAt(0) - 55).toString() : c;
       let remainder = 0;
-      for (const digit of numeric) {
-        remainder = (remainder * 10 + parseInt(digit)) % 97;
-      }
+      for (const digit of numeric) remainder = (remainder * 10 + parseInt(digit)) % 97;
       return remainder === 1;
     }
 
     document.getElementById('iban').addEventListener('input', (e) => {
       const raw = e.target.value.toUpperCase().replace(/\s/g, '');
-      // Format with spaces every 4 chars
       e.target.value = raw.match(/.{1,4}/g)?.join(' ') || raw;
-      const lang = localStorage.getItem('lasoci_lang') || 'es';
-      const t = T[lang] || T.es;
+      const t = T[getLang()] || T.es;
       const err = document.getElementById('iban-error');
       const ok = document.getElementById('iban-ok');
       if (raw.length >= 15) {
-        if (!validateIBAN(raw)) {
-          err.textContent = t.err_iban; err.classList.remove('hidden'); ok.classList.add('hidden');
-        } else {
-          err.classList.add('hidden'); ok.textContent = t.iban_ok; ok.classList.remove('hidden');
-        }
-      } else {
-        err.classList.add('hidden'); ok.classList.add('hidden');
-      }
+        if (!validateIBAN(raw)) { err.textContent = t.err_iban; err.classList.remove('hidden'); ok.classList.add('hidden'); }
+        else { err.classList.add('hidden'); ok.textContent = t.iban_ok; ok.classList.remove('hidden'); }
+      } else { err.classList.add('hidden'); ok.classList.add('hidden'); }
     });
 
-    // ── clearTitular (definida antes de usarse) ──
+    document.getElementById('toggle-pwd').addEventListener('click', () => {
+      const p = document.getElementById('password');
+      p.type = p.type === 'password' ? 'text' : 'password';
+    });
+
+    document.getElementById('vinculacion').addEventListener('change', () => {
+      const val = document.getElementById('vinculacion').value;
+      document.getElementById('titular-section').classList.toggle('hidden', val !== 'beneficiario');
+      if (val !== 'beneficiario') clearTitular();
+    });
+
     window.clearTitular = function() {
       document.getElementById('titular-dni').value = '';
       document.getElementById('titular-selected').classList.add('hidden');
       document.getElementById('buscar-titular').value = '';
     };
 
-    // ── Vinculació → mostrar buscador titular ──
-    document.getElementById('vinculacion').addEventListener('change', () => {
-      const val = document.getElementById('vinculacion').value;
-      const section = document.getElementById('titular-section');
-      if (val === 'beneficiario') {
-        section.classList.remove('hidden');
-      } else {
-        section.classList.add('hidden');
-        window.clearTitular();
-      }
-    });
-
-    // ── Buscar titular ──
     let searchTimeout;
     document.getElementById('buscar-titular').addEventListener('input', (e) => {
       clearTimeout(searchTimeout);
@@ -310,27 +690,20 @@ console.log('ENV CHECK - URL:', supabaseUrl ? 'OK' : 'MISSING');
     });
 
     async function buscarTitular(q) {
-      const { data, error } = await db
-        .from('socios')
-        .select('dni, nombre, apellidos, vinculacion')
-        .eq('activo', true)
-        .in('vinculacion', ['empleado', 'jubilado'])
-        .or(`apellidos.ilike.%${q}%,nombre.ilike.%${q}%`)
-        .limit(10);
-
+      const { data } = await db.from('socios').select('dni, nombre, apellidos, vinculacion')
+        .eq('activo', true).in('vinculacion', ['empleado', 'jubilado'])
+        .or(`apellidos.ilike.%${q}%,nombre.ilike.%${q}%`).limit(10);
       const container = document.getElementById('titular-resultados');
       if (!data || data.length === 0) {
         container.innerHTML = '<p class="px-4 py-3 text-sm text-gray-500">No s\'han trobat resultats</p>';
-        container.classList.remove('hidden');
-        return;
+      } else {
+        container.innerHTML = data.map(s => `
+          <button type="button" onclick="selectTitular('${s.dni}','${s.nombre} ${s.apellidos}','${s.vinculacion}')"
+            class="w-full text-left px-4 py-3 hover:bg-blue-50 text-sm border-b border-gray-100 last:border-0">
+            <span class="font-medium text-gray-800">${s.apellidos}, ${s.nombre}</span>
+            <span class="text-xs text-gray-500 ml-2">${s.vinculacion === 'empleado' ? '👔' : '🏖️'}</span>
+          </button>`).join('');
       }
-      container.innerHTML = data.map(s => `
-        <button type="button" onclick="selectTitular('${s.dni}','${s.nombre} ${s.apellidos}','${s.vinculacion}')"
-          class="w-full text-left px-4 py-3 hover:bg-blue-50 text-sm border-b border-gray-100 last:border-0">
-          <span class="font-medium text-gray-800">${s.apellidos}, ${s.nombre}</span>
-          <span class="text-xs text-gray-500 ml-2">${s.vinculacion === 'empleado' ? '👔 Empleat' : '🏖️ Jubilat'}</span>
-        </button>
-      `).join('');
       container.classList.remove('hidden');
     }
 
@@ -341,28 +714,26 @@ console.log('ENV CHECK - URL:', supabaseUrl ? 'OK' : 'MISSING');
       document.getElementById('titular-selected').classList.remove('hidden');
       document.getElementById('titular-resultados').classList.add('hidden');
       document.getElementById('buscar-titular').value = '';
-      // Intentar precargar IBAN del titular
-      precargarIBANTitular(dni);
     };
 
-    async function precargarIBANTitular(dni) {
-      const { data } = await db.from('socios').select('iban').eq('dni', dni).single();
-      if (data?.iban) {
-        const ibanInput = document.getElementById('iban');
-        const formatted = data.iban.match(/.{1,4}/g)?.join(' ') || data.iban;
-        ibanInput.value = formatted;
-        ibanInput.dispatchEvent(new Event('input'));
-      }
-    }
-
-
-
-    // ── Submit ──
-    document.getElementById('reg-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const lang = localStorage.getItem('lasoci_lang') || 'es';
+    window.submitForm = async function() {
+      const lang = getLang();
       const t = T[lang] || T.es;
+      const errDiv = document.getElementById('reg-error');
+      const okDiv = document.getElementById('reg-success');
+      const btn = document.getElementById('btn-crear');
+      errDiv.classList.add('hidden'); okDiv.classList.add('hidden');
 
+      const pwd = document.getElementById('password').value;
+      const pwd2 = document.getElementById('password2').value;
+      if (pwd !== pwd2) {
+        document.getElementById('pwd-error').textContent = t.err_pwd;
+        document.getElementById('pwd-error').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('pwd-error').classList.add('hidden');
+
+      btn.textContent = t.loading;
       const nombre = document.getElementById('nombre').value.trim();
       const apellidos = document.getElementById('apellidos').value.trim();
       const dni = document.getElementById('dni').value.trim().toUpperCase();
@@ -372,23 +743,7 @@ console.log('ENV CHECK - URL:', supabaseUrl ? 'OK' : 'MISSING');
       const telefon = document.getElementById('telefon').value.trim();
       const iban_raw = document.getElementById('iban').value.replace(/\s/g, '').toUpperCase();
       const idioma = document.getElementById('idioma').value;
-      const pwd = document.getElementById('password').value;
-      const pwd2 = document.getElementById('password2').value;
 
-      const errDiv = document.getElementById('reg-error');
-      const okDiv = document.getElementById('reg-success');
-      const btn = document.getElementById('reg-btn-text');
-      errDiv.classList.add('hidden'); okDiv.classList.add('hidden');
-
-      // Validaciones frontend
-      if (!validateDNI(dni)) { errDiv.textContent = t.err_dni; errDiv.classList.remove('hidden'); return; }
-      if (pwd !== pwd2) { errDiv.textContent = t.err_pwd; errDiv.classList.remove('hidden'); return; }
-      if (iban_raw && !validateIBAN(iban_raw)) { errDiv.textContent = t.err_iban; errDiv.classList.remove('hidden'); return; }
-      if (vinculacion === 'beneficiario' && !titular_dni) { errDiv.textContent = t.err_titular; errDiv.classList.remove('hidden'); return; }
-
-      btn.textContent = t.loading;
-
-      // Registrar en Supabase Auth
       const { data, error } = await db.auth.signUp({
         email, password: pwd,
         options: { data: { nombre, apellidos, dni, vinculacion, idioma } }
@@ -397,28 +752,21 @@ console.log('ENV CHECK - URL:', supabaseUrl ? 'OK' : 'MISSING');
       if (error) {
         errDiv.textContent = t.err_generic + ' ' + error.message;
         errDiv.classList.remove('hidden');
-        btn.textContent = t.btn;
+        btn.textContent = t.btn_crear;
         return;
       }
 
-      // Guardar perfil via API servidor (usa service role key)
       if (data.user) {
         const res = await fetch('/api/registro', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            id: data.user.id, email, nombre, apellidos,
-            dni, telefono: telefon || null,
-            iban: iban_raw || null,
-            vinculacion, titular_dni: titular_dni || null,
-          })
+          body: JSON.stringify({ id: data.user.id, email, nombre, apellidos, dni, telefono: telefon || null, iban: iban_raw || null, vinculacion, titular_dni: titular_dni || null })
         });
         const result = await res.json();
         if (!result.ok) {
-          console.error('Insert error:', result.error);
           errDiv.textContent = t.err_generic + ' ' + result.error;
           errDiv.classList.remove('hidden');
-          btn.textContent = t.btn;
+          btn.textContent = t.btn_crear;
           return;
         }
         localStorage.setItem('lasoci_lang', idioma);
@@ -426,9 +774,18 @@ console.log('ENV CHECK - URL:', supabaseUrl ? 'OK' : 'MISSING');
 
       okDiv.textContent = t.success;
       okDiv.classList.remove('hidden');
-      btn.textContent = t.btn;
-      document.getElementById('reg-form').reset();
-      document.getElementById('titular-section').classList.add('hidden');
+      btn.textContent = t.btn_crear;
+    };
+
+    const lang = getLang();
+    document.getElementById('idioma').value = lang;
+    applyLang(lang);
+    window.addEventListener('langchange', (e) => applyLang(e.detail.lang));
+    document.getElementById('idioma').addEventListener('change', () => {
+      const l = document.getElementById('idioma').value;
+      localStorage.setItem('lasoci_lang', l);
+      applyLang(l);
     });
   </script>
+
 </Layout>
