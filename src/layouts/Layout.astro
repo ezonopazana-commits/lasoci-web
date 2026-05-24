@@ -1,4 +1,5 @@
 ---
+import '../styles/global.css';
 interface Props {
   title: string;
   lang?: 'es' | 'ca';
@@ -14,8 +15,6 @@ const { title, lang = 'es' } = Astro.props;
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="description" content="la Soci — Associació del Personal de CaixaBank" />
-    <link rel="stylesheet" href="/src/styles/global.css" />
-    <!-- Apply lang BEFORE paint to avoid flash -->
     <script is:inline>
       (function() {
         var lang = localStorage.getItem('lasoci_lang') || 'es';
@@ -23,9 +22,48 @@ const { title, lang = 'es' } = Astro.props;
         document.documentElement.lang = lang;
       })();
     </script>
-    <style>
+    <style is:global>
       body { visibility: hidden; }
       body.lang-ready { visibility: visible; }
+
+      /* Orange border by default, green on focus */
+      .form-input {
+        border-color: #f97316 !important;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      .form-input:focus {
+        border-color: #22c55e !important;
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15) !important;
+        outline: none !important;
+      }
+
+      /* Nav hover effect */
+      .nav-link {
+        border: 1px solid transparent !important;
+        transition: all 0.2s ease !important;
+      }
+      .nav-link:hover {
+        border-color: #4ade80 !important;
+        background-color: rgba(74, 222, 128, 0.15) !important;
+        color: white !important;
+      }
+
+      /* Lang dropdown styles */
+      #lang-dropdown-menu {
+        opacity: 0;
+        transform: translateY(-8px);
+        transition: opacity 0.15s ease, transform 0.15s ease;
+        pointer-events: none;
+      }
+      #lang-dropdown-menu.open {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: all;
+      }
+      .lang-option.active {
+        background-color: #f0f4ff;
+        font-weight: 600;
+      }
     </style>
   </head>
   <body class="min-h-screen bg-white font-sans">
@@ -37,26 +75,54 @@ const { title, lang = 'es' } = Astro.props;
           la <span class="text-white">Soci</span>
         </a>
         <div class="hidden md:flex items-center gap-6 text-sm font-medium">
-          <a href="/secciones" class="text-blue-200 hover:text-white transition" data-i18n="nav_seccions">Seccions</a>
-          <a href="/noticias" class="text-blue-200 hover:text-white transition" data-i18n="nav_noticies">Notícies</a>
-          <a href="/revista" class="text-blue-200 hover:text-white transition" data-i18n="nav_revista">Revista</a>
-          <a href="/contacto" class="text-blue-200 hover:text-white transition" data-i18n="nav_contacte">Contacte</a>
+          <a href="/secciones" class="text-blue-200 px-3 py-2 rounded-lg nav-link" data-i18n="nav_seccions">Seccions</a>
+          <a href="/noticias" class="text-blue-200 px-3 py-2 rounded-lg nav-link" data-i18n="nav_noticies">Notícies</a>
+          <a href="/revista" class="text-blue-200 px-3 py-2 rounded-lg nav-link" data-i18n="nav_revista">Revista</a>
+          <a href="/contacto" class="text-blue-200 px-3 py-2 rounded-lg nav-link" data-i18n="nav_contacte">Contacte</a>
 
-          <!-- SELECTOR IDIOMA -->
+          <!-- LANGUAGE SELECTOR - Santander style -->
           <div class="relative" id="lang-dropdown">
             <button id="lang-btn" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition text-sm">
-              <span id="lang-flag">🇪🇸</span>
+              <img id="lang-flag-img" src="https://flagcdn.com/w40/es.png" class="w-6 h-6 rounded-full object-cover flex-shrink-0" alt="" />
               <span id="lang-label">Español</span>
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg id="lang-chevron" class="w-3 h-3 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
-            <div id="lang-menu" class="hidden absolute right-0 mt-2 w-36 bg-white rounded-lg shadow-lg overflow-hidden z-50">
-              <button onclick="setLang('es')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-sm font-medium">
-                🇪🇸 Español
+
+            <div id="lang-dropdown-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-2xl overflow-hidden z-50 border border-gray-200 py-1">
+              <!-- ES -->
+              <button onclick="setLang('es')" id="lang-opt-es"
+                class="lang-option w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors">
+                <div class="flex items-center gap-3">
+                  <img src="https://flagcdn.com/w40/es.png" class="w-8 h-8 rounded-full object-cover border-2 border-gray-200 shadow-sm flex-shrink-0" alt="ES" />
+                  <span class="font-medium">Español</span>
+                </div>
+                <svg id="check-es" class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                </svg>
               </button>
-              <button onclick="setLang('ca')" class="w-full flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-50 text-sm font-medium">
-                🏴󠁥󠁳󠁣󠁴󠁿 Català
+              <!-- CA -->
+              <button onclick="setLang('ca')" id="lang-opt-ca"
+                class="lang-option w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors">
+                <div class="flex items-center gap-3">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Catalonia.svg/40px-Flag_of_Catalonia.svg.png" class="w-8 h-8 rounded-full object-cover border-2 border-gray-200 shadow-sm flex-shrink-0" alt="CA" />
+                  <span class="font-medium">Català</span>
+                </div>
+                <svg id="check-ca" class="w-5 h-5 text-blue-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                </svg>
+              </button>
+              <!-- EN -->
+              <button onclick="setLang('en')" id="lang-opt-en"
+                class="lang-option w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors">
+                <div class="flex items-center gap-3">
+                  <img src="https://flagcdn.com/w40/gb.png" class="w-8 h-8 rounded-full object-cover border-2 border-gray-200 shadow-sm flex-shrink-0" alt="EN" />
+                  <span class="font-medium">Inglés</span>
+                </div>
+                <svg id="check-en" class="w-5 h-5 text-blue-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                </svg>
               </button>
             </div>
           </div>
@@ -80,6 +146,7 @@ const { title, lang = 'es' } = Astro.props;
         <div class="flex gap-2 py-1">
           <button onclick="setLang('es')" class="flex items-center gap-1 bg-white/10 px-3 py-1 rounded text-xs">🇪🇸 Español</button>
           <button onclick="setLang('ca')" class="flex items-center gap-1 bg-white/10 px-3 py-1 rounded text-xs">🏴󠁥󠁳󠁣󠁴󠁿 Català</button>
+          <button onclick="setLang('en')" class="flex items-center gap-1 bg-white/10 px-3 py-1 rounded text-xs">🇬🇧 English</button>
         </div>
         <a href="/socios/login" class="block bg-orange-500 text-white px-4 py-2 rounded-lg text-center mt-2" data-i18n="nav_area">Àrea socis</a>
       </div>
@@ -120,7 +187,6 @@ const { title, lang = 'es' } = Astro.props;
     </footer>
 
     <script>
-      // ─── I18N ───
       const TRANSLATIONS = {
         es: {
           nav_seccions: 'Secciones', nav_noticies: 'Noticias', nav_revista: 'Revista',
@@ -131,59 +197,94 @@ const { title, lang = 'es' } = Astro.props;
           nav_seccions: 'Seccions', nav_noticies: 'Notícies', nav_revista: 'Revista',
           nav_contacte: 'Contacte', nav_area: 'Àrea socis', nav_login: 'Iniciar sessió',
           nav_registro: 'Registrar-se', footer_links: 'Enllaços', footer_privat: 'Àrea privada',
+        },
+        en: {
+          nav_seccions: 'Sections', nav_noticies: 'News', nav_revista: 'Magazine',
+          nav_contacte: 'Contact', nav_area: 'Members area', nav_login: 'Sign in',
+          nav_registro: 'Register', footer_links: 'Links', footer_privat: 'Private area',
         }
       };
 
-      function getLang() {
-        return localStorage.getItem('lasoci_lang') || 'es';
-      }
+      const LANG_CONFIG = {
+        es: { flag: 'https://flagcdn.com/w40/es.png', label: 'Español' },
+        ca: { flag: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Catalonia.svg/40px-Flag_of_Catalonia.svg.png', label: 'Català' },
+        en: { flag: 'https://flagcdn.com/w40/gb.png', label: 'Inglés' },
+      };
+
+      function getLang() { return localStorage.getItem('lasoci_lang') || 'es'; }
 
       function setLang(lang) {
         localStorage.setItem('lasoci_lang', lang);
         applyLang(lang);
-        // Close dropdown
-        document.getElementById('lang-menu')?.classList.add('hidden');
+        closeLangMenu();
       }
+      window.setLang = setLang;
 
       function applyLang(lang) {
         const t = TRANSLATIONS[lang] || TRANSLATIONS.es;
-        // Update all data-i18n elements
+        const cfg = LANG_CONFIG[lang] || LANG_CONFIG.es;
+
         document.querySelectorAll('[data-i18n]').forEach(el => {
           const key = el.getAttribute('data-i18n');
           if (t[key]) el.textContent = t[key];
         });
-        // Update flag and label
-        const flag = document.getElementById('lang-flag');
-        const label = document.getElementById('lang-label');
-        if (flag) flag.textContent = lang === 'ca' ? '🏴󠁥󠁳󠁣󠁴󠁿' : '🇪🇸';
-        if (label) label.textContent = lang === 'ca' ? 'Català' : 'Español';
-        // Update html lang
+
+        // Update lang selector button
+        const flagImg = document.getElementById('lang-flag-img');
+        const labelEl = document.getElementById('lang-label');
+        if (flagImg) flagImg.src = cfg.flag;
+        if (labelEl) labelEl.textContent = cfg.label;
+
+        // Update checkmarks and active state
+        ['es', 'ca', 'en'].forEach(l => {
+          const check = document.getElementById('check-' + l);
+          const opt = document.getElementById('lang-opt-' + l);
+          if (check) check.classList.toggle('hidden', l !== lang);
+          if (opt) opt.classList.toggle('active', l === lang);
+        });
+
         document.documentElement.lang = lang;
-        // Dispatch event for pages to react
         window.dispatchEvent(new CustomEvent('langchange', { detail: { lang } }));
+      }
+
+      function openLangMenu() {
+        const menu = document.getElementById('lang-dropdown-menu');
+        const chevron = document.getElementById('lang-chevron');
+        menu?.classList.add('open');
+        chevron?.style.setProperty('transform', 'rotate(180deg)');
+      }
+
+      function closeLangMenu() {
+        const menu = document.getElementById('lang-dropdown-menu');
+        const chevron = document.getElementById('lang-chevron');
+        menu?.classList.remove('open');
+        chevron?.style.setProperty('transform', 'rotate(0deg)');
+      }
+
+      function toggleLangMenu() {
+        const menu = document.getElementById('lang-dropdown-menu');
+        if (menu?.classList.contains('open')) closeLangMenu();
+        else openLangMenu();
       }
 
       // Init
       applyLang(getLang());
       document.body.classList.add('lang-ready');
 
-      // Dropdown toggle
       document.getElementById('lang-btn')?.addEventListener('click', (e) => {
         e.stopPropagation();
-        document.getElementById('lang-menu')?.classList.toggle('hidden');
-      });
-      document.addEventListener('click', () => {
-        document.getElementById('lang-menu')?.classList.add('hidden');
+        toggleLangMenu();
       });
 
-      // Mobile menu
+      document.addEventListener('click', (e) => {
+        if (!document.getElementById('lang-dropdown')?.contains(e.target)) {
+          closeLangMenu();
+        }
+      });
+
       document.getElementById('menu-btn')?.addEventListener('click', () => {
         document.getElementById('mobile-menu')?.classList.toggle('hidden');
       });
-
-      // Expose globally for pages
-      window.getLang = getLang;
-      window.setLang = setLang;
     </script>
   </body>
 </html>

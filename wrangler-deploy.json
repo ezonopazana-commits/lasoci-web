@@ -1,0 +1,18 @@
+{
+  "name": "lasoci-web",
+  "main": "./dist/server/entry.mjs",
+  "compatibility_date": "2026-05-21",
+  "compatibility_flags": ["global_fetch_strictly_public"],
+  "kv_namespaces": [
+    { "binding": "SESSION", "id": "755852d44f03430fa95c63703e056aea" }
+  ],
+  "assets": {
+    "directory": "./dist/client",
+    "binding": "ASSETS"
+  },
+  "rules": [
+    { "type": "ESModule", "globs": ["**/*.mjs", "**/*.js"] }
+  ],
+  "no_bundle": true,
+  "observability": { "enabled": true }
+}

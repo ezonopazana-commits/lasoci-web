@@ -9,14 +9,19 @@ export const POST: APIRoute = async ({ request }) => {
     import.meta.env.SUPABASE_SERVICE_ROLE_KEY
   );
 
-  const { id, email, nombre, apellidos, dni, telefono, iban, vinculacion, titular_dni } = body;
+  const { id, email, nombre, apellidos, dni, telefono, iban, vinculacion, titular_dni, iban_tipo } = body;
 
   const { error } = await supabase.from('socios').insert({
-    id, email, nombre, apellidos, dni,
+    id,
+    email,
+    nombre,
+    apellidos,
+    dni,
     telefono: telefono || null,
     iban: iban || null,
     vinculacion,
     titular_dni: titular_dni || null,
+    iban_tipo: iban_tipo || 'propio',
     activo: false,
     rol: 'asociado'
   });

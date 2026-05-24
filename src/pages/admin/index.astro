@@ -1,0 +1,395 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Panel Admin — la Soci">
+  <div class="min-h-screen bg-gray-100">
+
+    <!-- Header -->
+    <div class="bg-blue-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-10 shadow">
+      <div class="flex items-center gap-2">
+        <a href="/"><span class="text-lg font-bold text-orange-400">la</span><span class="text-lg font-bold text-white">Soci</span></a>
+        <span class="text-blue-400 text-xs hidden sm:block">| Panel Admin</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="admin-name" class="text-xs text-blue-200 hidden sm:block"></span>
+        <a href="/socios/dashboard" class="text-xs text-blue-300 hover:text-white">Dashboard</a>
+        <button id="btn-logout" class="text-xs bg-blue-800 hover:bg-blue-700 px-3 py-1.5 rounded-lg transition">Salir</button>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-3 py-6">
+
+      <!-- Loading -->
+      <div id="loading" class="flex items-center justify-center py-20">
+        <div class="text-center">
+          <div class="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+          <p class="text-gray-500 text-sm">Cargando...</p>
+        </div>
+      </div>
+
+      <!-- Access denied -->
+      <div id="access-denied" class="hidden text-center py-20">
+        <div class="text-5xl mb-4">🚫</div>
+        <h2 class="text-lg font-bold text-gray-800 mb-2">Acceso denegado</h2>
+        <a href="/socios/dashboard" class="bg-orange-500 text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-orange-600 transition">Ir al dashboard</a>
+      </div>
+
+      <!-- Content -->
+      <div id="admin-content" class="hidden space-y-5">
+
+        <!-- Stats -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Total</p>
+            <p class="text-2xl font-bold text-blue-900" id="stat-total">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Pendientes</p>
+            <p class="text-2xl font-bold text-amber-500" id="stat-pendientes">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Activos</p>
+            <p class="text-2xl font-bold text-green-600" id="stat-activos">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Rechazados</p>
+            <p class="text-2xl font-bold text-red-500" id="stat-rechazados">-</p>
+          </div>
+        </div>
+
+        <!-- Pendientes -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-gray-100 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <h2 class="font-bold text-gray-800 text-sm">Pendientes de aprobación</h2>
+            <span id="badge-pendientes" class="bg-amber-100 text-amber-700 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+          </div>
+          <div id="lista-pendientes">
+            <p class="px-4 py-6 text-center text-gray-400 text-sm" id="no-pendientes">No hay socios pendientes</p>
+          </div>
+        </div>
+
+        <!-- Tabla todos -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+              <h2 class="font-bold text-gray-800 text-sm">Todos los socios</h2>
+            </div>
+            <div class="flex gap-2">
+              <input type="text" id="search-input" placeholder="Buscar..."
+                class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 w-36" />
+              <select id="filter-estado" class="px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                <option value="">Todos</option>
+                <option value="pendiente">Pendientes</option>
+                <option value="activo">Activos</option>
+                <option value="rechazado">Rechazados</option>
+              </select>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-gray-50 text-left">
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Socio</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500 hidden md:table-cell">DNI</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500 hidden md:table-cell">Vinculación</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Estado</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-socios" class="divide-y divide-gray-50">
+                <tr><td colspan="5" class="px-4 py-6 text-center text-gray-400 text-sm">Cargando...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal confirmar -->
+  <div id="modal-confirm" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-5">
+      <h3 class="font-bold text-gray-800 mb-2" id="modal-title">Confirmar</h3>
+      <p class="text-gray-500 text-sm mb-5" id="modal-msg"></p>
+      <div class="flex gap-2 justify-end">
+        <button onclick="closeModal()" class="px-4 py-2 text-sm text-gray-500 hover:text-gray-700">Cancelar</button>
+        <button id="modal-confirm-btn" class="px-5 py-2 text-sm text-white font-semibold rounded-xl transition">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal titular -->
+  <div id="modal-titular" class="fixed inset-0 z-50 hidden bg-black/50 p-4 overflow-y-auto">
+    <div class="relative min-h-full flex items-start justify-center pt-4 pb-8">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+        
+        <div class="bg-blue-900 text-white px-5 py-4 rounded-t-2xl flex items-center justify-between sticky top-0">
+          <h3 class="font-bold">Titular vinculado</h3>
+          <button onclick="closeTitularModal()" class="text-blue-200 hover:text-white text-xl leading-none">×</button>
+        </div>
+
+        <div class="p-5 space-y-4">
+
+          <!-- Beneficiario -->
+          <div>
+            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Beneficiario</p>
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 space-y-1">
+              <p class="font-semibold text-gray-800 text-sm" id="modal-benef-nombre"></p>
+              <p class="text-xs text-gray-500" id="modal-benef-email"></p>
+              <p class="text-xs text-gray-500" id="modal-benef-dni"></p>
+            </div>
+          </div>
+
+          <!-- Titular -->
+          <div>
+            <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Titular vinculado</p>
+            <div id="titular-info-container" class="bg-blue-50 border border-blue-200 rounded-xl p-3 space-y-1">
+              <p class="font-semibold text-gray-800 text-sm" id="modal-titular-nombre"></p>
+              <p class="text-xs text-gray-500" id="modal-titular-email"></p>
+              <p class="text-xs text-gray-500" id="modal-titular-telefono"></p>
+              <div id="modal-titular-iban-section" class="pt-2 border-t border-blue-200 mt-2">
+                <p class="text-xs text-blue-600 font-semibold mb-1">IBAN registrado:</p>
+                <p class="text-sm font-mono text-blue-900 break-all" id="modal-titular-iban"></p>
+              </div>
+              <div id="modal-sin-iban" class="hidden pt-2">
+                <p class="text-xs text-amber-600">⚠️ El titular no tiene IBAN registrado</p>
+              </div>
+            </div>
+            <div id="titular-no-encontrado" class="hidden bg-red-50 border border-red-200 rounded-xl p-3">
+              <p class="text-sm text-red-600">No se encontró el titular.</p>
+            </div>
+          </div>
+
+          <!-- IBAN tipo -->
+          <div id="iban-tipo-info" class="hidden bg-gray-50 border border-gray-200 rounded-xl p-3">
+            <p class="text-xs text-gray-500" id="iban-tipo-texto"></p>
+          </div>
+
+          <!-- Resultados email -->
+          <div id="email-success" class="hidden bg-green-50 border border-green-200 rounded-xl p-3 text-xs text-green-700"></div>
+          <div id="email-error" class="hidden bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-700"></div>
+
+        </div>
+
+        <div class="px-5 pb-5 flex gap-2 justify-end border-t border-gray-100 pt-4">
+          <button onclick="closeTitularModal()" class="px-4 py-2 text-sm text-gray-500 hover:text-gray-700">Cerrar</button>
+          <button id="btn-enviar-email" onclick="enviarEmailTitular()"
+            class="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition">
+            ✉ Enviar solicitud
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { supabase } from '../../lib/supabase.ts';
+
+    let allSocios = [];
+    let pendingAction = null;
+    let currentBeneficiarioId = null;
+
+    async function init() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { window.location.href = '/socios/login'; return; }
+      const { data: socio } = await supabase.from('socios').select('nombre, apellidos, rol').eq('id', user.id).single();
+      if (!socio || socio.rol !== 'admin') {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('access-denied').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('admin-name').textContent = socio.nombre + ' ' + socio.apellidos;
+      await loadSocios();
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('admin-content').classList.remove('hidden');
+    }
+
+    async function loadSocios() {
+      const { data } = await supabase.from('socios').select('*').order('created_at', { ascending: false });
+      allSocios = data || [];
+      renderStats();
+      renderPendientes();
+      renderTabla();
+    }
+
+    function renderStats() {
+      document.getElementById('stat-total').textContent = allSocios.length;
+      document.getElementById('stat-pendientes').textContent = allSocios.filter(s => !s.activo && s.rol !== 'rechazado').length;
+      document.getElementById('stat-activos').textContent = allSocios.filter(s => s.activo).length;
+      document.getElementById('stat-rechazados').textContent = allSocios.filter(s => s.rol === 'rechazado').length;
+      document.getElementById('badge-pendientes').textContent = allSocios.filter(s => !s.activo && s.rol !== 'rechazado').length;
+    }
+
+    function renderPendientes() {
+      const pendientes = allSocios.filter(s => !s.activo && s.rol !== 'rechazado' && s.rol !== 'admin');
+      const container = document.getElementById('lista-pendientes');
+      const noMsg = document.getElementById('no-pendientes');
+      if (pendientes.length === 0) { noMsg.classList.remove('hidden'); return; }
+      noMsg.classList.add('hidden');
+      container.innerHTML = pendientes.map(s => `
+        <div class="px-4 py-3 flex items-start justify-between gap-3 border-b border-gray-50 last:border-0">
+          <div class="flex items-start gap-3 min-w-0">
+            <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-xs flex-shrink-0">
+              ${s.nombre?.[0]||'?'}${s.apellidos?.[0]||''}
+            </div>
+            <div class="min-w-0">
+              <div class="flex items-center gap-1 flex-wrap">
+                <p class="font-semibold text-gray-800 text-sm">${s.nombre} ${s.apellidos}</p>
+                ${s.vinculacion === 'beneficiario' ? '<span class="bg-purple-100 text-purple-700 text-xs px-1.5 py-0.5 rounded-full">Benef.</span>' : ''}
+              </div>
+              <p class="text-xs text-gray-400 truncate">${s.email}</p>
+              <p class="text-xs text-gray-400">${vinculacionLabel(s.vinculacion)}</p>
+            </div>
+          </div>
+          <div class="flex gap-1.5 flex-shrink-0 flex-wrap justify-end">
+            ${s.vinculacion === 'beneficiario' && s.titular_dni ? `
+              <button onclick="verTitular('${s.id}')" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-medium px-2.5 py-1.5 rounded-lg transition">👤 Titular</button>` : ''}
+            <button onclick="confirmarAccion('aprobar','${s.id}','${s.nombre} ${s.apellidos}')" class="bg-green-500 hover:bg-green-600 text-white text-xs font-medium px-2.5 py-1.5 rounded-lg transition">✓</button>
+            <button onclick="confirmarAccion('rechazar','${s.id}','${s.nombre} ${s.apellidos}')" class="bg-red-100 hover:bg-red-200 text-red-700 text-xs font-medium px-2.5 py-1.5 rounded-lg transition">✕</button>
+          </div>
+        </div>`).join('');
+    }
+
+    function renderTabla(filtro = '', estado = '') {
+      let socios = allSocios;
+      if (filtro) {
+        const q = filtro.toLowerCase();
+        socios = socios.filter(s => s.nombre?.toLowerCase().includes(q) || s.apellidos?.toLowerCase().includes(q) || s.email?.toLowerCase().includes(q) || s.dni?.toLowerCase().includes(q));
+      }
+      if (estado === 'pendiente') socios = socios.filter(s => !s.activo && s.rol !== 'rechazado');
+      if (estado === 'activo') socios = socios.filter(s => s.activo);
+      if (estado === 'rechazado') socios = socios.filter(s => s.rol === 'rechazado');
+
+      const tbody = document.getElementById('tabla-socios');
+      if (!socios.length) { tbody.innerHTML = '<tr><td colspan="5" class="px-4 py-6 text-center text-gray-400 text-sm">Sin resultados</td></tr>'; return; }
+
+      tbody.innerHTML = socios.map(s => {
+        const badge = s.activo ? '<span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">Activo</span>'
+          : s.rol === 'rechazado' ? '<span class="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full">Rechazado</span>'
+          : s.rol === 'admin' ? '<span class="bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded-full">Admin</span>'
+          : '<span class="bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded-full">Pendiente</span>';
+
+        const acciones = s.rol === 'admin' ? '—' : `
+          <div class="flex gap-2 flex-wrap">
+            ${s.vinculacion === 'beneficiario' && s.titular_dni ? `<button onclick="verTitular('${s.id}')" class="text-xs text-blue-600 hover:underline">Titular</button>` : ''}
+            ${s.activo
+              ? `<button onclick="confirmarAccion('rechazar','${s.id}','${s.nombre} ${s.apellidos}')" class="text-xs text-red-500 hover:underline">Rechazar</button>`
+              : s.rol === 'rechazado'
+              ? `<button onclick="confirmarAccion('aprobar','${s.id}','${s.nombre} ${s.apellidos}')" class="text-xs text-green-600 hover:underline">Aprobar</button>`
+              : `<button onclick="confirmarAccion('aprobar','${s.id}','${s.nombre} ${s.apellidos}')" class="text-xs text-green-600 hover:underline">Aprobar</button>
+                 <button onclick="confirmarAccion('rechazar','${s.id}','${s.nombre} ${s.apellidos}')" class="text-xs text-red-500 hover:underline">Rechazar</button>`}
+          </div>`;
+
+        return `<tr class="hover:bg-gray-50">
+          <td class="px-4 py-3">
+            <p class="text-sm font-medium text-gray-800">${s.nombre} ${s.apellidos}</p>
+            <p class="text-xs text-gray-400">${s.email}</p>
+          </td>
+          <td class="px-4 py-3 text-xs text-gray-500 hidden md:table-cell">${s.dni||'—'}</td>
+          <td class="px-4 py-3 text-xs text-gray-500 hidden md:table-cell">${vinculacionLabel(s.vinculacion)}</td>
+          <td class="px-4 py-3">${badge}</td>
+          <td class="px-4 py-3">${acciones}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    function vinculacionLabel(v) {
+      return {empleado:'👔 Empleado',jubilado:'🏖️ Jubilado',beneficiario:'👨‍👩‍👧 Beneficiario',empleado_lasoci:'🏢 LaSoci'}[v] || v || '—';
+    }
+
+    window.verTitular = async function(id) {
+      currentBeneficiarioId = id;
+      const b = allSocios.find(s => s.id === id);
+      if (!b) return;
+      document.getElementById('modal-benef-nombre').textContent = b.nombre + ' ' + b.apellidos;
+      document.getElementById('modal-benef-email').textContent = '📧 ' + b.email;
+      document.getElementById('modal-benef-dni').textContent = '🪪 ' + b.dni;
+      document.getElementById('iban-tipo-info').classList.toggle('hidden', b.iban_tipo !== 'titular');
+      if (b.iban_tipo === 'titular') document.getElementById('iban-tipo-texto').textContent = '💳 El beneficiario solicitó usar el IBAN del titular.';
+      document.getElementById('email-success').classList.add('hidden');
+      document.getElementById('email-error').classList.add('hidden');
+      document.getElementById('titular-info-container').classList.remove('hidden');
+      document.getElementById('titular-no-encontrado').classList.add('hidden');
+      const btn = document.getElementById('btn-enviar-email');
+      btn.textContent = '✉ Enviar solicitud';
+      btn.disabled = false;
+
+      const { data: t } = await supabase.from('socios').select('nombre, apellidos, email, telefono, iban').eq('dni', b.titular_dni).single();
+      if (!t) {
+        document.getElementById('titular-info-container').classList.add('hidden');
+        document.getElementById('titular-no-encontrado').classList.remove('hidden');
+      } else {
+        document.getElementById('modal-titular-nombre').textContent = '👤 ' + t.nombre + ' ' + t.apellidos;
+        document.getElementById('modal-titular-email').textContent = '📧 ' + (t.email || 'Sin email');
+        document.getElementById('modal-titular-telefono').textContent = '📱 ' + (t.telefono || 'Sin teléfono');
+        if (t.iban) {
+          document.getElementById('modal-titular-iban').textContent = t.iban.match(/.{1,4}/g)?.join(' ') || t.iban;
+          document.getElementById('modal-titular-iban-section').classList.remove('hidden');
+          document.getElementById('modal-sin-iban').classList.add('hidden');
+        } else {
+          document.getElementById('modal-titular-iban-section').classList.add('hidden');
+          document.getElementById('modal-sin-iban').classList.remove('hidden');
+        }
+      }
+      document.getElementById('modal-titular').classList.remove('hidden');
+    };
+
+    window.closeTitularModal = function() {
+      document.getElementById('modal-titular').classList.add('hidden');
+      currentBeneficiarioId = null;
+    };
+
+    window.enviarEmailTitular = async function() {
+      if (!currentBeneficiarioId) return;
+      const btn = document.getElementById('btn-enviar-email');
+      const ok = document.getElementById('email-success');
+      const err = document.getElementById('email-error');
+      ok.classList.add('hidden'); err.classList.add('hidden');
+      btn.textContent = 'Enviando...'; btn.disabled = true;
+      const res = await fetch('/api/notificar-titular', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({beneficiario_id: currentBeneficiarioId}) });
+      const result = await res.json();
+      if (result.ok) {
+        ok.textContent = '✓ Email enviado al administrador con los datos del titular.';
+        ok.classList.remove('hidden');
+        btn.textContent = '✓ Enviado';
+      } else {
+        err.textContent = '✗ ' + result.error;
+        err.classList.remove('hidden');
+        btn.textContent = '✉ Enviar solicitud'; btn.disabled = false;
+      }
+    };
+
+    window.confirmarAccion = function(accion, id, nombre) {
+      pendingAction = { accion, id };
+      const isAprobar = accion === 'aprobar';
+      document.getElementById('modal-title').textContent = isAprobar ? 'Aprobar socio' : 'Rechazar socio';
+      document.getElementById('modal-msg').textContent = `¿${isAprobar ? 'Aprobar' : 'Rechazar'} a ${nombre}?`;
+      const btn = document.getElementById('modal-confirm-btn');
+      btn.textContent = isAprobar ? 'Aprobar' : 'Rechazar';
+      btn.className = `px-5 py-2 text-sm text-white font-semibold rounded-xl transition ${isAprobar ? 'bg-green-500 hover:bg-green-600' : 'bg-red-500 hover:bg-red-600'}`;
+      btn.onclick = ejecutarAccion;
+      document.getElementById('modal-confirm').classList.remove('hidden');
+    };
+
+    window.closeModal = function() { document.getElementById('modal-confirm').classList.add('hidden'); pendingAction = null; };
+
+    async function ejecutarAccion() {
+      if (!pendingAction) return;
+      const { accion, id } = pendingAction;
+      closeModal();
+      await supabase.from('socios').update(accion === 'aprobar' ? {activo:true, rol:'asociado'} : {activo:false, rol:'rechazado'}).eq('id', id);
+      await loadSocios();
+    }
+
+    document.getElementById('search-input').addEventListener('input', e => renderTabla(e.target.value, document.getElementById('filter-estado').value));
+    document.getElementById('filter-estado').addEventListener('change', e => renderTabla(document.getElementById('search-input').value, e.target.value));
+    document.getElementById('btn-logout').addEventListener('click', async () => { await supabase.auth.signOut(); window.location.href = '/socios/login'; });
+
+    init();
+  </script>
+</Layout>

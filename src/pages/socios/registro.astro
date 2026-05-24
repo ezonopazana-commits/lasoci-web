@@ -6,7 +6,6 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
 <Layout title="Registrar-se — la Soci">
 
-  <!-- SECURITY BANNER -->
   <div class="bg-orange-500 text-white py-2 px-4 flex items-center justify-center gap-2 text-sm font-medium">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
@@ -17,7 +16,6 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   <div class="min-h-screen bg-gray-50 py-10 px-4">
     <div class="max-w-5xl mx-auto">
 
-      <!-- Title -->
       <div class="text-center mb-8">
         <a href="/"><span class="text-3xl font-bold text-orange-500">la</span><span class="text-3xl font-bold text-blue-900">Soci</span></a>
         <h1 class="text-2xl font-bold text-gray-800 mt-3" id="reg-title">Registra't</h1>
@@ -25,21 +23,18 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
       <div class="flex gap-8 items-start">
 
-        <!-- SIDEBAR STEPS -->
         <div class="hidden md:block w-64 bg-white rounded-2xl shadow-sm p-6 sticky top-24">
           <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4" id="sidebar-title">Procés de registre</h2>
           <div class="space-y-3" id="steps-sidebar"></div>
         </div>
 
-        <!-- FORM AREA -->
         <div class="flex-1">
 
-          <!-- Progress bar -->
           <div class="h-1.5 bg-gray-200 rounded-full mb-6 overflow-hidden">
             <div id="progress-bar" class="h-full bg-orange-500 rounded-full transition-all duration-500" style="width: 20%"></div>
           </div>
 
-          <!-- STEP 1: Dades de contacte -->
+          <!-- STEP 1 -->
           <div id="step-1" class="step-panel bg-white rounded-2xl shadow-sm p-8">
             <div class="flex items-start gap-4 mb-6 pb-6 border-b border-gray-100">
               <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
@@ -52,21 +47,17 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                 <p class="text-sm text-gray-500" id="s1-sub">Les farem servir per enviar-te informació necessària</p>
               </div>
             </div>
-
             <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex gap-3">
               <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
               <p class="text-sm text-amber-700" id="s1-info">Els demanem perquè puguis recuperar el procés en qualsevol moment</p>
             </div>
-
             <div class="space-y-5">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-email">Correu electrònic *</label>
-                  <input type="email" id="email" required
-                    class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors"
-                    placeholder="nom@caixabank.com" />
+                  <input type="email" id="email" required class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors" placeholder="nom@caixabank.com" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-telefon">Mòbil</label>
@@ -74,13 +65,10 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                     <div class="flex items-center gap-1 border-2 border-orange-300 rounded-xl px-3 py-3 bg-white text-sm">
                       <span>🇪🇸</span><span class="text-gray-600">+34</span>
                     </div>
-                    <input type="tel" id="telefon"
-                      class="form-input flex-1 px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors"
-                      placeholder="666 000 000" />
+                    <input type="tel" id="telefon" class="form-input flex-1 px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors" placeholder="666 000 000" />
                   </div>
                 </div>
               </div>
-
               <div class="flex items-start gap-3 pt-2">
                 <input type="checkbox" id="rgpd" class="mt-0.5 w-5 h-5 accent-orange-500 cursor-pointer flex-shrink-0" />
                 <label for="rgpd" class="text-sm text-gray-600 cursor-pointer">
@@ -89,19 +77,15 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                 </label>
               </div>
             </div>
-
             <div class="mt-8 flex justify-end">
-              <button type="button" onclick="nextStep(1)" id="btn-next-1"
-                class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
+              <button type="button" onclick="nextStep(1)" class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
                 <span id="btn-continuar-1">Continuar</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
               </button>
             </div>
           </div>
 
-          <!-- STEP 2: Dades personals -->
+          <!-- STEP 2 -->
           <div id="step-2" class="step-panel hidden bg-white rounded-2xl shadow-sm p-8">
             <div class="flex items-start gap-4 mb-6 pb-6 border-b border-gray-100">
               <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
@@ -114,35 +98,25 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                 <p class="text-sm text-gray-500" id="s2-sub">Comprova que la informació és correcta</p>
               </div>
             </div>
-
             <div class="space-y-5">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-nombre">Nom *</label>
-                  <input type="text" id="nombre" required
-                    class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors"
-                    placeholder="Joan" />
+                  <input type="text" id="nombre" required class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors" placeholder="Joan" />
                 </div>
                 <div>
                   <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-apellidos">Cognoms *</label>
-                  <input type="text" id="apellidos" required
-                    class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors"
-                    placeholder="Garcia López" />
+                  <input type="text" id="apellidos" required class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors" placeholder="Garcia López" />
                 </div>
               </div>
-
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-dni">DNI *</label>
-                <input type="text" id="dni" required maxlength="9"
-                  class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm uppercase transition-colors"
-                  placeholder="12345678A" />
+                <input type="text" id="dni" required maxlength="9" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm uppercase transition-colors" placeholder="12345678A" />
                 <p id="dni-error" class="text-red-500 text-xs mt-1 hidden"></p>
               </div>
-
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-vinculacion">Vinculació *</label>
-                <select id="vinculacion" required
-                  class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm bg-white transition-colors">
+                <select id="vinculacion" required class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm bg-white transition-colors">
                   <option value="" id="opt-select">-- Selecciona --</option>
                   <option value="empleado" id="opt-empleado">Empleat/da CaixaBank</option>
                   <option value="jubilado" id="opt-jubilado">Jubilat/da CaixaBank</option>
@@ -150,14 +124,10 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                   <option value="empleado_lasoci" id="opt-empleado-lasoci">Empleat/da LaSoci</option>
                 </select>
               </div>
-
-              <!-- BENEFICIARIO: buscar titular -->
               <div id="titular-section" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3">
                 <p class="text-sm font-medium text-blue-800" id="label-buscar-titular">Busca el teu titular</p>
                 <div class="relative">
-                  <input type="text" id="buscar-titular"
-                    class="form-input w-full px-3 py-2.5 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors"
-                    placeholder="Escriu cognoms o nom..." />
+                  <input type="text" id="buscar-titular" class="form-input w-full px-3 py-2.5 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors" placeholder="Escriu cognoms o nom..." />
                   <div id="titular-resultados" class="absolute z-10 w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-1 hidden max-h-48 overflow-y-auto"></div>
                 </div>
                 <div id="titular-selected" class="hidden bg-white border border-green-300 rounded-xl p-3">
@@ -172,26 +142,19 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                 <input type="hidden" id="titular-dni" />
               </div>
             </div>
-
             <div class="mt-8 flex justify-between">
-              <button type="button" onclick="prevStep(2)"
-                class="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-medium px-4 py-3 rounded-xl transition text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
+              <button type="button" onclick="prevStep(2)" class="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-medium px-4 py-3 rounded-xl transition text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                 <span id="btn-anterior-2">Anterior</span>
               </button>
-              <button type="button" onclick="nextStep(2)"
-                class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
+              <button type="button" onclick="nextStep(2)" class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
                 <span id="btn-continuar-2">Continuar</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
               </button>
             </div>
           </div>
 
-          <!-- STEP 3: Dades bancàries -->
+          <!-- STEP 3 -->
           <div id="step-3" class="step-panel hidden bg-white rounded-2xl shadow-sm p-8">
             <div class="flex items-start gap-4 mb-6 pb-6 border-b border-gray-100">
               <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
@@ -204,9 +167,45 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                 <p class="text-sm text-gray-500" id="s3-sub">Per gestionar la quota de soci (opcional)</p>
               </div>
             </div>
-
             <div class="space-y-5">
-              <div>
+
+              <!-- Selector tipo IBAN — solo para beneficiarios -->
+              <div id="iban-tipo-section" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-3">
+                <p class="text-sm font-semibold text-blue-800" id="label-iban-tipo">¿Qué cuenta usarás para la domiciliación?</p>
+                <div class="space-y-2">
+                  <label class="flex items-center gap-3 cursor-pointer p-3 bg-white rounded-xl border-2 border-transparent hover:border-orange-300 transition">
+                    <input type="radio" name="iban_tipo" value="propio" checked class="accent-orange-500 w-4 h-4" id="radio-iban-propio" />
+                    <div>
+                      <p class="text-sm font-medium text-gray-800" id="opt-iban-propio-title">Mi propio IBAN</p>
+                      <p class="text-xs text-gray-500" id="opt-iban-propio-sub">Introduce tu número de cuenta bancaria</p>
+                    </div>
+                  </label>
+                  <label class="flex items-center gap-3 cursor-pointer p-3 bg-white rounded-xl border-2 border-transparent hover:border-orange-300 transition">
+                    <input type="radio" name="iban_tipo" value="titular" class="accent-orange-500 w-4 h-4" id="radio-iban-titular" />
+                    <div>
+                      <p class="text-sm font-medium text-gray-800" id="opt-iban-titular-title">IBAN del titular (empleado/jubilado)</p>
+                      <p class="text-xs text-gray-500" id="opt-iban-titular-sub">Se usará el IBAN registrado del titular</p>
+                    </div>
+                  </label>
+                </div>
+                <!-- Info IBAN del titular -->
+                <div id="info-iban-titular" class="hidden bg-green-50 border border-green-200 rounded-xl p-3 space-y-1">
+                  <p class="text-xs font-semibold text-green-800" id="info-titular-nombre-label">Titular:</p>
+                  <p class="text-sm font-bold text-green-900" id="info-titular-nombre-val">—</p>
+                  <p class="text-xs font-semibold text-green-800 mt-2" id="info-titular-iban-label">IBAN:</p>
+                  <p class="text-sm font-mono text-green-900" id="info-titular-iban-val">—</p>
+                </div>
+                <!-- Aviso si titular no tiene IBAN -->
+                <div id="aviso-sin-iban" class="hidden bg-amber-50 border border-amber-200 rounded-xl p-3 flex gap-2">
+                  <svg class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <p class="text-xs text-amber-700" id="aviso-sin-iban-text">El titular no tiene IBAN registrado. El administrador se pondrá en contacto con él para solicitarlo.</p>
+                </div>
+              </div>
+
+              <!-- Campo IBAN propio -->
+              <div id="iban-field-section">
                 <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-iban">IBAN</label>
                 <input type="text" id="iban" maxlength="34"
                   class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm uppercase tracking-wider transition-colors"
@@ -217,33 +216,25 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-idioma">Idioma preferit</label>
-                <select id="idioma"
-                  class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm bg-white transition-colors">
+                <select id="idioma" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm bg-white transition-colors">
                   <option value="es">🇪🇸 Español</option>
                   <option value="ca">🏴󠁥󠁳󠁣󠁴󠁿 Català</option>
                 </select>
               </div>
             </div>
-
             <div class="mt-8 flex justify-between">
-              <button type="button" onclick="prevStep(3)"
-                class="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-medium px-4 py-3 rounded-xl transition text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
+              <button type="button" onclick="prevStep(3)" class="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-medium px-4 py-3 rounded-xl transition text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                 <span id="btn-anterior-3">Anterior</span>
               </button>
-              <button type="button" onclick="nextStep(3)"
-                class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
+              <button type="button" onclick="nextStep(3)" class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
                 <span id="btn-continuar-3">Continuar</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                </svg>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
               </button>
             </div>
           </div>
 
-          <!-- STEP 4: Contrasenya -->
+          <!-- STEP 4 -->
           <div id="step-4" class="step-panel hidden bg-white rounded-2xl shadow-sm p-8">
             <div class="flex items-start gap-4 mb-6 pb-6 border-b border-gray-100">
               <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
@@ -256,14 +247,11 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                 <p class="text-sm text-gray-500" id="s4-sub">Mínim 8 caràcters</p>
               </div>
             </div>
-
             <div class="space-y-5">
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-pwd">Contrasenya *</label>
                 <div class="relative">
-                  <input type="password" id="password" required minlength="8"
-                    class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm pr-12 transition-colors"
-                    placeholder="Mínim 8 caràcters" />
+                  <input type="password" id="password" required minlength="8" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm pr-12 transition-colors" placeholder="Mínim 8 caràcters" />
                   <button type="button" id="toggle-pwd" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -274,30 +262,20 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-pwd2">Repetir contrasenya *</label>
-                <input type="password" id="password2" required
-                  class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors"
-                  placeholder="••••••••" />
+                <input type="password" id="password2" required class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors" placeholder="••••••••" />
                 <p id="pwd-error" class="text-red-500 text-xs mt-1 hidden"></p>
               </div>
             </div>
-
             <div class="mt-8 flex justify-between">
-              <button type="button" onclick="prevStep(4)"
-                class="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-medium px-4 py-3 rounded-xl transition text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
+              <button type="button" onclick="prevStep(4)" class="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-medium px-4 py-3 rounded-xl transition text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                 <span id="btn-anterior-4">Anterior</span>
               </button>
-              <button type="button" onclick="submitForm()"
-                class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
+              <button type="button" onclick="submitForm()" class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
                 <span id="btn-crear">Crear compte</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                </svg>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
               </button>
             </div>
-
             <div id="reg-error" class="hidden mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm"></div>
             <div id="reg-success" class="hidden mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm"></div>
           </div>
@@ -322,15 +300,10 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
             <h3 class="font-bold text-lg" id="modal-title">Informació bàsica sobre protecció de dades</h3>
           </div>
           <button onclick="closePrivacy()" class="text-blue-200 hover:text-white ml-4">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         </div>
         <div class="bg-amber-50 border-b border-amber-200 px-6 py-3 flex items-center gap-2 flex-shrink-0">
-          <svg class="w-4 h-4 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/>
-          </svg>
           <p class="text-sm text-amber-700" id="modal-warning">Has d'arribar al final del document i prémer Acceptar</p>
         </div>
         <div id="privacy-content" class="overflow-y-auto flex-1 p-8 text-sm text-gray-700 leading-relaxed" onscroll="checkScroll()">
@@ -339,49 +312,31 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
           <p class="mb-4">Identitat: la Soci — Associació del Personal de CaixaBank</p>
           <p class="font-semibold mb-2">Per què i per a què tractem les seves dades?</p>
           <p class="mb-4">L'associació tracta les seves dades personals amb les finalitats següents:</p>
-          <p class="font-semibold mb-2 uppercase text-xs tracking-wide text-gray-500">Finalitat de naturalesa contractual i obligació legal:</p>
           <ul class="list-disc pl-5 mb-4 space-y-2">
             <li>Gestionar la seva condició de soci/sòcia, incloent-hi el cobrament de quotes i la prestació de serveis associatius.</li>
             <li>Complir les obligacions legals aplicables a les associacions sense ànim de lucre.</li>
             <li>Enviar comunicacions relacionades amb les activitats, seccions i esdeveniments de l'associació.</li>
           </ul>
-          <p class="font-semibold mb-2 uppercase text-xs tracking-wide text-gray-500">Finalitats basades en interès legítim:</p>
-          <ul class="list-disc pl-5 mb-4 space-y-2">
-            <li>Mantenir actualitzada la seva informació com a associat/da.</li>
-            <li>Millorar els serveis i activitats oferts per l'associació.</li>
-            <li>Gestionar consultes i sol·licituds realitzades pels socis.</li>
-          </ul>
           <p class="font-semibold mb-2">Quant de temps conservarem les seves dades?</p>
           <p class="mb-4">Les seves dades es conservaran mentre mantingui la condició de soci/sòcia i, posteriorment, durant els terminis legalment establerts.</p>
-          <p class="font-semibold mb-2">A qui comunicarem les seves dades?</p>
-          <p class="mb-4">Les seves dades no es cediran a tercers, excepte en els casos previstos legalment o quan sigui necessari per a la prestació dels serveis associatius.</p>
           <p class="font-semibold mb-2">Quins són els seus drets?</p>
           <ul class="list-disc pl-5 mb-4 space-y-2">
-            <li>Dret d'accés: obtenir confirmació sobre si tractem les seves dades.</li>
-            <li>Dret de rectificació: sol·licitar la correcció de dades inexactes.</li>
-            <li>Dret de supressió: sol·licitar l'eliminació de les seves dades.</li>
-            <li>Dret d'oposició: oposar-se al tractament de les seves dades.</li>
-            <li>Dret de portabilitat: rebre les seves dades en format estructurat.</li>
+            <li>Dret d'accés, rectificació, supressió, oposició i portabilitat.</li>
+            <li>Per exercir els seus drets, pot contactar amb nosaltres a través de la secció de contacte de la web.</li>
           </ul>
-          <p class="mb-4">Per exercir els seus drets, pot contactar amb nosaltres a través de la secció de contacte de la web.</p>
           <p class="font-semibold mb-2">Dret a presentar una reclamació</p>
-          <p class="mb-8">Té dret a presentar una reclamació davant l'Agència Espanyola de Protecció de Dades (www.aepd.es) si considera que el tractament de les seves dades no s'ajusta a la normativa vigent.</p>
+          <p class="mb-8">Té dret a presentar una reclamació davant l'Agència Espanyola de Protecció de Dades (www.aepd.es).</p>
           <div class="h-4"></div>
         </div>
         <div class="px-6 py-4 border-t border-gray-100 flex justify-center flex-shrink-0">
-          <button id="btn-accept-privacy" onclick="acceptPrivacy()" disabled
-            class="bg-gray-300 text-gray-500 font-semibold px-10 py-3 rounded-xl transition text-sm cursor-not-allowed">
-            Acceptar
-          </button>
+          <button id="btn-accept-privacy" onclick="acceptPrivacy()" disabled class="bg-gray-300 text-gray-500 font-semibold px-10 py-3 rounded-xl transition text-sm cursor-not-allowed">Acceptar</button>
         </div>
       </div>
     </div>
   </div>
 
   <button id="scroll-btn" onclick="scrollPrivacy()" class="fixed bottom-8 right-8 z-50 hidden w-12 h-12 bg-orange-500 hover:bg-orange-600 text-white rounded-full shadow-lg flex items-center justify-center transition">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-    </svg>
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
   </button>
 
   <script define:vars={{ supabaseUrl, supabaseKey }}>
@@ -395,78 +350,74 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
     const T = {
       es: {
-        banner: 'Estás en un entorno 100% seguro',
-        sidebar_title: 'Proceso de registro',
-        steps: ['Datos de contacto', 'Datos personales', 'Datos bancarios', 'Contraseña'],
-        reg_title: 'Regístrate',
-        s1_title: 'Datos de contacto', s1_sub: 'Los usaremos para enviarte información necesaria',
-        s1_info: 'Te los pedimos para que puedas recuperar el proceso en cualquier momento',
-        s2_title: 'Datos personales', s2_sub: 'Comprueba que la información es correcta',
-        s3_title: 'Datos bancarios', s3_sub: 'Para gestionar la cuota de socio (opcional)',
-        s4_title: 'Crea tu contraseña', s4_sub: 'Mínimo 8 caracteres',
-        label_email: 'Correo electrónico *', label_telefon: 'Móvil',
-        label_nombre: 'Nombre *', label_apellidos: 'Apellidos *', label_dni: 'DNI *',
-        label_vinculacion: 'Vinculación *', label_buscar_titular: 'Busca tu titular (Empleado o Jubilado)',
-        opt_select: '-- Selecciona --', opt_empleado: 'Empleado/a CaixaBank',
-        opt_jubilado: 'Jubilado/a CaixaBank', opt_beneficiario: 'Beneficiario/a',
-        opt_empleado_lasoci: 'Empleado/a LaSoci',
-        label_iban: 'IBAN', label_idioma: 'Idioma preferido',
-        label_pwd: 'Contraseña *', label_pwd2: 'Repetir contraseña *',
-        btn_continuar: 'Continuar', btn_anterior: 'Anterior', btn_crear: 'Crear cuenta',
-        ya_socio: '¿Ya tienes cuenta?', link_login: 'Inicia sesión',
-        rgpd_text: 'Afirmo que he leído y acepto la ',
-        rgpd_link: 'información básica sobre protección de datos',
-        modal_title: 'Información básica sobre protección de datos',
-        modal_warning: 'Debes llegar al final del documento y pulsar en Aceptar',
-        privacy_heading: 'INFORMACIÓN BÁSICA SOBRE PROTECCIÓN DE DATOS',
-        btn_accept: 'Aceptar',
-        err_rgpd: 'Debes aceptar la política de protección de datos',
-        err_pwd: 'Las contraseñas no coinciden',
-        err_dni: 'DNI inválido',
-        err_titular: 'Debes seleccionar un titular para el beneficiario',
-        err_iban: 'IBAN inválido',
-        err_generic: 'Error al registrarse. Inténtalo de nuevo.',
-        success: '¡Cuenta creada! Revisa tu correo para confirmarla.',
-        iban_ok: '✓ IBAN válido',
-        loading: 'Creando cuenta...',
-        buscar_placeholder: 'Escribe apellidos o nombre...',
+        banner:'Estás en un entorno 100% seguro', sidebar_title:'Proceso de registro',
+        steps:['Datos de contacto','Datos personales','Datos bancarios','Contraseña'],
+        reg_title:'Regístrate', s1_title:'Datos de contacto', s1_sub:'Los usaremos para enviarte información necesaria',
+        s1_info:'Te los pedimos para que puedas recuperar el proceso en cualquier momento',
+        s2_title:'Datos personales', s2_sub:'Comprueba que la información es correcta',
+        s3_title:'Datos bancarios', s3_sub:'Para gestionar la cuota de socio (opcional)',
+        s4_title:'Crea tu contraseña', s4_sub:'Mínimo 8 caracteres',
+        label_email:'Correo electrónico *', label_telefon:'Móvil',
+        label_nombre:'Nombre *', label_apellidos:'Apellidos *', label_dni:'DNI *',
+        label_vinculacion:'Vinculación *', label_buscar_titular:'Busca tu titular (Empleado o Jubilado)',
+        opt_select:'-- Selecciona --', opt_empleado:'Empleado/a CaixaBank',
+        opt_jubilado:'Jubilado/a CaixaBank', opt_beneficiario:'Beneficiario/a',
+        opt_empleado_lasoci:'Empleado/a LaSoci',
+        label_iban:'IBAN', label_idioma:'Idioma preferido',
+        label_iban_tipo:'¿Qué cuenta usarás para la domiciliación?',
+        opt_iban_propio_title:'Mi propio IBAN', opt_iban_propio_sub:'Introduce tu número de cuenta bancaria',
+        opt_iban_titular_title:'IBAN del titular (empleado/jubilado)', opt_iban_titular_sub:'Se usará el IBAN registrado del titular',
+        aviso_sin_iban:'El titular no tiene IBAN registrado. El administrador se pondrá en contacto con él.',
+        info_titular_nombre_label:'Titular:', info_titular_iban_label:'IBAN:',
+        label_pwd:'Contraseña *', label_pwd2:'Repetir contraseña *',
+        btn_continuar:'Continuar', btn_anterior:'Anterior', btn_crear:'Crear cuenta',
+        ya_socio:'¿Ya tienes cuenta?', link_login:'Inicia sesión',
+        rgpd_text:'Afirmo que he leído y acepto la ',
+        modal_title:'Información básica sobre protección de datos',
+        modal_warning:'Debes llegar al final del documento y pulsar en Aceptar',
+        privacy_heading:'INFORMACIÓN BÁSICA SOBRE PROTECCIÓN DE DATOS',
+        btn_accept:'Aceptar',
+        err_rgpd:'Debes aceptar la política de protección de datos',
+        err_pwd:'Las contraseñas no coinciden', err_dni:'DNI inválido',
+        err_titular:'Debes seleccionar un titular para el beneficiario',
+        err_iban:'IBAN inválido', err_generic:'Error al registrarse. Inténtalo de nuevo.',
+        success:'¡Cuenta creada! Revisa tu correo para confirmarla.',
+        iban_ok:'✓ IBAN válido', loading:'Creando cuenta...', buscar_placeholder:'Escribe apellidos o nombre...',
       },
       ca: {
-        banner: "Estàs en un entorn 100% segur",
-        sidebar_title: 'Procés de registre',
-        steps: ['Dades de contacte', 'Dades personals', 'Dades bancàries', 'Contrasenya'],
-        reg_title: "Registra't",
-        s1_title: 'Dades de contacte', s1_sub: "Les farem servir per enviar-te informació necessària",
-        s1_info: "Els demanem perquè puguis recuperar el procés en qualsevol moment",
-        s2_title: 'Dades personals', s2_sub: 'Comprova que la informació és correcta',
-        s3_title: 'Dades bancàries', s3_sub: 'Per gestionar la quota de soci (opcional)',
-        s4_title: 'Crea la teva contrasenya', s4_sub: 'Mínim 8 caràcters',
-        label_email: 'Correu electrònic *', label_telefon: 'Mòbil',
-        label_nombre: 'Nom *', label_apellidos: 'Cognoms *', label_dni: 'DNI *',
-        label_vinculacion: 'Vinculació *', label_buscar_titular: 'Busca el teu titular (Empleat o Jubilat)',
-        opt_select: '-- Selecciona --', opt_empleado: 'Empleat/da CaixaBank',
-        opt_jubilado: 'Jubilat/da CaixaBank', opt_beneficiario: 'Beneficiari/a',
-        opt_empleado_lasoci: 'Empleat/da LaSoci',
-        label_iban: 'IBAN', label_idioma: 'Idioma preferit',
-        label_pwd: 'Contrasenya *', label_pwd2: 'Repetir contrasenya *',
-        btn_continuar: 'Continuar', btn_anterior: 'Anterior', btn_crear: 'Crear compte',
-        ya_socio: 'Ja tens compte?', link_login: 'Inicia sessió',
-        rgpd_text: 'Afirmo que he llegit i accepto la ',
-        rgpd_link: 'informació bàsica sobre protecció de dades',
-        modal_title: 'Informació bàsica sobre protecció de dades',
-        modal_warning: "Has d'arribar al final del document i prémer Acceptar",
-        privacy_heading: 'INFORMACIÓ BÀSICA SOBRE PROTECCIÓ DE DADES',
-        btn_accept: 'Acceptar',
-        err_rgpd: "Has d'acceptar la política de protecció de dades",
-        err_pwd: 'Les contrasenyes no coincideixen',
-        err_dni: 'DNI invàlid',
-        err_titular: 'Has de seleccionar un titular per al beneficiari',
-        err_iban: 'IBAN invàlid',
-        err_generic: "Error en registrar-se. Torna-ho a intentar.",
-        success: 'Compte creat! Revisa el teu correu per confirmar-lo.',
-        iban_ok: '✓ IBAN vàlid',
-        loading: 'Creant compte...',
-        buscar_placeholder: 'Escriu cognoms o nom...',
+        banner:"Estàs en un entorn 100% segur", sidebar_title:'Procés de registre',
+        steps:['Dades de contacte','Dades personals','Dades bancàries','Contrasenya'],
+        reg_title:"Registra't", s1_title:'Dades de contacte', s1_sub:"Les farem servir per enviar-te informació necessària",
+        s1_info:"Els demanem perquè puguis recuperar el procés en qualsevol moment",
+        s2_title:'Dades personals', s2_sub:'Comprova que la informació és correcta',
+        s3_title:'Dades bancàries', s3_sub:'Per gestionar la quota de soci (opcional)',
+        s4_title:'Crea la teva contrasenya', s4_sub:'Mínim 8 caràcters',
+        label_email:'Correu electrònic *', label_telefon:'Mòbil',
+        label_nombre:'Nom *', label_apellidos:'Cognoms *', label_dni:'DNI *',
+        label_vinculacion:'Vinculació *', label_buscar_titular:'Busca el teu titular (Empleat o Jubilat)',
+        opt_select:'-- Selecciona --', opt_empleado:'Empleat/da CaixaBank',
+        opt_jubilado:'Jubilat/da CaixaBank', opt_beneficiario:'Beneficiari/a',
+        opt_empleado_lasoci:'Empleat/da LaSoci',
+        label_iban:'IBAN', label_idioma:'Idioma preferit',
+        label_iban_tipo:'Quina compte faràs servir per a la domiciliació?',
+        opt_iban_propio_title:'El meu propi IBAN', opt_iban_propio_sub:'Introdueix el teu número de compte bancari',
+        opt_iban_titular_title:'IBAN del titular (empleat/jubilat)', opt_iban_titular_sub:"S'utilitzarà l'IBAN registrat del titular",
+        aviso_sin_iban:"El titular no té IBAN registrat. L'administrador es posarà en contacte amb ell.",
+        info_titular_nombre_label:'Titular:', info_titular_iban_label:'IBAN:',
+        label_pwd:'Contrasenya *', label_pwd2:'Repetir contrasenya *',
+        btn_continuar:'Continuar', btn_anterior:'Anterior', btn_crear:'Crear compte',
+        ya_socio:'Ja tens compte?', link_login:'Inicia sessió',
+        rgpd_text:'Afirmo que he llegit i accepto la ',
+        modal_title:'Informació bàsica sobre protecció de dades',
+        modal_warning:"Has d'arribar al final del document i prémer Acceptar",
+        privacy_heading:'INFORMACIÓ BÀSICA SOBRE PROTECCIÓ DE DADES',
+        btn_accept:'Acceptar',
+        err_rgpd:"Has d'acceptar la política de protecció de dades",
+        err_pwd:'Les contrasenyes no coincideixen', err_dni:'DNI invàlid',
+        err_titular:'Has de seleccionar un titular per al beneficiari',
+        err_iban:'IBAN invàlid', err_generic:"Error en registrar-se. Torna-ho a intentar.",
+        success:'Compte creat! Revisa el teu correu per confirmar-lo.',
+        iban_ok:'✓ IBAN vàlid', loading:'Creant compte...', buscar_placeholder:'Escriu cognoms o nom...',
       }
     };
 
@@ -474,54 +425,40 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     const totalSteps = 4;
     let privacyAccepted = false;
     let privacyScrolled = false;
+    let titularIban = null;
 
     function getLang() { return localStorage.getItem('lasoci_lang') || 'es'; }
 
     function applyLang(lang) {
       const t = T[lang] || T.es;
-      document.getElementById('banner-text').textContent = t.banner;
-      document.getElementById('sidebar-title').textContent = t.sidebar_title;
-      document.getElementById('reg-title').textContent = t.reg_title;
-      document.getElementById('s1-title').textContent = t.s1_title;
-      document.getElementById('s1-sub').textContent = t.s1_sub;
-      document.getElementById('s1-info').textContent = t.s1_info;
-      document.getElementById('s2-title').textContent = t.s2_title;
-      document.getElementById('s2-sub').textContent = t.s2_sub;
-      document.getElementById('s3-title').textContent = t.s3_title;
-      document.getElementById('s3-sub').textContent = t.s3_sub;
-      document.getElementById('s4-title').textContent = t.s4_title;
-      document.getElementById('s4-sub').textContent = t.s4_sub;
-      document.getElementById('label-email').textContent = t.label_email;
-      document.getElementById('label-telefon').textContent = t.label_telefon;
-      document.getElementById('label-nombre').textContent = t.label_nombre;
-      document.getElementById('label-apellidos').textContent = t.label_apellidos;
-      document.getElementById('label-dni').textContent = t.label_dni;
-      document.getElementById('label-vinculacion').textContent = t.label_vinculacion;
-      document.getElementById('label-buscar-titular').textContent = t.label_buscar_titular;
-      document.getElementById('opt-select').textContent = t.opt_select;
-      document.getElementById('opt-empleado').textContent = t.opt_empleado;
-      document.getElementById('opt-jubilado').textContent = t.opt_jubilado;
-      document.getElementById('opt-beneficiario').textContent = t.opt_beneficiario;
-      document.getElementById('opt-empleado-lasoci').textContent = t.opt_empleado_lasoci;
-      document.getElementById('label-iban').textContent = t.label_iban;
-      document.getElementById('label-idioma').textContent = t.label_idioma;
-      document.getElementById('label-pwd').textContent = t.label_pwd;
-      document.getElementById('label-pwd2').textContent = t.label_pwd2;
-      document.getElementById('btn-continuar-1').textContent = t.btn_continuar;
-      document.getElementById('btn-continuar-2').textContent = t.btn_continuar;
-      document.getElementById('btn-continuar-3').textContent = t.btn_continuar;
-      document.getElementById('btn-anterior-2').textContent = t.btn_anterior;
-      document.getElementById('btn-anterior-3').textContent = t.btn_anterior;
-      document.getElementById('btn-anterior-4').textContent = t.btn_anterior;
-      document.getElementById('btn-crear').textContent = t.btn_crear;
-      document.getElementById('ya-socio').textContent = t.ya_socio;
-      document.getElementById('link-login').textContent = t.link_login;
-      document.getElementById('rgpd-text').textContent = t.rgpd_text;
-      document.getElementById('open-privacy').textContent = t.rgpd_link;
-      document.getElementById('modal-title').textContent = t.modal_title;
-      document.getElementById('modal-warning').textContent = t.modal_warning;
-      document.getElementById('privacy-heading').textContent = t.privacy_heading;
-      document.getElementById('btn-accept-privacy').textContent = t.btn_accept;
+      const ids = {
+        'banner-text': t.banner, 'sidebar-title': t.sidebar_title,
+        'reg-title': t.reg_title, 's1-title': t.s1_title, 's1-sub': t.s1_sub, 's1-info': t.s1_info,
+        's2-title': t.s2_title, 's2-sub': t.s2_sub, 's3-title': t.s3_title, 's3-sub': t.s3_sub,
+        's4-title': t.s4_title, 's4-sub': t.s4_sub,
+        'label-email': t.label_email, 'label-telefon': t.label_telefon,
+        'label-nombre': t.label_nombre, 'label-apellidos': t.label_apellidos, 'label-dni': t.label_dni,
+        'label-vinculacion': t.label_vinculacion, 'label-buscar-titular': t.label_buscar_titular,
+        'opt-select': t.opt_select, 'opt-empleado': t.opt_empleado, 'opt-jubilado': t.opt_jubilado,
+        'opt-beneficiario': t.opt_beneficiario, 'opt-empleado-lasoci': t.opt_empleado_lasoci,
+        'label-iban': t.label_iban, 'label-idioma': t.label_idioma,
+        'label-iban-tipo': t.label_iban_tipo,
+        'opt-iban-propio-title': t.opt_iban_propio_title, 'opt-iban-propio-sub': t.opt_iban_propio_sub,
+        'opt-iban-titular-title': t.opt_iban_titular_title, 'opt-iban-titular-sub': t.opt_iban_titular_sub,
+        'aviso-sin-iban-text': t.aviso_sin_iban,
+        'info-titular-nombre-label': t.info_titular_nombre_label, 'info-titular-iban-label': t.info_titular_iban_label,
+        'label-pwd': t.label_pwd, 'label-pwd2': t.label_pwd2,
+        'btn-continuar-1': t.btn_continuar, 'btn-continuar-2': t.btn_continuar, 'btn-continuar-3': t.btn_continuar,
+        'btn-anterior-2': t.btn_anterior, 'btn-anterior-3': t.btn_anterior, 'btn-anterior-4': t.btn_anterior,
+        'btn-crear': t.btn_crear, 'ya-socio': t.ya_socio, 'link-login': t.link_login,
+        'rgpd-text': t.rgpd_text, 'open-privacy': 'informació bàsica sobre protecció de dades',
+        'modal-title': t.modal_title, 'modal-warning': t.modal_warning,
+        'privacy-heading': t.privacy_heading, 'btn-accept-privacy': t.btn_accept,
+      };
+      Object.entries(ids).forEach(([id, val]) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = val;
+      });
       document.getElementById('buscar-titular').placeholder = t.buscar_placeholder;
       renderSidebar(lang);
     }
@@ -535,7 +472,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         const isDone = step < currentStep;
         return `
           <div class="flex items-center gap-3 py-2">
-            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 transition-all
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0
               ${isDone ? 'bg-green-500 text-white' : isActive ? 'bg-orange-500 text-white' : 'border-2 border-gray-200 text-gray-400'}">
               ${isDone ? '✓' : step}
             </div>
@@ -546,16 +483,12 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       }).join('');
     }
 
-    function updateProgress() {
-      const pct = (currentStep / totalSteps) * 100;
-      document.getElementById('progress-bar').style.width = pct + '%';
-    }
-
     function showStep(step) {
       document.querySelectorAll('.step-panel').forEach(p => p.classList.add('hidden'));
       document.getElementById('step-' + step).classList.remove('hidden');
       currentStep = step;
-      updateProgress();
+      const pct = (step / totalSteps) * 100;
+      document.getElementById('progress-bar').style.width = pct + '%';
       renderSidebar(getLang());
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -563,8 +496,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     window.nextStep = function(from) {
       const t = T[getLang()] || T.es;
       if (from === 1) {
-        const email = document.getElementById('email').value.trim();
-        if (!email) { alert(t.label_email); return; }
+        if (!document.getElementById('email').value.trim()) { alert(t.label_email); return; }
         if (!privacyAccepted) { alert(t.err_rgpd); return; }
       }
       if (from === 2) {
@@ -575,12 +507,49 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         if (!nombre || !apellidos || !dni) return;
         if (!validateDNI(dni)) { document.getElementById('dni-error').textContent = t.err_dni; document.getElementById('dni-error').classList.remove('hidden'); return; }
         if (vinculacion === 'beneficiario' && !document.getElementById('titular-dni').value) { alert(t.err_titular); return; }
+        // Mostrar/ocultar selector IBAN tipo en step 3
+        document.getElementById('iban-tipo-section').classList.toggle('hidden', vinculacion !== 'beneficiario');
+        if (vinculacion !== 'beneficiario') {
+          document.getElementById('radio-iban-propio').checked = true;
+          document.getElementById('iban-field-section').classList.remove('hidden');
+          document.getElementById('info-iban-titular').classList.add('hidden');
+          document.getElementById('aviso-sin-iban').classList.add('hidden');
+        }
       }
       showStep(from + 1);
     };
 
     window.prevStep = function(from) { showStep(from - 1); };
 
+    // ── IBAN tipo selector ──
+    document.querySelectorAll('input[name="iban_tipo"]').forEach(radio => {
+      radio.addEventListener('change', async (e) => {
+        const esTitular = e.target.value === 'titular';
+        document.getElementById('iban-field-section').classList.toggle('hidden', esTitular);
+        document.getElementById('info-iban-titular').classList.add('hidden');
+        document.getElementById('aviso-sin-iban').classList.add('hidden');
+        titularIban = null;
+
+        if (esTitular) {
+          const titularDni = document.getElementById('titular-dni').value;
+          if (titularDni) {
+            const { data } = await db.from('socios').select('nombre, apellidos, iban').eq('dni', titularDni).single();
+            if (data) {
+              if (data.iban) {
+                titularIban = data.iban;
+                document.getElementById('info-titular-nombre-val').textContent = data.nombre + ' ' + data.apellidos;
+                document.getElementById('info-titular-iban-val').textContent = data.iban.match(/.{1,4}/g)?.join(' ') || data.iban;
+                document.getElementById('info-iban-titular').classList.remove('hidden');
+              } else {
+                document.getElementById('aviso-sin-iban').classList.remove('hidden');
+              }
+            }
+          }
+        }
+      });
+    });
+
+    // ── Privacy ──
     document.getElementById('open-privacy').addEventListener('click', () => {
       document.getElementById('privacy-modal').classList.remove('hidden');
       document.getElementById('scroll-btn').classList.remove('hidden');
@@ -588,59 +557,42 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       document.getElementById('btn-accept-privacy').disabled = true;
       document.getElementById('btn-accept-privacy').className = 'bg-gray-300 text-gray-500 font-semibold px-10 py-3 rounded-xl transition text-sm cursor-not-allowed';
     });
-
     window.closePrivacy = function() {
       document.getElementById('privacy-modal').classList.add('hidden');
       document.getElementById('scroll-btn').classList.add('hidden');
     };
-
     window.checkScroll = function() {
       const el = document.getElementById('privacy-content');
-      const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 50;
-      if (atBottom && !privacyScrolled) {
+      if (el.scrollHeight - el.scrollTop - el.clientHeight < 50 && !privacyScrolled) {
         privacyScrolled = true;
         const btn = document.getElementById('btn-accept-privacy');
         btn.disabled = false;
         btn.className = 'bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-3 rounded-xl transition text-sm cursor-pointer';
       }
     };
-
-    window.scrollPrivacy = function() {
-      document.getElementById('privacy-content').scrollBy({ top: 300, behavior: 'smooth' });
-    };
-
-    window.acceptPrivacy = function() {
-      privacyAccepted = true;
-      document.getElementById('rgpd').checked = true;
-      closePrivacy();
-    };
-
+    window.scrollPrivacy = function() { document.getElementById('privacy-content').scrollBy({ top: 300, behavior: 'smooth' }); };
+    window.acceptPrivacy = function() { privacyAccepted = true; document.getElementById('rgpd').checked = true; closePrivacy(); };
     document.getElementById('rgpd').addEventListener('change', (e) => {
-      if (e.target.checked && !privacyAccepted) {
-        e.target.checked = false;
-        document.getElementById('open-privacy').click();
-      } else if (!e.target.checked) {
-        privacyAccepted = false;
-      }
+      if (e.target.checked && !privacyAccepted) { e.target.checked = false; document.getElementById('open-privacy').click(); }
+      else if (!e.target.checked) privacyAccepted = false;
     });
 
+    // ── DNI ──
     function validateDNI(dni) {
       const clean = dni.toUpperCase().trim();
       if (!/^\d{8}[A-Z]$/.test(clean)) return false;
-      const letters = 'TRWAGMYFPDXBNJZSQVHLCKE';
-      return clean[8] === letters[parseInt(clean.substring(0, 8)) % 23];
+      return clean[8] === 'TRWAGMYFPDXBNJZSQVHLCKE'[parseInt(clean.substring(0, 8)) % 23];
     }
-
     document.getElementById('dni').addEventListener('input', (e) => {
       e.target.value = e.target.value.toUpperCase();
       const err = document.getElementById('dni-error');
-      const t = T[getLang()] || T.es;
       if (e.target.value.length === 9) {
-        if (!validateDNI(e.target.value)) { err.textContent = t.err_dni; err.classList.remove('hidden'); }
-        else { err.classList.add('hidden'); }
-      } else { err.classList.add('hidden'); }
+        if (!validateDNI(e.target.value)) { err.textContent = T[getLang()].err_dni; err.classList.remove('hidden'); }
+        else err.classList.add('hidden');
+      } else err.classList.add('hidden');
     });
 
+    // ── IBAN ──
     function validateIBAN(iban) {
       const clean = iban.toUpperCase().replace(/\s/g, '');
       if (!/^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/.test(clean)) return false;
@@ -651,7 +603,6 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       for (const digit of numeric) remainder = (remainder * 10 + parseInt(digit)) % 97;
       return remainder === 1;
     }
-
     document.getElementById('iban').addEventListener('input', (e) => {
       const raw = e.target.value.toUpperCase().replace(/\s/g, '');
       e.target.value = raw.match(/.{1,4}/g)?.join(' ') || raw;
@@ -664,23 +615,26 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       } else { err.classList.add('hidden'); ok.classList.add('hidden'); }
     });
 
+    // ── Toggle password ──
     document.getElementById('toggle-pwd').addEventListener('click', () => {
       const p = document.getElementById('password');
       p.type = p.type === 'password' ? 'text' : 'password';
     });
 
+    // ── Vinculación ──
     document.getElementById('vinculacion').addEventListener('change', () => {
       const val = document.getElementById('vinculacion').value;
       document.getElementById('titular-section').classList.toggle('hidden', val !== 'beneficiario');
       if (val !== 'beneficiario') clearTitular();
     });
 
+    // ── Buscar titular ──
     window.clearTitular = function() {
       document.getElementById('titular-dni').value = '';
       document.getElementById('titular-selected').classList.add('hidden');
       document.getElementById('buscar-titular').value = '';
+      titularIban = null;
     };
-
     let searchTimeout;
     document.getElementById('buscar-titular').addEventListener('input', (e) => {
       clearTimeout(searchTimeout);
@@ -688,7 +642,6 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       if (q.length < 2) { document.getElementById('titular-resultados').classList.add('hidden'); return; }
       searchTimeout = setTimeout(() => buscarTitular(q), 300);
     });
-
     async function buscarTitular(q) {
       const { data } = await db.from('socios').select('dni, nombre, apellidos, vinculacion')
         .eq('activo', true).in('vinculacion', ['empleado', 'jubilado'])
@@ -706,7 +659,6 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       }
       container.classList.remove('hidden');
     }
-
     window.selectTitular = function(dni, nombre, vinculacion) {
       document.getElementById('titular-dni').value = dni;
       document.getElementById('titular-nombre').textContent = nombre;
@@ -714,8 +666,15 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       document.getElementById('titular-selected').classList.remove('hidden');
       document.getElementById('titular-resultados').classList.add('hidden');
       document.getElementById('buscar-titular').value = '';
+      // Reset iban tipo si cambia el titular
+      document.getElementById('radio-iban-propio').checked = true;
+      document.getElementById('iban-field-section').classList.remove('hidden');
+      document.getElementById('info-iban-titular').classList.add('hidden');
+      document.getElementById('aviso-sin-iban').classList.add('hidden');
+      titularIban = null;
     };
 
+    // ── Submit ──
     window.submitForm = async function() {
       const lang = getLang();
       const t = T[lang] || T.es;
@@ -741,8 +700,16 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       const titular_dni = document.getElementById('titular-dni').value || null;
       const email = document.getElementById('email').value.trim();
       const telefon = document.getElementById('telefon').value.trim();
-      const iban_raw = document.getElementById('iban').value.replace(/\s/g, '').toUpperCase();
       const idioma = document.getElementById('idioma').value;
+      const iban_tipo = document.querySelector('input[name="iban_tipo"]:checked')?.value || 'propio';
+      let iban_raw = document.getElementById('iban').value.replace(/\s/g, '').toUpperCase();
+
+      // Si eligió IBAN del titular, usar el IBAN del titular
+      if (iban_tipo === 'titular' && titularIban) {
+        iban_raw = titularIban;
+      } else if (iban_tipo === 'titular' && !titularIban) {
+        iban_raw = null;
+      }
 
       const { data, error } = await db.auth.signUp({
         email, password: pwd,
@@ -760,7 +727,14 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         const res = await fetch('/api/registro', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: data.user.id, email, nombre, apellidos, dni, telefono: telefon || null, iban: iban_raw || null, vinculacion, titular_dni: titular_dni || null })
+          body: JSON.stringify({
+            id: data.user.id, email, nombre, apellidos, dni,
+            telefono: telefon || null,
+            iban: iban_raw || null,
+            vinculacion,
+            titular_dni,
+            iban_tipo
+          })
         });
         const result = await res.json();
         if (!result.ok) {
@@ -777,6 +751,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       btn.textContent = t.btn_crear;
     };
 
+    // ── Init ──
     const lang = getLang();
     document.getElementById('idioma').value = lang;
     applyLang(lang);
