@@ -161,8 +161,14 @@ const { title, lang = 'es' } = Astro.props;
     <footer class="bg-gray-900 text-gray-400 py-10 px-6 mt-0">
       <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
         <div>
-          <div class="text-orange-400 font-bold text-lg mb-2">la Soci</div>
-          <p>Associació del Personal de CaixaBank</p>
+          <div class="text-white font-bold text-2xl mb-3" style="font-family:serif;letter-spacing:-1px;">la<span style="font-size:1.4em;vertical-align:middle;">S</span>OCI</div>
+          <p class="text-sm mb-3">Somos la Asociación de todos los trabajadores y trabajadoras de CaixaBank y la Fundación "la Caixa" y sus familias.</p>
+          <p class="text-xs text-gray-500 mb-4">Todo un mundo de actividades, servicios y ventajas exclusivos.</p>
+          <ul class="space-y-1 text-xs">
+            <li><a href="/aviso-legal" class="hover:text-white transition">Aviso legal</a></li>
+            <li><a href="/privacidad" class="hover:text-white transition">Política de privacidad</a></li>
+            <li><a href="/cookies" class="hover:text-white transition">Política de cookies</a></li>
+          </ul>
         </div>
         <div>
           <div class="text-white font-semibold mb-2" data-i18n="footer_links">Enllaços</div>
