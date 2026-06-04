@@ -36,9 +36,9 @@ import Layout from '../../layouts/Layout.astro';
     <div class="flex flex-wrap items-center gap-3">
       <!-- Tipo -->
       <select id="sel-tipo" class="filtro-select">
-        <option value="">⚽🎭 Todos los tipos</option>
-        <option value="deportiva">⚽ Deportivas</option>
-        <option value="cultural">🎭 Culturales</option>
+        <option value="">Todos los tipos</option>
+        <option value="deportiva">Deportivas</option>
+        <option value="cultural">Culturales</option>
       </select>
 
       <!-- Provincia (dinámico) -->
@@ -100,19 +100,13 @@ import Layout from '../../layouts/Layout.astro';
     // Poblar provincias dinámicas
     const provincias = [...new Set(todasSecciones.map(s => s.provincia).filter(Boolean))].sort();
     const selProv = document.getElementById('sel-provincia');
-    provincias.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p; opt.textContent = '📍 ' + p;
-      selProv.appendChild(opt);
-    });
+    selProv.innerHTML = '<option value="">Todas las provincias</option>' +
+      provincias.map(p => `<option value="${p}">${p}</option>`).join('');
 
     // Poblar nombres dinámicos
     const selNombre = document.getElementById('sel-nombre');
-    todasSecciones.forEach(s => {
-      const opt = document.createElement('option');
-      opt.value = s.id; opt.textContent = s.nombre;
-      selNombre.appendChild(opt);
-    });
+    selNombre.innerHTML = '<option value="">Todas las secciones</option>' +
+      todasSecciones.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('');
 
     renderGrid();
   }
