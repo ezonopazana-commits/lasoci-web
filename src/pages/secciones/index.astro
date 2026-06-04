@@ -100,13 +100,20 @@ import Layout from '../../layouts/Layout.astro';
     // Poblar provincias dinámicas
     const provincias = [...new Set(todasSecciones.map(s => s.provincia).filter(Boolean))].sort();
     const selProv = document.getElementById('sel-provincia');
-    selProv.innerHTML = '<option value="">Todas las provincias</option>' +
-      provincias.map(p => `<option value="${p}">${p}</option>`).join('');
+    provincias.forEach(p => {
+      const o = document.createElement('option');
+      o.value = p;
+      o.textContent = p;
+      selProv.appendChild(o);
+    });
 
-    // Poblar nombres dinámicos
     const selNombre = document.getElementById('sel-nombre');
-    selNombre.innerHTML = '<option value="">Todas las secciones</option>' +
-      todasSecciones.map(s => `<option value="${s.id}">${s.nombre}</option>`).join('');
+    todasSecciones.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s.id;
+      o.textContent = s.nombre;
+      selNombre.appendChild(o);
+    });
 
     renderGrid();
   }
