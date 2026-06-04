@@ -115,6 +115,7 @@ import Layout from '../../layouts/Layout.astro';
       selNombre.appendChild(o);
     });
 
+    actualizarOpciones();
     renderGrid();
   }
 
@@ -162,16 +163,101 @@ import Layout from '../../layouts/Layout.astro';
     }).join('');
   }
 
-  document.getElementById('sel-tipo').addEventListener('change', function() { filtroTipo = this.value; renderGrid(); });
-  document.getElementById('sel-provincia').addEventListener('change', function() { filtroProv = this.value; renderGrid(); });
-  document.getElementById('sel-nombre').addEventListener('change', function() { filtroNombre = this.value; renderGrid(); });
-  document.getElementById('search-seccion').addEventListener('input', function() { busqueda = this.value.toLowerCase(); renderGrid(); });
+  function actualizarOpciones() {
+    // Calcular secciones visibles con los filtros actuales
+    const visibles = todasSecciones.filter(s => {
+      const mt = !filtroTipo   || s.tipo === filtroTipo;
+      const mp = !filtroProv   || s.provincia === filtroProv;
+      const mn = !filtroNombre || s.id === filtroNombre;
+      const mb = !busqueda     || s.nombre.toLowerCase().includes(busqueda);
+      return mt && mp && mn && mb;
+    });
+
+    // Provincias disponibles (sin filtro de provincia activo)
+    const sinFiltProv = todasSecciones.filter(s => {
+      const mt = !filtroTipo   || s.tipo === filtroTipo;
+      const mn = !filtroNombre || s.id === filtroNombre;
+      const mb = !busqueda     || s.nombre.toLowerCase().includes(busqueda);
+      return mt && mn && mb;
+    });
+    const provDisp = [...new Set(sinFiltProv.map(s => s.provincia).filter(Boolean))].sort();
+
+    // Secciones disponibles (sin filtro de nombre activo)
+    const sinFiltNombre = todasSecciones.filter(s => {
+      const mt = !filtroTipo || s.tipo === filtroTipo;
+      const mp = !filtroProv || s.provincia === filtroProv;
+      const mb = !busqueda   || s.nombre.toLowerCase().includes(busqueda);
+      return mt && mp && mb;
+    });
+
+    // Tipos disponibles (sin filtro de tipo activo)
+    const sinFiltTipo = todasSecciones.filter(s => {
+      const mp = !filtroProv   || s.provincia === filtroProv;
+      const mn = !filtroNombre || s.id === filtroNombre;
+      const mb = !busqueda     || s.nombre.toLowerCase().includes(busqueda);
+      return mp && mn && mb;
+    });
+    const tiposDisp = [...new Set(sinFiltTipo.map(s => s.tipo).filter(Boolean))];
+
+    // Actualizar select tipo
+    const selTipo = document.getElementById('sel-tipo');
+    const tipoActual = selTipo.value;
+    selTipo.innerHTML = '<option value="">Todos los tipos</option>';
+    ['deportiva','cultural'].forEach(t => {
+      const o = document.createElement('option');
+      o.value = t;
+      o.textContent = t === 'deportiva' ? 'Deportivas' : 'Culturales';
+      o.disabled = !tiposDisp.includes(t);
+      if (o.disabled) o.style.color = 'rgba(255,255,255,0.3)';
+      selTipo.appendChild(o);
+    });
+    selTipo.value = tipoActual;
+
+    // Actualizar select provincia
+    const selProv = document.getElementById('sel-provincia');
+    const provActual = selProv.value;
+    selProv.innerHTML = '<option value="">Todas las provincias</option>';
+    provDisp.forEach(p => {
+      const o = document.createElement('option');
+      o.value = p; o.textContent = p;
+      selProv.appendChild(o);
+    });
+    // Si la provincia actual ya no está disponible, resetear
+    if (provActual && !provDisp.includes(provActual)) {
+      filtroProv = '';
+    } else {
+      selProv.value = provActual;
+    }
+
+    // Actualizar select nombre/sección
+    const selNombre = document.getElementById('sel-nombre');
+    const nombreActual = selNombre.value;
+    selNombre.innerHTML = '<option value="">Todas las secciones</option>';
+    sinFiltNombre.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s.id; o.textContent = s.nombre;
+      selNombre.appendChild(o);
+    });
+    if (nombreActual && !sinFiltNombre.find(s => s.id === nombreActual)) {
+      filtroNombre = '';
+    } else {
+      selNombre.value = nombreActual;
+    }
+  }
+
+  function aplicarFiltro() {
+    actualizarOpciones();
+    renderGrid();
+  }
+
+  document.getElementById('sel-tipo').addEventListener('change', function() { filtroTipo = this.value; aplicarFiltro(); });
+  document.getElementById('sel-provincia').addEventListener('change', function() { filtroProv = this.value; aplicarFiltro(); });
+  document.getElementById('sel-nombre').addEventListener('change', function() { filtroNombre = this.value; aplicarFiltro(); });
+  document.getElementById('search-seccion').addEventListener('input', function() { busqueda = this.value.toLowerCase(); aplicarFiltro(); });
   document.getElementById('btn-reset').addEventListener('click', function() {
     filtroTipo = ''; filtroProv = ''; filtroNombre = ''; busqueda = '';
-    document.getElementById('sel-tipo').value = '';
-    document.getElementById('sel-provincia').value = '';
-    document.getElementById('sel-nombre').value = '';
     document.getElementById('search-seccion').value = '';
+    actualizarOpciones();
     renderGrid();
   });
 
