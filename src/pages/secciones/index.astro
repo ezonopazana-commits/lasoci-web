@@ -7,46 +7,58 @@ import Layout from '../../layouts/Layout.astro';
 <style>
   .seccion-row { transition: background .15s, transform .1s; }
   .seccion-row:hover { background: #f0f7ff; transform: translateX(2px); }
-  .filtro-pill { transition: all .15s; cursor: pointer; }
-  .filtro-pill.activo { background: white; color: #1e3a8a; font-weight: 700; }
-  .filtro-pill:not(.activo) { background: rgba(255,255,255,0.15); color: white; }
-  .filtro-pill:not(.activo):hover { background: rgba(255,255,255,0.25); }
+  .filtro-select {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    border-radius: 10px;
+    padding: 7px 32px 7px 12px;
+    font-size: 13px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    cursor: pointer;
+    transition: background .15s;
+    min-width: 140px;
+  }
+  .filtro-select:focus { outline: none; background-color: rgba(255,255,255,0.22); }
+  .filtro-select option { background: #1e3a8a; color: white; }
 </style>
 
-<!-- Hero con filtros integrados -->
+<!-- Hero con filtros desplegables -->
 <div class="bg-gradient-to-br from-blue-950 to-blue-800 text-white px-6 pt-8 pb-6">
   <div class="max-w-5xl mx-auto">
     <p class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-1">Secciones</p>
     <h1 class="text-3xl font-bold mb-5">Nuestras secciones</h1>
 
-    <!-- Filtros en una línea -->
     <div class="flex flex-wrap items-center gap-3">
-
       <!-- Tipo -->
-      <div class="flex gap-1.5" id="filtros-tipo">
-        <button data-tipo="" class="filtro-pill activo text-xs px-3 py-1.5 rounded-full border border-white/30">Todas</button>
-        <button data-tipo="deportiva" class="filtro-pill text-xs px-3 py-1.5 rounded-full border border-white/20">⚽ Deportivas</button>
-        <button data-tipo="cultural" class="filtro-pill text-xs px-3 py-1.5 rounded-full border border-white/20">🎭 Culturales</button>
-      </div>
+      <select id="sel-tipo" class="filtro-select">
+        <option value="">⚽🎭 Todos los tipos</option>
+        <option value="deportiva">⚽ Deportivas</option>
+        <option value="cultural">🎭 Culturales</option>
+      </select>
 
-      <!-- Separador -->
-      <div class="w-px h-6 bg-white/20"></div>
+      <!-- Provincia (dinámico) -->
+      <select id="sel-provincia" class="filtro-select">
+        <option value="">📍 Todas las provincias</option>
+      </select>
 
-      <!-- Provincia -->
-      <div class="flex gap-1.5 flex-wrap" id="filtros-provincia">
-        <button data-provincia="" class="filtro-pill activo text-xs px-3 py-1.5 rounded-full border border-white/30">Todas</button>
-      </div>
+      <!-- Nombre (dinámico) -->
+      <select id="sel-nombre" class="filtro-select">
+        <option value="">📋 Todas las secciones</option>
+      </select>
 
-      <!-- Separador -->
-      <div class="w-px h-6 bg-white/20"></div>
-
-      <!-- Búsqueda -->
+      <!-- Búsqueda rápida -->
       <input id="search-seccion" type="text" placeholder="🔍 Buscar..."
-        class="bg-white/15 border border-white/20 text-white placeholder-white/50 text-xs px-3 py-1.5 rounded-full focus:outline-none focus:bg-white/25 w-36" />
+        class="bg-white/12 border border-white/25 text-white placeholder-white/50 text-sm px-3 py-1.5 rounded-xl focus:outline-none focus:bg-white/22 w-36" />
 
+      <!-- Reset -->
+      <button id="btn-reset" class="text-xs text-white/60 hover:text-white underline">Limpiar filtros</button>
     </div>
 
-    <!-- Contador -->
     <p id="contador" class="text-blue-300 text-xs mt-3"></p>
   </div>
 </div>
@@ -54,9 +66,7 @@ import Layout from '../../layouts/Layout.astro';
 <!-- Grid 2 columnas -->
 <div class="max-w-5xl mx-auto px-4 py-6">
   <div id="grid-secciones" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-    <div class="col-span-2 text-center py-12 text-gray-300">
-      <p>Cargando secciones...</p>
-    </div>
+    <div class="col-span-2 text-center py-12 text-gray-300"><p>Cargando secciones...</p></div>
   </div>
 </div>
 
@@ -70,6 +80,7 @@ import Layout from '../../layouts/Layout.astro';
   let todasSecciones = [];
   let filtroTipo  = '';
   let filtroProv  = '';
+  let filtroNombre = '';
   let busqueda    = '';
 
   async function init() {
@@ -81,21 +92,26 @@ import Layout from '../../layouts/Layout.astro';
 
     todasSecciones = secciones || [];
 
-    // Contar miembros
     const { data: miembros } = await supabase.from('secciones_miembros').select('seccion_id');
     const conteo = {};
     (miembros || []).forEach(m => { conteo[m.seccion_id] = (conteo[m.seccion_id] || 0) + 1; });
     todasSecciones = todasSecciones.map(s => ({ ...s, nMiembros: conteo[s.id] || 0 }));
 
-    // Provincias dinámicas
+    // Poblar provincias dinámicas
     const provincias = [...new Set(todasSecciones.map(s => s.provincia).filter(Boolean))].sort();
-    const wrapProv = document.getElementById('filtros-provincia');
+    const selProv = document.getElementById('sel-provincia');
     provincias.forEach(p => {
-      const btn = document.createElement('button');
-      btn.dataset.provincia = p;
-      btn.className = 'filtro-pill text-xs px-3 py-1.5 rounded-full border border-white/20';
-      btn.textContent = '📍 ' + p;
-      wrapProv.appendChild(btn);
+      const opt = document.createElement('option');
+      opt.value = p; opt.textContent = '📍 ' + p;
+      selProv.appendChild(opt);
+    });
+
+    // Poblar nombres dinámicos
+    const selNombre = document.getElementById('sel-nombre');
+    todasSecciones.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s.id; opt.textContent = s.nombre;
+      selNombre.appendChild(opt);
     });
 
     renderGrid();
@@ -103,10 +119,11 @@ import Layout from '../../layouts/Layout.astro';
 
   function renderGrid() {
     const lista = todasSecciones.filter(s => {
-      const mt = !filtroTipo || s.tipo === filtroTipo;
-      const mp = !filtroProv || s.provincia === filtroProv;
-      const mb = !busqueda  || s.nombre.toLowerCase().includes(busqueda);
-      return mt && mp && mb;
+      const mt = !filtroTipo   || s.tipo === filtroTipo;
+      const mp = !filtroProv   || s.provincia === filtroProv;
+      const mn = !filtroNombre || s.id === filtroNombre;
+      const mb = !busqueda     || s.nombre.toLowerCase().includes(busqueda);
+      return mt && mp && mn && mb;
     });
 
     document.getElementById('contador').textContent = `${lista.length} sección${lista.length !== 1 ? 'es' : ''} encontradas`;
@@ -132,7 +149,7 @@ import Layout from '../../layouts/Layout.astro';
               <h3 class="font-bold text-gray-900 truncate">${s.nombre}</h3>
               ${tipoBadge}
             </div>
-            <div class="flex items-center gap-3 text-xs text-gray-400">
+            <div class="flex items-center gap-3 text-xs text-gray-400 flex-wrap">
               ${s.provincia ? `<span>📍 ${s.provincia}</span>` : ''}
               <span>👥 ${s.nMiembros} miembro${s.nMiembros !== 1 ? 's' : ''}</span>
               ${s.delegado ? `<span>👤 ${s.delegado.nombre} ${s.delegado.apellidos}</span>` : ''}
@@ -144,31 +161,16 @@ import Layout from '../../layouts/Layout.astro';
     }).join('');
   }
 
-  // ── FILTROS TIPO ──
-  document.getElementById('filtros-tipo').addEventListener('click', e => {
-    const btn = e.target.closest('button');
-    if (!btn) return;
-    filtroTipo = btn.dataset.tipo;
-    document.querySelectorAll('#filtros-tipo button').forEach(b => {
-      b.className = `filtro-pill text-xs px-3 py-1.5 rounded-full border ${b.dataset.tipo === filtroTipo ? 'activo border-white/30' : 'border-white/20'}`;
-    });
-    renderGrid();
-  });
-
-  // ── FILTROS PROVINCIA ──
-  document.getElementById('filtros-provincia').addEventListener('click', e => {
-    const btn = e.target.closest('button');
-    if (!btn) return;
-    filtroProv = btn.dataset.provincia;
-    document.querySelectorAll('#filtros-provincia button').forEach(b => {
-      b.className = `filtro-pill text-xs px-3 py-1.5 rounded-full border ${b.dataset.provincia === filtroProv ? 'activo border-white/30' : 'border-white/20'}`;
-    });
-    renderGrid();
-  });
-
-  // ── BÚSQUEDA ──
-  document.getElementById('search-seccion').addEventListener('input', e => {
-    busqueda = e.target.value.toLowerCase();
+  document.getElementById('sel-tipo').addEventListener('change', function() { filtroTipo = this.value; renderGrid(); });
+  document.getElementById('sel-provincia').addEventListener('change', function() { filtroProv = this.value; renderGrid(); });
+  document.getElementById('sel-nombre').addEventListener('change', function() { filtroNombre = this.value; renderGrid(); });
+  document.getElementById('search-seccion').addEventListener('input', function() { busqueda = this.value.toLowerCase(); renderGrid(); });
+  document.getElementById('btn-reset').addEventListener('click', function() {
+    filtroTipo = ''; filtroProv = ''; filtroNombre = ''; busqueda = '';
+    document.getElementById('sel-tipo').value = '';
+    document.getElementById('sel-provincia').value = '';
+    document.getElementById('sel-nombre').value = '';
+    document.getElementById('search-seccion').value = '';
     renderGrid();
   });
 
