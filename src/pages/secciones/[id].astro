@@ -1,0 +1,184 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const { id } = Astro.params;
+---
+
+<Layout title="Sección — la Soci">
+
+<style>
+  .galeria-img { transition: transform .2s, opacity .2s; cursor: pointer; }
+  .galeria-img:hover { transform: scale(1.03); opacity: .9; }
+</style>
+
+<div id="seccion-wrap">
+  <div class="flex items-center justify-center py-24 text-gray-300">
+    <div class="text-center"><div class="text-5xl mb-3">⏳</div><p>Cargando...</p></div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox" class="hidden fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4">
+  <button id="lb-close" class="absolute top-4 right-4 text-white text-3xl hover:text-gray-300">✕</button>
+  <button id="lb-prev" class="absolute left-4 text-white text-4xl hover:text-gray-300">‹</button>
+  <img id="lb-img" src="" class="max-w-full max-h-full rounded-xl object-contain" />
+  <button id="lb-next" class="absolute right-4 text-white text-4xl hover:text-gray-300">›</button>
+</div>
+
+<script>
+  import { createClient } from '@supabase/supabase-js';
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+  );
+
+  let galeriaFotos = [];
+  let lbIdx = 0;
+
+  async function init() {
+    const [
+      { data: s },
+      { data: eventos },
+      { data: galeria },
+      { data: miembros },
+      { data: { user } }
+    ] = await Promise.all([
+      supabase.from('secciones').select('*, delegado:delegado_id(nombre, apellidos, avatar_url)').eq('id', seccionId).single(),
+      supabase.from('eventos').select('id, titulo, fecha_inicio, lugar, precio, imagen_url').eq('seccion_id', seccionId).eq('activo', true).gte('fecha_inicio', new Date().toISOString()).order('fecha_inicio').limit(6),
+      supabase.from('secciones_galeria').select('id, imagen_url, caption').eq('seccion_id', seccionId).order('created_at'),
+      supabase.from('secciones_miembros').select('socio_id').eq('seccion_id', seccionId),
+      supabase.auth.getUser()
+    ]);
+
+    if (!s) {
+      document.getElementById('seccion-wrap').innerHTML = '<p class="text-center text-gray-400 py-24">Sección no encontrada.</p>';
+      return;
+    }
+
+    galeriaFotos = (galeria || []).map(g => g.imagen_url);
+    const nMiembros = miembros?.length || 0;
+    const yaMiembro = user ? miembros?.some(m => m.socio_id === user.id) : false;
+
+    // Botón unirse/salir
+    let btnMiembro = '';
+    if (!user) {
+      btnMiembro = `<a href="/socios/login" class="inline-block bg-blue-900 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-blue-800 transition">Inicia sesión para unirte</a>`;
+    } else if (yaMiembro) {
+      btnMiembro = `<button id="btn-salir" class="bg-gray-100 text-gray-700 px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-red-50 hover:text-red-600 transition">✓ Ya eres miembro · Salir</button>`;
+    } else {
+      btnMiembro = `<button id="btn-unirse" class="bg-blue-900 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-blue-800 transition">+ Unirme a esta sección</button>`;
+    }
+
+    const eventosHtml = eventos?.length
+      ? eventos.map(ev => {
+          const fecha = new Date(ev.fecha_inicio).toLocaleDateString('es-ES', { weekday:'short', day:'numeric', month:'short' });
+          const hora  = new Date(ev.fecha_inicio).toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
+          const precio = ev.precio > 0 ? `${Number(ev.precio).toFixed(2)} €` : 'Gratuito';
+          return `
+            <a href="/agenda/${ev.id}" class="flex gap-4 items-center bg-white border border-gray-100 rounded-xl p-4 hover:border-blue-200 hover:shadow-sm transition group">
+              ${ev.imagen_url ? `<img src="${ev.imagen_url}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0" />` : '<div class="w-16 h-16 rounded-lg bg-blue-50 flex-shrink-0 flex items-center justify-center text-2xl">📅</div>'}
+              <div class="flex-1 min-w-0">
+                <p class="font-semibold text-gray-900 group-hover:text-blue-900 truncate">${ev.titulo}</p>
+                <p class="text-sm text-gray-500">📅 ${fecha} · ${hora}h</p>
+                ${ev.lugar ? `<p class="text-sm text-gray-400">📍 ${ev.lugar}</p>` : ''}
+              </div>
+              <span class="text-sm font-bold ${ev.precio > 0 ? 'text-blue-700' : 'text-green-600'} shrink-0">${precio}</span>
+            </a>`;
+        }).join('')
+      : '<p class="text-gray-400 text-sm">No hay próximos eventos para esta sección.</p>';
+
+    const galeriaHtml = galeria?.length
+      ? `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          ${galeria.map((g, i) => `
+            <div class="galeria-img aspect-square rounded-xl overflow-hidden bg-gray-100" onclick="abrirLightbox(${i})">
+              <img src="${g.imagen_url}" class="w-full h-full object-cover" alt="${g.caption||''}" />
+            </div>`).join('')}
+        </div>`
+      : '<p class="text-gray-400 text-sm">Sin fotos en la galería todavía.</p>';
+
+    document.getElementById('seccion-wrap').innerHTML = `
+      <!-- Hero imagen -->
+      <div class="relative h-72 md:h-96 overflow-hidden">
+        ${s.imagen_url
+          ? `<img src="${s.imagen_url}" class="w-full h-full object-cover" />`
+          : '<div class="w-full h-full bg-gradient-to-br from-blue-900 to-blue-700 flex items-center justify-center text-8xl">🏅</div>'}
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 px-6 pb-8">
+          <a href="/secciones" class="text-white/70 text-sm hover:text-white mb-3 inline-block">← Todas las secciones</a>
+          <h1 class="text-4xl font-bold text-white">${s.nombre}</h1>
+          ${s.provincia ? `<p class="text-blue-200 text-sm mt-1">📍 ${s.provincia}</p>` : ''}
+        </div>
+      </div>
+
+      <div class="max-w-4xl mx-auto px-4 py-10 space-y-12">
+
+        <!-- Info + unirse -->
+        <div class="flex flex-wrap items-start justify-between gap-6">
+          <div class="flex-1 min-w-0">
+            ${s.descripcion ? `<p class="text-gray-600 text-base leading-relaxed">${s.descripcion}</p>` : ''}
+            <p class="text-sm text-gray-400 mt-3">👥 ${nMiembros} miembro${nMiembros !== 1 ? 's' : ''}</p>
+          </div>
+          <div class="flex flex-col items-end gap-3">
+            ${btnMiembro}
+            ${s.delegado ? `
+              <div class="flex items-center gap-2 text-sm text-gray-500">
+                ${s.delegado.avatar_url ? `<img src="${s.delegado.avatar_url}" class="w-8 h-8 rounded-full object-cover" />` : '<div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-700">' + (s.delegado.nombre?.[0]||'?') + '</div>'}
+                <span>Delegado/a: <strong>${s.delegado.nombre} ${s.delegado.apellidos}</strong></span>
+              </div>` : ''}
+          </div>
+        </div>
+
+        <!-- Próximos eventos -->
+        <div>
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Próximos eventos</h2>
+          <div class="space-y-3">${eventosHtml}</div>
+        </div>
+
+        <!-- Galería -->
+        <div>
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Galería de fotos</h2>
+          ${galeriaHtml}
+        </div>
+
+      </div>
+      <div id="msg-miembro" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-sm px-5 py-3 rounded-full shadow-lg z-50"></div>
+    `;
+
+    // Botones unirse/salir
+    document.getElementById('btn-unirse')?.addEventListener('click', async () => {
+      const { error } = await supabase.from('secciones_miembros').insert({ seccion_id: seccionId, socio_id: user.id });
+      mostrarMsg(error ? 'Error: ' + error.message : '✓ ¡Te has unido a la sección!');
+      if (!error) setTimeout(() => location.reload(), 1200);
+    });
+    document.getElementById('btn-salir')?.addEventListener('click', async () => {
+      await supabase.from('secciones_miembros').delete().eq('seccion_id', seccionId).eq('socio_id', user.id);
+      mostrarMsg('Has salido de la sección.');
+      setTimeout(() => location.reload(), 1200);
+    });
+  }
+
+  function mostrarMsg(txt) {
+    const el = document.getElementById('msg-miembro');
+    el.textContent = txt; el.classList.remove('hidden');
+    setTimeout(() => el.classList.add('hidden'), 2500);
+  }
+
+  // Lightbox
+  window.abrirLightbox = function(idx) {
+    lbIdx = idx;
+    document.getElementById('lb-img').src = galeriaFotos[idx];
+    document.getElementById('lightbox').classList.remove('hidden');
+  };
+  document.getElementById('lb-close').addEventListener('click', () => document.getElementById('lightbox').classList.add('hidden'));
+  document.getElementById('lb-prev').addEventListener('click', () => {
+    lbIdx = (lbIdx - 1 + galeriaFotos.length) % galeriaFotos.length;
+    document.getElementById('lb-img').src = galeriaFotos[lbIdx];
+  });
+  document.getElementById('lb-next').addEventListener('click', () => {
+    lbIdx = (lbIdx + 1) % galeriaFotos.length;
+    document.getElementById('lb-img').src = galeriaFotos[lbIdx];
+  });
+
+  init();
+</script>
+
+</Layout>
