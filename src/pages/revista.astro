@@ -7,8 +7,6 @@ import Layout from '../layouts/Layout.astro';
 <style>
   .revista-card { transition: transform .2s, box-shadow .2s; cursor: pointer; }
   .revista-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.15); }
-  .revista-card.activa { ring: 2px solid #1e3a8a; }
-  #visor-wrap { transition: all .3s; }
 </style>
 
 <!-- Hero -->
@@ -16,31 +14,27 @@ import Layout from '../layouts/Layout.astro';
   <div class="max-w-5xl mx-auto">
     <p class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-2">Publicación</p>
     <h1 class="text-4xl font-bold mb-3">Revista la Soci</h1>
-    <p class="text-blue-200 text-base max-w-2xl">Desde 1935, la revista de la Asociación del Personal de "la Caixa". Información sobre actividades, secciones y la vida de nuestra comunidad. Publicación bimestral.</p>
+    <p class="text-blue-200 text-base max-w-2xl">Desde 1935, la revista de la Asociación del Personal de "la Caixa". Publicación bimestral sobre actividades, secciones y la vida de nuestra comunidad.</p>
   </div>
 </div>
 
 <div class="max-w-5xl mx-auto px-4 py-10">
 
-  <!-- Última edición destacada -->
-  <div class="mb-10">
+  <!-- Última edición -->
+  <div id="ultima-edicion" class="mb-10 hidden">
     <h2 class="text-xl font-bold text-gray-900 mb-5">Última edición</h2>
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-      <div class="flex flex-col md:flex-row gap-0">
-        <div class="md:w-48 flex-shrink-0">
-          <img src="https://admin.lasoci.org/documents/butlleti/imgs/612_portada_ES.jpg"
-               alt="Revista 612" class="w-full h-full object-cover" style="min-height:200px;" />
-        </div>
+      <div class="flex flex-col md:flex-row">
+        <div id="ultima-portada" class="md:w-48 flex-shrink-0 bg-gray-100"></div>
         <div class="p-8 flex flex-col justify-between flex-1">
           <div>
             <span class="bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full">Número actual</span>
-            <h3 class="text-2xl font-bold text-gray-900 mt-3 mb-2">Revista n° 612</h3>
-            <p class="text-blue-700 font-medium mb-4">Junio - Julio 2026</p>
+            <h3 id="ultima-titulo" class="text-2xl font-bold text-gray-900 mt-3 mb-2"></h3>
+            <p id="ultima-periodo" class="text-blue-700 font-medium mb-4"></p>
             <p class="text-gray-600 text-sm leading-relaxed">Pocas entidades hay que puedan decir que tienen una revista propia que se edita y no ha dejado de publicar desde 1935. Con los nombres de "Boletín" primero, "Revista" después y "La Soci" actualmente, ha sido y es el medio de comunicación de referencia de la Asociación.</p>
           </div>
           <div class="flex gap-3 mt-6">
-            <button onclick="abrirVisor('https://pubhtml5.com/read/aargq/zpll/index.html', 'Revista n° 612')"
-              class="bg-blue-900 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-blue-800 transition">
+            <button id="btn-leer-ultima" class="bg-blue-900 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-blue-800 transition">
               📖 Leer revista
             </button>
             <a href="mailto:info@lasoci.org" class="border border-gray-200 text-gray-600 px-5 py-2.5 rounded-xl font-medium text-sm hover:bg-gray-50 transition">
@@ -66,56 +60,70 @@ import Layout from '../layouts/Layout.astro';
   <!-- Ediciones anteriores -->
   <div>
     <h2 class="text-xl font-bold text-gray-900 mb-5">Ediciones anteriores</h2>
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" id="grid-revistas">
-
-      {[
-        { num: 611, periodo: 'Abr - May 2026', img: '611_portada_ES.jpg', url: 'https://online.pubhtml5.com/aargq/vbfs/' },
-        { num: 610, periodo: 'Feb - Mar 2026', img: '610_portada_ES.jpg', url: 'https://online.pubhtml5.com/aargq/swab/' },
-        { num: 609, periodo: 'Dic 25 - Ene 26', img: '609_portada_ES.jpg', url: 'https://online.pubhtml5.com/aargq/urys/' },
-        { num: 608, periodo: 'Oct - Nov 2025', img: '608_portada_ES.jpg', url: 'https://online.pubhtml5.com/aargq/zmsd/' },
-        { num: 607, periodo: 'Ago - Sep 2025', img: '607_portada_ES.jpg', url: 'https://pubhtml5.com/aargq/pkab/' },
-        { num: 606, periodo: 'Jun - Jul 2025', img: '606_portada_ES.jpg', url: 'https://online.pubhtml5.com/aargq/jbef/' },
-        { num: 605, periodo: 'Abr - May 2025', img: '605_portada_ES.jpg', url: 'https://online.pubhtml5.com/aargq/clde/' },
-        { num: 604, periodo: 'Feb - Mar 2025', img: '604_portada_ES.jpg', url: 'https://online.pubhtml5.com/aargq/klyk/' },
-        { num: 603, periodo: 'Dic 24 - Ene 25', img: '603_portada_ES.jpg', url: 'https://online.pubhtml5.com/aargq/iemy/' },
-        { num: 602, periodo: 'Oct - Nov 2024', img: '602_portada_ES.jpg', url: 'https://online.pubhtml5.com/aargq/hxfy/' },
-        { num: 601, periodo: 'Ago - Sep 2024', img: '601_ES.jpg', url: 'https://online.pubhtml5.com/aargq/vltc/' },
-        { num: 600, periodo: 'Jun - Jul 2024', img: '600_ES.jpg', url: 'https://online.pubhtml5.com/aargq/mcfl/' },
-      ].map(r => (
-        <div class="revista-card bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden"
-          onclick={`abrirVisor('${r.url}', 'Revista n° ${r.num}')`}>
-          <img src={`https://admin.lasoci.org/documents/butlleti/imgs/${r.img}`}
-               alt={`Revista ${r.num}`} class="w-full object-cover" style="aspect-ratio:3/4;" />
-          <div class="p-3">
-            <p class="font-bold text-gray-900 text-sm">N° {r.num}</p>
-            <p class="text-xs text-gray-400">{r.periodo}</p>
-          </div>
-        </div>
-      ))}
-
-    </div>
-  </div>
-
-  <!-- Otras publicaciones -->
-  <div class="mt-12">
-    <h2 class="text-xl font-bold text-gray-900 mb-5">Otras publicaciones</h2>
-    <div class="flex gap-6">
-      <div class="revista-card bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden w-40"
-        onclick="abrirVisor('https://online.pubhtml5.com/aargq/gozr/', 'Centenario Teatre Barcelona – La Teatral')">
-        <img src="https://www.lasoci.org/wp-content/uploads/2025/04/portada_ES_teatral-212x300.jpg"
-             alt="La Teatral" class="w-full object-cover" style="aspect-ratio:3/4;" />
-        <div class="p-3">
-          <p class="font-bold text-gray-900 text-xs leading-tight">Centenario Teatre Barcelona</p>
-          <p class="text-xs text-gray-400 mt-0.5">La Teatral</p>
-        </div>
-      </div>
+    <div id="grid-revistas" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <div class="col-span-6 text-center py-8 text-gray-300">Cargando...</div>
     </div>
   </div>
 
 </div>
 
 <script>
+  import { createClient } from '@supabase/supabase-js';
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+  );
+
+  const MESES = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+  async function init() {
+    const { data: revistas } = await supabase
+      .from('revista')
+      .select('*')
+      .eq('publicada', true)
+      .order('numero', { ascending: false });
+
+    if (!revistas?.length) {
+      document.getElementById('grid-revistas').innerHTML = '<div class="col-span-6 text-center py-8 text-gray-300">No hay revistas publicadas</div>';
+      return;
+    }
+
+    // Última edición
+    const ultima = revistas[0];
+    const periodo = ultima.mes ? `${MESES[ultima.mes]} ${ultima.anio}` : `${ultima.anio}`;
+    document.getElementById('ultima-titulo').textContent = ultima.titulo || `Revista n° ${ultima.numero}`;
+    document.getElementById('ultima-periodo').textContent = periodo;
+    if (ultima.portada_url) {
+      document.getElementById('ultima-portada').innerHTML = `<img src="${ultima.portada_url}" alt="Portada ${ultima.numero}" class="w-full h-full object-cover" style="min-height:200px;" />`;
+    }
+    document.getElementById('btn-leer-ultima').onclick = () => abrirVisor(ultima.pdf_url, ultima.titulo || `Revista n° ${ultima.numero}`);
+    document.getElementById('ultima-edicion').classList.remove('hidden');
+
+    // Grid anteriores
+    const anteriores = revistas.slice(1);
+    const grid = document.getElementById('grid-revistas');
+    if (!anteriores.length) {
+      grid.innerHTML = '<div class="col-span-6 text-sm text-gray-400">Sin ediciones anteriores</div>';
+      return;
+    }
+    grid.innerHTML = anteriores.map(r => {
+      const per = r.mes ? `${MESES[r.mes]} ${r.anio}` : `${r.anio}`;
+      const img = r.portada_url
+        ? `<img src="${r.portada_url}" alt="Revista ${r.numero}" class="w-full object-cover" style="aspect-ratio:3/4;" />`
+        : `<div class="w-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-3xl font-bold text-blue-400" style="aspect-ratio:3/4;">${r.numero}</div>`;
+      return `
+        <div class="revista-card bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden" onclick="abrirVisor('${r.pdf_url}','${(r.titulo||'Revista n° '+r.numero).replace(/'/g,"\\'")}')">
+          ${img}
+          <div class="p-3">
+            <p class="font-bold text-gray-900 text-sm">N° ${r.numero}</p>
+            <p class="text-xs text-gray-400">${per}</p>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
   window.abrirVisor = function(url, titulo) {
+    if (!url) return;
     document.getElementById('visor-titulo').textContent = titulo;
     document.getElementById('visor-iframe').src = url;
     const wrap = document.getElementById('visor-wrap');
@@ -127,6 +135,8 @@ import Layout from '../layouts/Layout.astro';
     document.getElementById('visor-wrap').classList.add('hidden');
     document.getElementById('visor-iframe').src = '';
   };
+
+  init();
 </script>
 
 </Layout>
