@@ -1,0 +1,141 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const { id } = Astro.params;
+---
+
+<Layout title="Evento — la Soci">
+
+  <div id="evento-wrap" class="max-w-3xl mx-auto px-4 py-10">
+    <p class="text-gray-400 text-center py-20">Cargando evento...</p>
+  </div>
+
+  <script>
+    import { createClient } from '@supabase/supabase-js';
+    const supabase = createClient(
+      import.meta.env.PUBLIC_SUPABASE_URL,
+      import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+    );
+    const eventoId = window.location.pathname.split('/').pop();
+
+    async function init() {
+      const { data: ev } = await supabase
+        .from('eventos')
+        .select('*')
+        .eq('id', eventoId)
+        .eq('activo', true)
+        .single();
+
+      if (!ev) {
+        document.getElementById('evento-wrap').innerHTML = '<p class="text-center text-gray-400 py-20">Evento no encontrado.</p>';
+        return;
+      }
+
+      // Contar inscritos
+      const { count: inscritos } = await supabase
+        .from('inscripciones')
+        .select('*', { count: 'exact', head: true })
+        .eq('evento_id', ev.id)
+        .eq('estado', 'confirmada');
+
+      // Ver si el usuario está inscrito
+      const { data: { user } } = await supabase.auth.getUser();
+      let miInscripcion = null;
+      if (user) {
+        const { data } = await supabase
+          .from('inscripciones')
+          .select('id, estado')
+          .eq('evento_id', ev.id)
+          .eq('socio_id', user.id)
+          .single();
+        miInscripcion = data;
+      }
+
+      const fecha    = new Date(ev.fecha_inicio);
+      const diaStr   = fecha.toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+      const horaStr  = fecha.toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
+      const precio   = ev.precio > 0 ? `${Number(ev.precio).toFixed(2)} € (cargo en cuenta)` : 'Gratuito';
+      const plazasLibres = ev.plazas ? ev.plazas - (inscritos || 0) : null;
+      const agotado  = plazasLibres !== null && plazasLibres <= 0;
+
+      let btnInscripcion = '';
+      if (!user) {
+        btnInscripcion = `<a href="/socios/login" class="inline-block bg-blue-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-800 transition">Inicia sesión para inscribirte</a>`;
+      } else if (miInscripcion?.estado === 'confirmada') {
+        btnInscripcion = `
+          <div class="flex items-center gap-3">
+            <span class="bg-green-100 text-green-700 px-4 py-2 rounded-xl font-medium text-sm">✅ Inscrito/a</span>
+            <button onclick="cancelarInscripcion('${miInscripcion.id}')" class="text-sm text-red-500 hover:underline">Cancelar inscripción</button>
+          </div>`;
+      } else if (miInscripcion?.estado === 'espera') {
+        btnInscripcion = `
+          <div class="flex items-center gap-3">
+            <span class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded-xl font-medium text-sm">⏳ En lista de espera</span>
+            <button onclick="cancelarInscripcion('${miInscripcion.id}')" class="text-sm text-red-500 hover:underline">Cancelar</button>
+          </div>`;
+      } else if (agotado) {
+        btnInscripcion = `<button onclick="inscribirse()" class="bg-yellow-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-yellow-600 transition">Apuntarse a lista de espera</button>`;
+      } else {
+        btnInscripcion = `<button onclick="inscribirse()" class="bg-blue-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-800 transition">Inscribirse</button>`;
+      }
+
+      document.getElementById('evento-wrap').innerHTML = `
+        <a href="/agenda" class="text-sm text-blue-700 hover:underline mb-6 inline-block">← Volver a la agenda</a>
+        ${ev.imagen_url ? `<img src="${ev.imagen_url}" class="w-full h-72 object-cover rounded-2xl mb-6" />` : ''}
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-xs font-semibold uppercase tracking-widest px-3 py-1 rounded-full ${ev.tipo === 'seccion' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}">${ev.tipo === 'seccion' ? 'Sección' : 'General'}</span>
+          ${ev.precio > 0 ? `<span class="text-xs font-semibold bg-orange-100 text-orange-700 px-3 py-1 rounded-full">${Number(ev.precio).toFixed(2)} €</span>` : '<span class="text-xs font-semibold bg-green-100 text-green-700 px-3 py-1 rounded-full">Gratuito</span>'}
+        </div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">${ev.titulo}</h1>
+        <div class="flex flex-wrap gap-4 text-sm text-gray-600 mb-6">
+          <span>📅 ${diaStr} · ${horaStr}h</span>
+          ${ev.lugar ? `<span>📍 ${ev.lugar}</span>` : ''}
+          ${ev.plazas ? `<span>👥 ${inscritos || 0} / ${ev.plazas} inscritos${agotado ? ' · <span class="text-red-500 font-medium">Completo</span>' : ` · <span class="text-green-600">${plazasLibres} plazas libres</span>`}</span>` : ''}
+        </div>
+        ${ev.descripcion ? `<div class="prose prose-sm max-w-none text-gray-700 mb-8">${ev.descripcion}</div>` : ''}
+        <div id="btn-wrap" class="flex items-center gap-4">
+          ${btnInscripcion}
+        </div>
+        <div id="msg-inscripcion" class="hidden mt-4 text-sm rounded-lg px-4 py-3"></div>
+      `;
+    }
+
+    window.inscribirse = async function() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { window.location.href = '/socios/login'; return; }
+
+      const { count } = await supabase
+        .from('inscripciones')
+        .select('*', { count: 'exact', head: true })
+        .eq('evento_id', eventoId)
+        .eq('estado', 'confirmada');
+
+      const { data: ev } = await supabase.from('eventos').select('plazas').eq('id', eventoId).single();
+      const enEspera = ev.plazas && count >= ev.plazas;
+
+      const { error } = await supabase.from('inscripciones').insert({
+        evento_id: eventoId,
+        socio_id: user.id,
+        estado: enEspera ? 'espera' : 'confirmada'
+      });
+
+      const msg = document.getElementById('msg-inscripcion');
+      msg.classList.remove('hidden');
+      if (error) {
+        msg.className = 'mt-4 text-sm rounded-lg px-4 py-3 bg-red-50 text-red-700';
+        msg.textContent = 'Error: ' + error.message;
+      } else {
+        msg.className = 'mt-4 text-sm rounded-lg px-4 py-3 bg-green-50 text-green-700';
+        msg.textContent = enEspera ? 'Añadido/a a la lista de espera.' : '¡Inscripción confirmada!';
+        setTimeout(() => location.reload(), 1200);
+      }
+    };
+
+    window.cancelarInscripcion = async function(inscripcionId) {
+      await supabase.from('inscripciones').update({ estado: 'cancelada' }).eq('id', inscripcionId);
+      location.reload();
+    };
+
+    init();
+  </script>
+
+</Layout>
