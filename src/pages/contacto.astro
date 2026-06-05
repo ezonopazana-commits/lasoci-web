@@ -251,14 +251,8 @@ import Layout from '../layouts/Layout.astro';
       errEl.textContent = 'Error al enviar el mensaje. Inténtalo de nuevo.';
       errEl.classList.remove('hidden');
     } else {
-      const { data: inserted } = await supabase
-        .from('contactos').select('id').eq('email', email)
-        .order('created_at', { ascending: false }).limit(1).single();
-      const msgId = inserted?.id || '';
       okEl.innerHTML = `✅ Mensaje enviado correctamente. Te responderemos en menos de 48 horas.<br><br>
-        <strong>Tu ID de seguimiento:</strong><br>
-        <span style="font-family:monospace;font-size:12px;background:#dcfce7;padding:4px 8px;border-radius:6px;display:block;margin:6px 0;">${msgId}</span>
-        <a href="/seguimiento?id=${msgId}" style="color:#1d4ed8;text-decoration:underline;font-size:13px;">Consultar estado de tu mensaje →</a>`;
+        <a href="/seguimiento" style="color:#1d4ed8;text-decoration:underline;font-size:13px;">Consultar el estado de tus mensajes con tu email →</a>`;
       okEl.classList.remove('hidden');
       ['f-nombre','f-apellidos','f-email','f-telefono','f-mensaje'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('f-asunto').value = '';
