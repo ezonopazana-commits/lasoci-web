@@ -7,19 +7,19 @@ import Layout from '../layouts/Layout.astro';
 <div class="bg-gradient-to-br from-blue-950 to-blue-800 text-white py-12 px-6">
   <div class="max-w-2xl mx-auto">
     <p class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-2">Contacto</p>
-    <h1 class="text-3xl font-bold mb-2">Consulta tu mensaje</h1>
-    <p class="text-blue-200 text-sm">Introduce el ID de seguimiento que recibiste al enviar tu mensaje.</p>
+    <h1 class="text-3xl font-bold mb-2">Consulta tus mensajes</h1>
+    <p class="text-blue-200 text-sm">Introduce tu email para ver todos tus mensajes y las respuestas del equipo.</p>
   </div>
 </div>
 
 <div class="max-w-2xl mx-auto px-4 py-10">
 
-  <!-- Buscador -->
+  <!-- Buscador por email -->
   <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-6">
-    <label class="block text-sm font-medium text-gray-700 mb-2">ID de seguimiento</label>
+    <label class="block text-sm font-medium text-gray-700 mb-2">Tu dirección de email</label>
     <div class="flex gap-3">
-      <input id="f-id" type="text" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-        class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      <input id="f-email" type="email" placeholder="tu@email.com"
+        class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
       <button id="btn-buscar" class="bg-blue-900 text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-800 transition">
         Consultar
       </button>
@@ -27,57 +27,12 @@ import Layout from '../layouts/Layout.astro';
     <div id="buscar-error" class="hidden mt-3 text-sm text-red-600"></div>
   </div>
 
-  <!-- Resultado -->
+  <!-- Lista de mensajes -->
   <div id="resultado" class="hidden space-y-4">
-
-    <!-- Datos del mensaje -->
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="font-bold text-gray-900">Tu mensaje</h2>
-        <span id="r-estado" class="text-xs font-bold px-3 py-1 rounded-full"></span>
-      </div>
-      <div class="grid grid-cols-2 gap-3 text-sm mb-4">
-        <div>
-          <p class="text-xs text-gray-400 mb-0.5">Nombre</p>
-          <p id="r-nombre" class="font-medium text-gray-900"></p>
-        </div>
-        <div>
-          <p class="text-xs text-gray-400 mb-0.5">Asunto</p>
-          <p id="r-asunto" class="text-gray-700"></p>
-        </div>
-        <div>
-          <p class="text-xs text-gray-400 mb-0.5">Fecha envío</p>
-          <p id="r-fecha" class="text-gray-500 text-xs"></p>
-        </div>
-      </div>
-      <div>
-        <p class="text-xs text-gray-400 mb-2">Mensaje enviado</p>
-        <div id="r-mensaje" class="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap"></div>
-      </div>
-    </div>
-
-    <!-- Respuesta del admin -->
-    <div id="bloque-respuesta" class="hidden bg-white rounded-2xl border border-green-200 shadow-sm p-6">
-      <div class="flex items-center gap-2 mb-4">
-        <span class="text-green-600 text-lg">✅</span>
-        <h2 class="font-bold text-gray-900">Respuesta de la Soci</h2>
-      </div>
-      <div id="r-respuesta" class="bg-green-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap"></div>
-      <p id="r-respondido-at" class="text-xs text-gray-400 mt-2"></p>
-    </div>
-
-    <!-- Sin respuesta -->
-    <div id="bloque-pendiente" class="hidden bg-white rounded-2xl border border-yellow-200 shadow-sm p-6">
-      <div class="flex items-center gap-3">
-        <span class="text-yellow-500 text-2xl">⏳</span>
-        <div>
-          <p class="font-semibold text-gray-900">Mensaje recibido</p>
-          <p class="text-sm text-gray-500">Tu mensaje está siendo revisado. Te responderemos en menos de 48 horas.</p>
-        </div>
-      </div>
-    </div>
-
+    <p id="resultado-titulo" class="text-sm text-gray-500 mb-2"></p>
+    <div id="lista-mensajes" class="space-y-4"></div>
   </div>
+
 </div>
 
 <script>
@@ -93,64 +48,75 @@ import Layout from '../layouts/Layout.astro';
     sugerencia: 'Sugerencia o queja', otro: 'Otro'
   };
 
-  // Leer ID de la URL si viene como parámetro
-  const params = new URLSearchParams(window.location.search);
-  const idParam = params.get('id');
-  if (idParam) {
-    document.getElementById('f-id').value = idParam;
-    buscar();
-  }
-
   document.getElementById('btn-buscar').addEventListener('click', buscar);
-  document.getElementById('f-id').addEventListener('keydown', e => { if (e.key === 'Enter') buscar(); });
+  document.getElementById('f-email').addEventListener('keydown', e => { if (e.key === 'Enter') buscar(); });
 
   async function buscar() {
-    const id = document.getElementById('f-id').value.trim();
+    const email = document.getElementById('f-email').value.trim().toLowerCase();
     const errEl = document.getElementById('buscar-error');
     errEl.classList.add('hidden');
     document.getElementById('resultado').classList.add('hidden');
 
-    if (!id) { errEl.textContent = 'Introduce el ID de seguimiento.'; errEl.classList.remove('hidden'); return; }
-
-    const btn = document.getElementById('btn-buscar');
-    btn.textContent = 'Buscando...'; btn.disabled = true;
-
-    const { data: m, error } = await supabase
-      .from('contactos')
-      .select('id, nombre, apellidos, asunto, mensaje, created_at, respuesta, respondido_at')
-      .eq('id', id)
-      .single();
-
-    btn.textContent = 'Consultar'; btn.disabled = false;
-
-    if (error || !m) {
-      errEl.textContent = 'No se encontró ningún mensaje con ese ID. Comprueba que lo has introducido correctamente.';
+    if (!email || !email.includes('@')) {
+      errEl.textContent = 'Introduce un email válido.';
       errEl.classList.remove('hidden');
       return;
     }
 
-    // Rellenar datos
-    document.getElementById('r-nombre').textContent = `${m.nombre} ${m.apellidos || ''}`;
-    document.getElementById('r-asunto').textContent  = ASUNTOS[m.asunto] || m.asunto || '—';
-    document.getElementById('r-fecha').textContent   = new Date(m.created_at).toLocaleString('es-ES');
-    document.getElementById('r-mensaje').textContent = m.mensaje;
+    const btn = document.getElementById('btn-buscar');
+    btn.textContent = 'Buscando...'; btn.disabled = true;
 
-    const estadoEl = document.getElementById('r-estado');
-    if (m.respuesta) {
-      estadoEl.textContent = 'Respondido';
-      estadoEl.className = 'text-xs font-bold px-3 py-1 rounded-full bg-green-100 text-green-700';
-      document.getElementById('r-respuesta').textContent = m.respuesta;
-      document.getElementById('r-respondido-at').textContent = m.respondido_at
-        ? `Respondido el ${new Date(m.respondido_at).toLocaleString('es-ES')}`
-        : '';
-      document.getElementById('bloque-respuesta').classList.remove('hidden');
-      document.getElementById('bloque-pendiente').classList.add('hidden');
-    } else {
-      estadoEl.textContent = 'Pendiente';
-      estadoEl.className = 'text-xs font-bold px-3 py-1 rounded-full bg-yellow-100 text-yellow-700';
-      document.getElementById('bloque-respuesta').classList.add('hidden');
-      document.getElementById('bloque-pendiente').classList.remove('hidden');
+    const { data: mensajes, error } = await supabase
+      .from('contactos')
+      .select('id, nombre, apellidos, asunto, mensaje, created_at, respuesta, respondido_at')
+      .eq('email', email)
+      .order('created_at', { ascending: false });
+
+    btn.textContent = 'Consultar'; btn.disabled = false;
+
+    if (error || !mensajes?.length) {
+      errEl.textContent = 'No encontramos mensajes con ese email. Comprueba que es el mismo con el que enviaste el formulario.';
+      errEl.classList.remove('hidden');
+      return;
     }
+
+    document.getElementById('resultado-titulo').textContent =
+      `${mensajes.length} mensaje${mensajes.length > 1 ? 's' : ''} encontrado${mensajes.length > 1 ? 's' : ''}`;
+
+    document.getElementById('lista-mensajes').innerHTML = mensajes.map(m => {
+      const fecha = new Date(m.created_at).toLocaleString('es-ES');
+      const asunto = ASUNTOS[m.asunto] || m.asunto || '—';
+      const respondido = m.respuesta
+        ? `<div class="mt-4 pt-4 border-t border-green-100">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-green-600">✅</span>
+              <p class="text-xs font-semibold text-green-700">Respuesta del equipo</p>
+            </div>
+            <div class="bg-green-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">${m.respuesta}</div>
+            <p class="text-xs text-gray-400 mt-1">${m.respondido_at ? 'Respondido el ' + new Date(m.respondido_at).toLocaleString('es-ES') : ''}</p>
+          </div>`
+        : `<div class="mt-4 pt-4 border-t border-yellow-100 flex items-center gap-3">
+            <span class="text-yellow-500">⏳</span>
+            <p class="text-sm text-gray-500">Tu mensaje está siendo revisado. Te responderemos en menos de 48 horas.</p>
+          </div>`;
+
+      const badge = m.respuesta
+        ? '<span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">Respondido</span>'
+        : '<span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-2 py-0.5 rounded-full">Pendiente</span>';
+
+      return `
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <p class="font-semibold text-gray-900">${asunto}</p>
+              <p class="text-xs text-gray-400">${fecha}</p>
+            </div>
+            ${badge}
+          </div>
+          <div class="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">${m.mensaje}</div>
+          ${respondido}
+        </div>`;
+    }).join('');
 
     document.getElementById('resultado').classList.remove('hidden');
   }
