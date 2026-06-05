@@ -1,0 +1,251 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Admin — Revista">
+
+  <div class="max-w-5xl mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Gestión de Revista</h1>
+        <p class="text-sm text-gray-500 mt-1">Ediciones publicadas</p>
+      </div>
+      <button id="btn-nueva" class="bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-800 transition">
+        + Nueva edición
+      </button>
+    </div>
+
+    <div class="bg-white rounded-xl shadow border border-gray-100 overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 border-b border-gray-200">
+          <tr>
+            <th class="text-left px-4 py-3 font-medium text-gray-600">Portada</th>
+            <th class="text-left px-4 py-3 font-medium text-gray-600">Número</th>
+            <th class="text-left px-4 py-3 font-medium text-gray-600">Título</th>
+            <th class="text-left px-4 py-3 font-medium text-gray-600">Periodo</th>
+            <th class="text-left px-4 py-3 font-medium text-gray-600">Estado</th>
+            <th class="text-right px-4 py-3 font-medium text-gray-600">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body" class="divide-y divide-gray-100">
+          <tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">Cargando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <h2 id="modal-titulo" class="text-lg font-bold text-gray-900">Nueva edición</h2>
+        <button id="btn-cerrar" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+      </div>
+      <div class="px-6 py-5 space-y-4">
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Número *</label>
+            <input id="f-numero" type="number" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="612" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Año *</label>
+            <input id="f-anio" type="number" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="2026" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Mes</label>
+          <select id="f-mes" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">— Sin mes específico —</option>
+            <option value="1">Enero</option><option value="2">Febrero</option>
+            <option value="3">Marzo</option><option value="4">Abril</option>
+            <option value="5">Mayo</option><option value="6">Junio</option>
+            <option value="7">Julio</option><option value="8">Agosto</option>
+            <option value="9">Septiembre</option><option value="10">Octubre</option>
+            <option value="11">Noviembre</option><option value="12">Diciembre</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
+          <input id="f-titulo" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Revista n° 612" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">URL del visor (pubhtml5) *</label>
+          <input id="f-pdf-url" type="url" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://pubhtml5.com/read/..." />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">URL portada</label>
+          <input id="f-portada-url" type="url" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://admin.lasoci.org/documents/butlleti/imgs/..." />
+          <div id="portada-preview" class="hidden mt-2">
+            <img id="portada-img" src="" class="h-32 rounded-lg object-cover" />
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <input id="f-publicada" type="checkbox" class="w-4 h-4 accent-blue-600" checked />
+          <label for="f-publicada" class="text-sm font-medium text-gray-700">Publicar inmediatamente</label>
+        </div>
+
+        <div id="form-error" class="hidden bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3"></div>
+        <div id="form-ok" class="hidden bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3"></div>
+      </div>
+      <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+        <button id="btn-cancelar" class="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50">Cancelar</button>
+        <button id="btn-guardar" class="px-5 py-2 text-sm font-medium bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL BORRAR -->
+  <div id="modal-borrar" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 text-center">
+      <div class="text-4xl mb-3">🗑️</div>
+      <h3 class="text-lg font-bold mb-2">¿Eliminar edición?</h3>
+      <div class="flex gap-3 justify-center mt-4">
+        <button id="btn-cancelar-borrar" class="px-4 py-2 text-sm border border-gray-300 rounded-lg">Cancelar</button>
+        <button id="btn-confirmar-borrar" class="px-4 py-2 text-sm bg-red-600 text-white rounded-lg">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { createClient } from '@supabase/supabase-js';
+    const supabase = createClient(
+      import.meta.env.PUBLIC_SUPABASE_URL,
+      import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+    );
+
+    const MESES = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    let revistas = [];
+    let editandoId = null;
+    let borrandoId = null;
+
+    async function init() {
+      const { data } = await supabase.from('revista').select('*').order('numero', { ascending: false });
+      revistas = data || [];
+      renderTabla();
+    }
+
+    function renderTabla() {
+      const tbody = document.getElementById('tabla-body');
+      if (!revistas.length) { tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">No hay ediciones</td></tr>'; return; }
+      tbody.innerHTML = revistas.map(r => {
+        const periodo = r.mes ? `${MESES[r.mes]} ${r.anio}` : `${r.anio}`;
+        const thumb = r.portada_url ? `<img src="${r.portada_url}" class="w-10 h-14 object-cover rounded" />` : '<div class="w-10 h-14 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-400">—</div>';
+        const badge = r.publicada ? '<span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">Publicada</span>' : '<span class="bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded-full">Borrador</span>';
+        return `<tr class="hover:bg-gray-50">
+          <td class="px-4 py-3">${thumb}</td>
+          <td class="px-4 py-3 font-bold text-gray-900">N° ${r.numero}</td>
+          <td class="px-4 py-3 text-gray-600">${r.titulo || '—'}</td>
+          <td class="px-4 py-3 text-gray-500 text-xs">${periodo}</td>
+          <td class="px-4 py-3">${badge}</td>
+          <td class="px-4 py-3 text-right space-x-2">
+            <button data-editar="${r.id}" class="text-xs px-2 py-1 bg-blue-900 text-white rounded hover:bg-blue-800">Editar</button>
+            <button data-borrar="${r.id}" class="text-xs px-2 py-1 bg-red-100 text-red-600 rounded hover:bg-red-200">Borrar</button>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    document.getElementById('tabla-body').addEventListener('click', e => {
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      if (btn.dataset.editar) editarRevista(btn.dataset.editar);
+      if (btn.dataset.borrar) { borrandoId = btn.dataset.borrar; document.getElementById('modal-borrar').classList.remove('hidden'); }
+    });
+
+    function resetForm() {
+      ['f-numero','f-anio','f-titulo','f-pdf-url','f-portada-url'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f-mes').value = '';
+      document.getElementById('f-publicada').checked = true;
+      document.getElementById('form-error').classList.add('hidden');
+      document.getElementById('form-ok').classList.add('hidden');
+      document.getElementById('portada-preview').classList.add('hidden');
+    }
+
+    function abrirModal(titulo) { document.getElementById('modal-titulo').textContent = titulo; document.getElementById('modal').classList.remove('hidden'); }
+    function cerrarModal() { document.getElementById('modal').classList.add('hidden'); }
+
+    document.getElementById('btn-nueva').addEventListener('click', () => { resetForm(); editandoId = null; abrirModal('Nueva edición'); });
+    document.getElementById('btn-cerrar').addEventListener('click', cerrarModal);
+    document.getElementById('btn-cancelar').addEventListener('click', cerrarModal);
+
+    async function editarRevista(id) {
+      const r = revistas.find(x => x.id === id);
+      if (!r) return;
+      editandoId = id;
+      resetForm();
+      document.getElementById('f-numero').value    = r.numero || '';
+      document.getElementById('f-anio').value      = r.anio || '';
+      document.getElementById('f-mes').value       = r.mes || '';
+      document.getElementById('f-titulo').value    = r.titulo || '';
+      document.getElementById('f-pdf-url').value   = r.pdf_url || '';
+      document.getElementById('f-portada-url').value = r.portada_url || '';
+      document.getElementById('f-publicada').checked = r.publicada ?? true;
+      if (r.portada_url) { document.getElementById('portada-img').src = r.portada_url; document.getElementById('portada-preview').classList.remove('hidden'); }
+      abrirModal('Editar edición');
+    }
+
+    document.getElementById('f-portada-url').addEventListener('input', function() {
+      if (this.value.startsWith('http')) {
+        document.getElementById('portada-img').src = this.value;
+        document.getElementById('portada-preview').classList.remove('hidden');
+      } else {
+        document.getElementById('portada-preview').classList.add('hidden');
+      }
+    });
+
+    document.getElementById('btn-guardar').addEventListener('click', async () => {
+      const numero  = parseInt(document.getElementById('f-numero').value);
+      const anio    = parseInt(document.getElementById('f-anio').value);
+      const pdf_url = document.getElementById('f-pdf-url').value.trim();
+      if (!numero || !anio || !pdf_url) { mostrarError('Número, año y URL del visor son obligatorios.'); return; }
+
+      const btn = document.getElementById('btn-guardar');
+      btn.textContent = 'Guardando...'; btn.disabled = true;
+
+      const datos = {
+        numero, anio,
+        mes:         document.getElementById('f-mes').value ? parseInt(document.getElementById('f-mes').value) : null,
+        titulo:      document.getElementById('f-titulo').value.trim() || `Revista n° ${numero}`,
+        pdf_url,
+        portada_url: document.getElementById('f-portada-url').value.trim() || null,
+        publicada:   document.getElementById('f-publicada').checked,
+      };
+
+      let error;
+      if (editandoId) {
+        ({ error } = await supabase.from('revista').update(datos).eq('id', editandoId));
+      } else {
+        ({ error } = await supabase.from('revista').insert(datos));
+      }
+
+      btn.textContent = 'Guardar'; btn.disabled = false;
+      if (error) { mostrarError('Error: ' + error.message); }
+      else {
+        document.getElementById('form-ok').textContent = editandoId ? 'Edición actualizada.' : 'Edición creada.';
+        document.getElementById('form-ok').classList.remove('hidden');
+        await init();
+        setTimeout(() => cerrarModal(), 1200);
+      }
+    });
+
+    document.getElementById('btn-cancelar-borrar').addEventListener('click', () => { document.getElementById('modal-borrar').classList.add('hidden'); borrandoId = null; });
+    document.getElementById('btn-confirmar-borrar').addEventListener('click', async () => {
+      if (!borrandoId) return;
+      await supabase.from('revista').delete().eq('id', borrandoId);
+      document.getElementById('modal-borrar').classList.add('hidden');
+      borrandoId = null;
+      await init();
+    });
+
+    function mostrarError(msg) { const el = document.getElementById('form-error'); el.textContent = msg; el.classList.remove('hidden'); }
+
+    init();
+  </script>
+
+</Layout>
