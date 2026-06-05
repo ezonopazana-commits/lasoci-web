@@ -1,0 +1,418 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Agenda — la Soci">
+
+<style>
+  .ev-pill {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.4;
+    padding: 3px 7px;
+    border-radius: 5px;
+    margin-top: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+  }
+  .ev-pill.general { background:#dbeafe; color:#1d4ed8; border-left: 3px solid #3b82f6; }
+  .ev-pill.seccion { background:#ede9fe; color:#7c3aed; border-left: 3px solid #8b5cf6; }
+  .evento-card { transition: transform .15s, box-shadow .15s; }
+  .evento-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.10); }
+  .cal-cell { min-height: 120px; }
+  .cal-cell.hoy { background: #eff6ff; }
+  .cal-cell.sel  { background: #dbeafe; }
+  /* Tooltip global único */
+  #ev-popup {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    width: 280px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.07);
+    overflow: hidden;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+</style>
+
+<!-- Popup global tooltip -->
+<div id="ev-popup">
+  <div id="ev-popup-inner"></div>
+</div>
+
+<!-- Hero compacto -->
+<div class="bg-gradient-to-br from-blue-950 to-blue-800 text-white py-10 px-6">
+  <div class="max-w-6xl mx-auto flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <p class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-1">Agenda</p>
+      <h1 class="text-3xl font-bold">Próximos eventos</h1>
+      <p class="text-blue-300 text-sm mt-1">Actividades, excursiones y eventos de la Soci</p>
+    </div>
+    <!-- Toggle vista -->
+    <div class="flex bg-white/10 rounded-xl p-1 gap-1">
+      <button id="btn-lista" onclick="setVista('lista')"
+        class="px-4 py-2 rounded-lg text-sm font-medium transition bg-white text-blue-900">
+        ☰ Lista
+      </button>
+      <button id="btn-cal" onclick="setVista('calendario')"
+        class="px-4 py-2 rounded-lg text-sm font-medium transition text-white/70 hover:text-white">
+        📅 Calendario
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+
+  <!-- Filtros -->
+  <div class="flex flex-wrap items-center gap-3 mb-7">
+    <div id="filtros-tipo" class="flex gap-2 flex-wrap">
+      <button data-tipo="" class="tipo-btn px-4 py-1.5 rounded-full text-sm font-medium border-2 border-blue-900 bg-blue-900 text-white">Todos</button>
+      <button data-tipo="general" class="tipo-btn px-4 py-1.5 rounded-full text-sm font-medium border-2 border-gray-200 text-gray-500 hover:border-blue-300 transition">General</button>
+      <button data-tipo="seccion" class="tipo-btn px-4 py-1.5 rounded-full text-sm font-medium border-2 border-gray-200 text-gray-500 hover:border-purple-300 transition">Secciones</button>
+    </div>
+    <input id="search-evento" type="text" placeholder="Buscar evento..."
+      class="ml-auto border border-gray-200 rounded-xl px-4 py-1.5 text-sm w-52 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+  </div>
+
+  <!-- ═══ VISTA LISTA ═══ -->
+  <div id="vista-lista">
+    <div id="lista-eventos" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div class="col-span-2 text-center py-16 text-gray-300">
+        <div class="text-5xl mb-3">📅</div>
+        <p>Cargando eventos...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ VISTA CALENDARIO ═══ -->
+  <div id="vista-calendario" class="hidden">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+
+      <!-- Cabecera mes -->
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <button onclick="cambiarMes(-1)" class="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-gray-100 transition text-gray-500 text-lg">‹</button>
+        <div class="text-center">
+          <h2 id="cal-titulo" class="text-xl font-bold text-gray-900"></h2>
+        </div>
+        <button onclick="cambiarMes(1)" class="w-9 h-9 flex items-center justify-center rounded-xl hover:bg-gray-100 transition text-gray-500 text-lg">›</button>
+      </div>
+
+      <!-- Días semana -->
+      <div class="grid grid-cols-7 bg-gray-50 border-b border-gray-100">
+        {['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(d =>
+          <div class="text-center text-xs font-semibold text-gray-400 py-3 uppercase tracking-wide">{d}</div>
+        )}
+      </div>
+
+      <!-- Grid días -->
+      <div id="cal-grid" class="grid grid-cols-7 divide-x divide-y divide-gray-100"></div>
+    </div>
+
+    <!-- Panel eventos día seleccionado -->
+    <div id="cal-panel-dia" class="hidden mt-6 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <h3 id="cal-dia-titulo" class="font-bold text-gray-900"></h3>
+        <button onclick="document.getElementById('cal-panel-dia').classList.add('hidden')" class="text-gray-400 hover:text-gray-600">✕</button>
+      </div>
+      <div id="cal-lista-dia" class="divide-y divide-gray-50"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  import { createClient } from '@supabase/supabase-js';
+  const supabase = createClient(
+    import.meta.env.PUBLIC_SUPABASE_URL,
+    import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+  );
+
+  let eventos = [];
+  let filtroTipo = '';
+  let busqueda = '';
+  let vistaInicial = 'calendario';
+  let calMes = new Date().getMonth();
+  let calAnio = new Date().getFullYear();
+  let diaSeleccionado = null;
+
+  // ── INIT ──
+  async function init() {
+    const { data } = await supabase
+      .from('eventos')
+      .select('id, titulo, descripcion, imagen_url, fecha_inicio, fecha_fin, lugar, tipo, plazas, precio, seccion:seccion_id(nombre, provincia)')
+      .eq('activo', true)
+      .order('fecha_inicio', { ascending: true });
+    eventos = data || [];
+    setVista('calendario');
+    renderLista();
+    renderCalendario();
+  }
+
+  // ── FILTROS ──
+  document.getElementById('filtros-tipo').addEventListener('click', e => {
+    const btn = e.target.closest('.tipo-btn');
+    if (!btn) return;
+    filtroTipo = btn.dataset.tipo;
+    document.querySelectorAll('.tipo-btn').forEach(b => {
+      const activo = b.dataset.tipo === filtroTipo;
+      b.className = `tipo-btn px-4 py-1.5 rounded-full text-sm font-medium border-2 transition ${
+        activo ? 'border-blue-900 bg-blue-900 text-white' : 'border-gray-200 text-gray-500 hover:border-blue-300'
+      }`;
+    });
+    renderLista(); renderCalendario();
+  });
+
+  document.getElementById('search-evento').addEventListener('input', e => {
+    busqueda = e.target.value.toLowerCase();
+    renderLista(); renderCalendario();
+  });
+
+  function eventosFiltrados() {
+    return eventos.filter(ev => {
+      const mt = !filtroTipo || ev.tipo === filtroTipo;
+      const mb = !busqueda || ev.titulo.toLowerCase().includes(busqueda) || (ev.lugar||'').toLowerCase().includes(busqueda);
+      return mt && mb;
+    });
+  }
+
+  // ── VISTA ──
+  window.setVista = function(v) {
+    document.getElementById('vista-lista').classList.toggle('hidden', v !== 'lista');
+    document.getElementById('vista-calendario').classList.toggle('hidden', v !== 'calendario');
+    document.getElementById('btn-lista').className = `px-4 py-2 rounded-lg text-sm font-medium transition ${v==='lista' ? 'bg-white text-blue-900' : 'text-white/70 hover:text-white'}`;
+    document.getElementById('btn-cal').className   = `px-4 py-2 rounded-lg text-sm font-medium transition ${v==='calendario' ? 'bg-white text-blue-900' : 'text-white/70 hover:text-white'}`;
+  };
+
+  // ── LISTA ──
+  function renderLista() {
+    const lista = eventosFiltrados();
+    const cont  = document.getElementById('lista-eventos');
+    if (!lista.length) {
+      cont.innerHTML = `<div class="col-span-2 text-center py-16 text-gray-300"><div class="text-5xl mb-3">🔍</div><p>No hay eventos que coincidan</p></div>`;
+      return;
+    }
+    cont.innerHTML = lista.map(ev => {
+      const fecha = new Date(ev.fecha_inicio);
+      const diaN  = fecha.toLocaleDateString('es-ES', { day:'numeric' });
+      const mesN  = fecha.toLocaleDateString('es-ES', { month:'short' }).toUpperCase();
+      const semN  = fecha.toLocaleDateString('es-ES', { weekday:'long' });
+      const hora  = fecha.toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
+      const precio = ev.precio > 0
+        ? `<span class="text-xs font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">${Number(ev.precio).toFixed(2)} €</span>`
+        : `<span class="text-xs font-bold text-green-700 bg-green-50 px-2 py-0.5 rounded-full">Gratuito</span>`;
+      const tipoBadge = ev.tipo === 'seccion'
+        ? `<span class="text-xs font-semibold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full">Sección</span>`
+        : `<span class="text-xs font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full">General</span>`;
+      const img = ev.imagen_url
+        ? `<img src="${ev.imagen_url}" class="w-full h-40 object-cover" />`
+        : `<div class="w-full h-40 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center text-5xl">📅</div>`;
+      return `
+        <a href="/agenda/${ev.id}" class="evento-card bg-white rounded-2xl border border-gray-100 overflow-hidden flex flex-col">
+          <div class="relative">
+            ${img}
+            <div class="absolute top-3 left-3 flex gap-1">${tipoBadge}${precio}</div>
+          </div>
+          <div class="p-5 flex-1 flex flex-col">
+            <h3 class="font-bold text-gray-900 text-base mb-2 leading-tight">${ev.titulo}</h3>
+            <div class="flex items-center gap-2 text-sm text-gray-500 mb-1">
+              <span class="text-blue-500">📅</span>
+              <span class="capitalize">${semN}, ${diaN} ${mesN} · ${hora}h</span>
+            </div>
+            ${ev.lugar ? `<div class="flex items-center gap-2 text-sm text-gray-500 mb-3"><span>📍</span><span>${ev.lugar}</span></div>` : '<div class="mb-3"></div>'}
+            ${ev.descripcion ? `<p class="text-sm text-gray-400 line-clamp-2 flex-1">${ev.descripcion}</p>` : ''}
+            <div class="mt-4 flex items-center justify-between">
+              ${ev.plazas ? `<span class="text-xs text-gray-400">👥 ${ev.plazas} plazas</span>` : '<span></span>'}
+              <span class="text-xs font-semibold text-blue-900 group-hover:underline">Ver evento →</span>
+            </div>
+          </div>
+        </a>`;
+    }).join('');
+  }
+
+  // ── CALENDARIO ──
+  function renderCalendario() {
+    const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    document.getElementById('cal-titulo').textContent = `${MESES[calMes]} ${calAnio}`;
+
+    const primerDia = new Date(calAnio, calMes, 1);
+    const ultimoDia = new Date(calAnio, calMes + 1, 0);
+    let offset = primerDia.getDay() - 1;
+    if (offset < 0) offset = 6;
+
+    const lista = eventosFiltrados();
+    const porDia = {};
+    lista.forEach(ev => {
+      const d = new Date(ev.fecha_inicio);
+      if (d.getMonth() === calMes && d.getFullYear() === calAnio) {
+        const k = d.getDate();
+        if (!porDia[k]) porDia[k] = [];
+        porDia[k].push(ev);
+      }
+    });
+
+    const hoy = new Date();
+    let html = '';
+
+    for (let i = 0; i < offset; i++) html += '<div class="cal-cell p-2 bg-gray-50/50"></div>';
+
+    for (let d = 1; d <= ultimoDia.getDate(); d++) {
+      const esHoy = d === hoy.getDate() && calMes === hoy.getMonth() && calAnio === hoy.getFullYear();
+      const esSel = diaSeleccionado === d;
+      const evs   = porDia[d] || [];
+      const clases = `cal-cell p-2 cursor-pointer hover:bg-blue-50/50 transition ${esHoy ? 'hoy' : ''} ${esSel ? 'sel' : ''}`;
+
+      const numSpan = esHoy
+        ? `<span class="inline-flex w-7 h-7 rounded-full bg-blue-900 text-white text-sm font-bold items-center justify-center">${d}</span>`
+        : `<span class="text-sm font-semibold ${esSel ? 'text-blue-900' : 'text-gray-600'}">${d}</span>`;
+
+      const pills = evs.slice(0, 3).map(ev => {
+        const hora   = new Date(ev.fecha_inicio).toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
+        const precio = ev.precio > 0 ? `${Number(ev.precio).toFixed(2)} €` : 'Gratuito';
+        const label  = ev.tipo === 'seccion' && ev.seccion
+          ? (ev.seccion.nombre + ' ' + (ev.seccion.provincia||'')).trim()
+          : ev.titulo.slice(0, 20);
+        const tipColor = ev.tipo === 'seccion' ? '#7c3aed' : '#2563eb';
+        const tipLabel = ev.tipo === 'seccion' ? 'Sección' : 'General';
+        const precioColor = ev.precio > 0 ? '#2563eb' : '#16a34a';
+        // Serializar datos para el popup
+        const popupData = JSON.stringify({
+          id: ev.id,
+          titulo: ev.titulo,
+          hora,
+          lugar: ev.lugar || '',
+          plazas: ev.plazas || 0,
+          precio,
+          precioColor,
+          tipLabel,
+          tipColor,
+          descripcion: ev.descripcion || '',
+          imagen_url: ev.imagen_url || ''
+        }).replace(/"/g, '&quot;');
+        return `
+          <a href="/agenda/${ev.id}"
+            class="ev-pill ${ev.tipo === 'seccion' ? 'seccion' : 'general'}"
+            onmouseenter="showPopup(event, this)"
+            onmouseleave="hidePopup()"
+            data-popup="${popupData}"
+            onclick="event.stopPropagation()">
+            ${label}
+          </a>`;
+      }).join('');
+
+      const mas = evs.length > 3
+        ? `<button onclick="seleccionarDia(${d})" class="text-xs text-blue-600 font-medium mt-1 hover:underline">+${evs.length - 3} más</button>`
+        : '';
+
+      html += `<div class="${clases}" onclick="seleccionarDia(${d})">${numSpan}${pills}${mas}</div>`;
+    }
+
+    const total = offset + ultimoDia.getDate();
+    const rest  = total % 7 === 0 ? 0 : 7 - (total % 7);
+    for (let i = 0; i < rest; i++) html += '<div class="cal-cell p-2 bg-gray-50/50"></div>';
+
+    document.getElementById('cal-grid').innerHTML = html;
+  }
+
+  window.seleccionarDia = function(dia) {
+    diaSeleccionado = dia;
+    renderCalendario();
+
+    const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    const lista = eventosFiltrados().filter(ev => {
+      const d = new Date(ev.fecha_inicio);
+      return d.getDate() === dia && d.getMonth() === calMes && d.getFullYear() === calAnio;
+    });
+
+    const panel = document.getElementById('cal-panel-dia');
+    const tit   = document.getElementById('cal-dia-titulo');
+    const cont  = document.getElementById('cal-lista-dia');
+
+    if (!lista.length) { panel.classList.add('hidden'); return; }
+
+    tit.textContent = `${dia} de ${MESES_ES[calMes]} de ${calAnio}`;
+    cont.innerHTML = lista.map(ev => {
+      const hora   = new Date(ev.fecha_inicio).toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
+      const precio = ev.precio > 0 ? `${Number(ev.precio).toFixed(2)} €` : 'Gratuito';
+      return `
+        <a href="/agenda/${ev.id}" class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50 transition group">
+          <div class="w-1 self-stretch rounded-full ${ev.tipo === 'seccion' ? 'bg-purple-400' : 'bg-blue-500'}"></div>
+          <div class="flex-1 min-w-0">
+            <p class="font-semibold text-gray-900 group-hover:text-blue-900 transition truncate">${ev.titulo}</p>
+            <p class="text-sm text-gray-400">${hora}h ${ev.lugar ? `· 📍 ${ev.lugar}` : ''}</p>
+          </div>
+          <span class="text-sm font-semibold ${ev.precio > 0 ? 'text-blue-700' : 'text-green-600'} shrink-0">${precio}</span>
+          <span class="text-gray-300 group-hover:text-blue-500 transition">›</span>
+        </a>`;
+    }).join('');
+    panel.classList.remove('hidden');
+  };
+
+  window.cambiarMes = function(delta) {
+    calMes += delta;
+    if (calMes > 11) { calMes = 0; calAnio++; }
+    if (calMes < 0)  { calMes = 11; calAnio--; }
+    diaSeleccionado = null;
+    document.getElementById('cal-panel-dia').classList.add('hidden');
+    renderCalendario();
+  };
+
+  // ── POPUP TOOLTIP ──
+  const popup = document.getElementById('ev-popup');
+  const popupInner = document.getElementById('ev-popup-inner');
+
+  let hideTimer = null;
+  let popupEventId = null;
+
+  window.showPopup = function(e, el) {
+    clearTimeout(hideTimer);
+    const data = JSON.parse(el.dataset.popup.replace(/&quot;/g, '"'));
+    popupInner.innerHTML = `
+      ${data.imagen_url ? `<img src="${data.imagen_url}" style="width:100%;height:90px;object-fit:cover;" onerror="this.style.display='none'" />` : ''}
+      <div style="padding:14px 16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:${data.tipColor};background:${data.tipColor}18;padding:2px 8px;border-radius:20px;">${data.tipLabel}</span>
+          <span style="font-size:12px;font-weight:700;color:${data.precioColor};">${data.precio}</span>
+        </div>
+        <p style="font-size:14px;font-weight:700;color:#0f172a;margin:0 0 8px;line-height:1.3;">${data.titulo}</p>
+        <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:${data.descripcion ? '8px' : '0'};">
+          <span style="font-size:12px;color:#64748b;">🕐 ${data.hora}h</span>
+          ${data.lugar ? `<span style="font-size:12px;color:#64748b;">📍 ${data.lugar}</span>` : ''}
+          ${data.plazas ? `<span style="font-size:12px;color:#64748b;">👥 ${data.plazas} plazas</span>` : ''}
+        </div>
+        ${data.descripcion ? `<p style="font-size:11px;color:#94a3b8;line-height:1.5;margin:0 0 10px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${data.descripcion}</p>` : ''}
+        <div style="background:#f1f5f9;border-radius:8px;padding:7px 12px;text-align:center;">
+          <span style="font-size:12px;font-weight:700;color:#1e40af;">Ver evento →</span>
+        </div>
+      </div>`;
+
+    popupEventId = data.id;
+    popup.style.display = 'block';
+    const rect = el.getBoundingClientRect();
+    let left = rect.left + rect.width / 2 - 140;
+    let top  = rect.bottom + 8;
+    // Si se sale por abajo, mostrar encima
+    if (top + 300 > window.innerHeight) top = rect.top - 8 - popup.offsetHeight;
+    left = Math.max(8, Math.min(left, window.innerWidth - 288));
+    popup.style.left = left + 'px';
+    popup.style.top  = top + 'px';
+  };
+
+  window.hidePopup = function() {
+    hideTimer = setTimeout(() => { popup.style.display = 'none'; }, 200);
+  };
+
+  // Mantener popup visible si el ratón entra en él
+  popup.addEventListener('mouseenter', () => clearTimeout(hideTimer));
+  popup.addEventListener('mouseleave', () => { hideTimer = setTimeout(() => { popup.style.display = 'none'; }, 150); });
+  popup.addEventListener('click', () => { if (popupEventId) window.location.href = '/agenda/' + popupEventId; });
+
+  init();
+</script>
+
+</Layout>
