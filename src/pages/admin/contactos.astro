@@ -10,12 +10,9 @@ import Layout from '../../layouts/Layout.astro';
         <h1 class="text-2xl font-bold text-gray-900">Mensajes de Contacto</h1>
         <p class="text-sm text-gray-500 mt-1">Formularios recibidos desde la web</p>
       </div>
-      <div class="flex gap-3">
-        <span id="badge-nuevos" class="hidden bg-red-100 text-red-700 text-xs font-bold px-3 py-1.5 rounded-full"></span>
-      </div>
+      <span id="badge-nuevos" class="hidden bg-red-100 text-red-700 text-xs font-bold px-3 py-1.5 rounded-full"></span>
     </div>
 
-    <!-- Filtros -->
     <div class="flex gap-3 mb-5">
       <select id="filter-leido" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
         <option value="">Todos</option>
@@ -41,18 +38,19 @@ import Layout from '../../layouts/Layout.astro';
             <th class="text-left px-4 py-3 font-medium text-gray-600">Nombre</th>
             <th class="text-left px-4 py-3 font-medium text-gray-600">Email</th>
             <th class="text-left px-4 py-3 font-medium text-gray-600">Asunto</th>
+            <th class="text-left px-4 py-3 font-medium text-gray-600">Estado</th>
             <th class="text-left px-4 py-3 font-medium text-gray-600">Fecha</th>
             <th class="text-right px-4 py-3 font-medium text-gray-600">Acciones</th>
           </tr>
         </thead>
         <tbody id="tabla-body" class="divide-y divide-gray-100">
-          <tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">Cargando...</td></tr>
+          <tr><td colspan="7" class="px-4 py-8 text-center text-gray-400">Cargando...</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- MODAL VER MENSAJE -->
+  <!-- MODAL VER + RESPONDER -->
   <div id="modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
@@ -67,16 +65,20 @@ import Layout from '../../layouts/Layout.astro';
           </div>
           <div>
             <p class="text-xs text-gray-400 font-medium mb-1">Email</p>
-            <a id="m-email" href="" class="text-blue-700 hover:underline"></a>
+            <a id="m-email" href="" class="text-blue-700 hover:underline text-sm"></a>
           </div>
           <div>
             <p class="text-xs text-gray-400 font-medium mb-1">Teléfono</p>
-            <p id="m-telefono" class="text-gray-700"></p>
+            <p id="m-telefono" class="text-gray-700 text-sm"></p>
           </div>
           <div>
             <p class="text-xs text-gray-400 font-medium mb-1">Asunto</p>
-            <p id="m-asunto" class="text-gray-700"></p>
+            <p id="m-asunto" class="text-gray-700 text-sm"></p>
           </div>
+        </div>
+        <div>
+          <p class="text-xs text-gray-400 font-medium mb-1">ID seguimiento</p>
+          <p id="m-id" class="font-mono text-xs text-gray-500 bg-gray-50 rounded px-2 py-1"></p>
         </div>
         <div>
           <p class="text-xs text-gray-400 font-medium mb-1">Fecha</p>
@@ -86,12 +88,27 @@ import Layout from '../../layouts/Layout.astro';
           <p class="text-xs text-gray-400 font-medium mb-2">Mensaje</p>
           <div id="m-mensaje" class="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap"></div>
         </div>
+
+        <!-- Respuesta existente -->
+        <div id="respuesta-existente" class="hidden">
+          <p class="text-xs text-green-600 font-medium mb-2">✅ Respuesta enviada</p>
+          <div id="m-respuesta" class="bg-green-50 border border-green-200 rounded-xl p-4 text-sm text-gray-700 leading-relaxed whitespace-pre-wrap"></div>
+          <p id="m-respondido-at" class="text-xs text-gray-400 mt-1"></p>
+        </div>
+
+        <!-- Formulario respuesta -->
+        <div id="form-respuesta">
+          <label class="block text-xs text-gray-400 font-medium mb-2">Respuesta al usuario</label>
+          <textarea id="f-respuesta" rows="4" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Escribe tu respuesta aquí..."></textarea>
+          <p class="text-xs text-gray-400 mt-1">El usuario podrá consultar esta respuesta con su ID de seguimiento.</p>
+        </div>
+
+        <div id="resp-ok" class="hidden bg-green-50 border border-green-200 text-green-700 text-sm rounded-xl px-4 py-3"></div>
+        <div id="resp-error" class="hidden bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3"></div>
+
         <div class="flex gap-3 pt-2">
-          <a id="btn-responder" href="" class="flex-1 text-center bg-blue-900 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-800 transition">
-            ✉️ Responder por email
-          </a>
-          <button id="btn-marcar" class="px-4 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
-            Marcar como leído
+          <button id="btn-enviar-respuesta" class="flex-1 bg-blue-900 text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-blue-800 transition">
+            ✉️ Enviar respuesta
           </button>
           <button id="btn-borrar-msg" class="px-4 py-2.5 bg-red-50 text-red-600 rounded-xl text-sm font-medium hover:bg-red-100 transition">
             Borrar
@@ -107,6 +124,12 @@ import Layout from '../../layouts/Layout.astro';
       import.meta.env.PUBLIC_SUPABASE_URL,
       import.meta.env.PUBLIC_SUPABASE_ANON_KEY
     );
+
+    const ASUNTOS = {
+      informacion: 'Información general', socio: 'Hacerse socio',
+      seccion: 'Secciones', evento: 'Eventos',
+      sugerencia: 'Sugerencia o queja', otro: 'Otro'
+    };
 
     let mensajes = [];
     let msgActual = null;
@@ -126,14 +149,12 @@ import Layout from '../../layouts/Layout.astro';
       } else {
         badge.classList.add('hidden');
       }
-
       renderTabla();
     }
 
     function renderTabla() {
       const filtroLeido  = document.getElementById('filter-leido').value;
       const filtroAsunto = document.getElementById('filter-asunto').value;
-
       const lista = mensajes.filter(m => {
         const ml = filtroLeido  === '' ? true : String(m.leido) === filtroLeido;
         const ma = filtroAsunto === '' ? true : m.asunto === filtroAsunto;
@@ -142,26 +163,24 @@ import Layout from '../../layouts/Layout.astro';
 
       const tbody = document.getElementById('tabla-body');
       if (!lista.length) {
-        tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">No hay mensajes</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="px-4 py-8 text-center text-gray-400">No hay mensajes</td></tr>';
         return;
       }
-
-      const ASUNTOS = {
-        informacion: 'Información general', socio: 'Hacerse socio',
-        seccion: 'Secciones', evento: 'Eventos',
-        sugerencia: 'Sugerencia o queja', otro: 'Otro'
-      };
 
       tbody.innerHTML = lista.map(m => {
         const fecha = new Date(m.created_at).toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric' });
         const hora  = new Date(m.created_at).toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
-        const punto = m.leido ? '' : '<div class="w-2.5 h-2.5 rounded-full bg-blue-600 flex-shrink-0"></div>';
-        const rowClass = m.leido ? 'hover:bg-gray-50' : 'bg-blue-50/40 hover:bg-blue-50 font-medium';
+        const punto = m.leido ? '' : '<div class="w-2.5 h-2.5 rounded-full bg-blue-600"></div>';
+        const rowClass = m.leido ? 'hover:bg-gray-50' : 'bg-blue-50/40 hover:bg-blue-50';
+        const respondido = m.respuesta
+          ? '<span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">Respondido</span>'
+          : '<span class="bg-yellow-100 text-yellow-700 text-xs px-2 py-0.5 rounded-full">Pendiente</span>';
         return `<tr class="${rowClass} cursor-pointer" data-id="${m.id}">
           <td class="px-4 py-3">${punto}</td>
-          <td class="px-4 py-3 text-gray-900">${m.nombre} ${m.apellidos || ''}</td>
-          <td class="px-4 py-3 text-gray-500">${m.email}</td>
-          <td class="px-4 py-3 text-gray-500">${ASUNTOS[m.asunto] || m.asunto || '—'}</td>
+          <td class="px-4 py-3 text-gray-900 font-medium">${m.nombre} ${m.apellidos || ''}</td>
+          <td class="px-4 py-3 text-gray-500 text-xs">${m.email}</td>
+          <td class="px-4 py-3 text-gray-500 text-xs">${ASUNTOS[m.asunto] || m.asunto || '—'}</td>
+          <td class="px-4 py-3">${respondido}</td>
           <td class="px-4 py-3 text-gray-400 text-xs">${fecha} ${hora}</td>
           <td class="px-4 py-3 text-right">
             <button data-ver="${m.id}" class="text-xs px-3 py-1 bg-blue-900 text-white rounded-lg hover:bg-blue-800">Ver</button>
@@ -178,23 +197,12 @@ import Layout from '../../layouts/Layout.astro';
       if (!m) return;
       msgActual = m;
       abrirModal(m);
-      // Marcar como leído automáticamente
       if (!m.leido) {
         await supabase.from('contactos').update({ leido: true }).eq('id', id);
         m.leido = true;
         renderTabla();
-        const noLeidos = mensajes.filter(x => !x.leido).length;
-        const badge = document.getElementById('badge-nuevos');
-        if (noLeidos > 0) { badge.textContent = `${noLeidos} nuevo${noLeidos > 1 ? 's' : ''}`; }
-        else { badge.classList.add('hidden'); }
       }
     });
-
-    const ASUNTOS = {
-      informacion: 'Información general', socio: 'Hacerse socio',
-      seccion: 'Secciones', evento: 'Eventos',
-      sugerencia: 'Sugerencia o queja', otro: 'Otro'
-    };
 
     function abrirModal(m) {
       document.getElementById('m-nombre').textContent   = `${m.nombre} ${m.apellidos || ''}`;
@@ -204,21 +212,59 @@ import Layout from '../../layouts/Layout.astro';
       document.getElementById('m-asunto').textContent   = ASUNTOS[m.asunto] || m.asunto || '—';
       document.getElementById('m-fecha').textContent    = new Date(m.created_at).toLocaleString('es-ES');
       document.getElementById('m-mensaje').textContent  = m.mensaje;
-      const asunto = encodeURIComponent(`Re: ${ASUNTOS[m.asunto] || m.asunto || 'Contacto web'}`);
-      document.getElementById('btn-responder').href = `mailto:${m.email}?subject=${asunto}`;
-      document.getElementById('btn-marcar').textContent = m.leido ? 'Marcar como no leído' : 'Marcar como leído';
+      document.getElementById('m-id').textContent       = m.id;
+      document.getElementById('f-respuesta').value      = '';
+      document.getElementById('resp-ok').classList.add('hidden');
+      document.getElementById('resp-error').classList.add('hidden');
+
+      // Mostrar respuesta existente si la hay
+      if (m.respuesta) {
+        document.getElementById('m-respuesta').textContent = m.respuesta;
+        document.getElementById('m-respondido-at').textContent = m.respondido_at
+          ? `Respondido el ${new Date(m.respondido_at).toLocaleString('es-ES')}`
+          : '';
+        document.getElementById('respuesta-existente').classList.remove('hidden');
+        document.getElementById('btn-enviar-respuesta').textContent = '✏️ Actualizar respuesta';
+      } else {
+        document.getElementById('respuesta-existente').classList.add('hidden');
+        document.getElementById('btn-enviar-respuesta').textContent = '✉️ Enviar respuesta';
+      }
+
       document.getElementById('modal').classList.remove('hidden');
     }
 
     document.getElementById('btn-cerrar').addEventListener('click', () => document.getElementById('modal').classList.add('hidden'));
 
-    document.getElementById('btn-marcar').addEventListener('click', async () => {
-      if (!msgActual) return;
-      const nuevoEstado = !msgActual.leido;
-      await supabase.from('contactos').update({ leido: nuevoEstado }).eq('id', msgActual.id);
-      msgActual.leido = nuevoEstado;
-      await init();
-      document.getElementById('modal').classList.add('hidden');
+    document.getElementById('btn-enviar-respuesta').addEventListener('click', async () => {
+      const respuesta = document.getElementById('f-respuesta').value.trim();
+      if (!respuesta && !msgActual?.respuesta) {
+        document.getElementById('resp-error').textContent = 'Escribe una respuesta.';
+        document.getElementById('resp-error').classList.remove('hidden');
+        return;
+      }
+
+      const textoFinal = respuesta || msgActual.respuesta;
+      const btn = document.getElementById('btn-enviar-respuesta');
+      btn.textContent = 'Enviando...'; btn.disabled = true;
+
+      const { error } = await supabase.from('contactos').update({
+        respuesta: textoFinal,
+        respondido_at: new Date().toISOString()
+      }).eq('id', msgActual.id);
+
+      btn.disabled = false;
+      if (error) {
+        document.getElementById('resp-error').textContent = 'Error: ' + error.message;
+        document.getElementById('resp-error').classList.remove('hidden');
+      } else {
+        msgActual.respuesta = textoFinal;
+        msgActual.respondido_at = new Date().toISOString();
+        document.getElementById('resp-ok').textContent = '✅ Respuesta guardada. El usuario puede consultarla con su ID.';
+        document.getElementById('resp-ok').classList.remove('hidden');
+        await init();
+        setTimeout(() => abrirModal(msgActual), 500);
+        btn.textContent = '✏️ Actualizar respuesta';
+      }
     });
 
     document.getElementById('btn-borrar-msg').addEventListener('click', async () => {
