@@ -128,6 +128,10 @@ const { title, lang = 'es' } = Astro.props;
             </div>
           </div>
 
+          <a href="/socios/registro" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition font-semibold flex items-center gap-1" data-i18n="nav_asociate">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+            +Asóciate
+          </a>
           <a href="/socios/login" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition" data-i18n="nav_area">
             Àrea socis
           </a>
@@ -224,16 +228,19 @@ const { title, lang = 'es' } = Astro.props;
           nav_seccions: 'Secciones', nav_noticies: 'Noticias', nav_revista: 'Revista',
           nav_contacte: 'Contacto', nav_area: 'Área socios', nav_login: 'Iniciar sesión',
           nav_registro: 'Registrarse', footer_links: 'Enlaces', footer_privat: 'Área privada',
+          nav_asociate: '+Asóciate',
         },
         ca: {
           nav_seccions: 'Seccions', nav_noticies: 'Notícies', nav_revista: 'Revista',
           nav_contacte: 'Contacte', nav_area: 'Àrea socis', nav_login: 'Iniciar sessió',
           nav_registro: 'Registrar-se', footer_links: 'Enllaços', footer_privat: 'Àrea privada',
+          nav_asociate: '+Fes-te soci',
         },
         en: {
           nav_seccions: 'Sections', nav_noticies: 'News', nav_revista: 'Magazine',
           nav_contacte: 'Contact', nav_area: 'Members area', nav_login: 'Sign in',
           nav_registro: 'Register', footer_links: 'Links', footer_privat: 'Private area',
+          nav_asociate: '+Join us',
         }
       };
 
