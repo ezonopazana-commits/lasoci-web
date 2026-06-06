@@ -2,49 +2,65 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="la Soci — Associació del Personal de CaixaBank">
+<Layout title="la Soci — Asociación del Personal de CaixaBank">
 
   <!-- HERO -->
   <section class="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-24 px-6">
     <div class="max-w-5xl mx-auto text-center">
-      <img src="/logo-lasoci.png" alt="la Soci" class="h-16 mx-auto mb-8" />
+      <img src="/logo-lasoci.png.JPG" alt="la Soci" class="h-16 mx-auto mb-8" />
       <h1 class="text-4xl md:text-5xl font-bold mb-6">
-        Bienvenido a <span class="text-orange-400">la Soci</span>
+        <span data-i18n="home_hero_welcome">Bienvenido a</span> <span class="text-orange-400">la Soci</span>
       </h1>
-      <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
-        La associació del personal de CaixaBank. Activitats, cultura, esport i molt més per als seus associats.
+      <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto" data-i18n="home_hero_sub">
+        La asociación del personal de CaixaBank. Actividades, cultura, deporte y mucho más para sus asociados.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/socios/registro" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-lg transition">
-          Fes-te soci
+        <a href="/socios/registro" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-lg transition" data-i18n="home_hero_join">
+          Hazte socio
         </a>
-        <a href="/socios/login" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-3 rounded-lg border border-white/30 transition">
-          Accés socis
+        <a href="/socios/login" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-3 rounded-lg border border-white/30 transition" data-i18n="home_hero_access">
+          Acceso socios
         </a>
       </div>
     </div>
   </section>
 
-  <!-- SECCIONS -->
+  <!-- SECCIONES -->
   <section class="py-20 px-6 bg-gray-50">
     <div class="max-w-5xl mx-auto">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-4">Les nostres seccions</h2>
-      <p class="text-center text-gray-500 mb-12">Activitats per a tots els gustos</p>
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-4" data-i18n="home_sections_title">Nuestras secciones</h2>
+      <p class="text-center text-gray-500 mb-12" data-i18n="home_sections_sub">Actividades para todos los gustos</p>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[
-          { nom: 'Senderisme', icon: '🥾', desc: 'Rutes i excursions per la natura' },
-          { nom: 'Cultura', icon: '🎭', desc: 'Visites culturals, teatre i música' },
-          { nom: 'Esport', icon: '⚽', desc: 'Activitats esportives i tornejos' },
-          { nom: 'Viatges', icon: '✈️', desc: 'Viatges i escapades organitzades' },
-          { nom: 'Gastronomia', icon: '🍷', desc: 'Sopars, tastaments i events' },
-          { nom: 'Família', icon: '👨‍👩‍👧', desc: 'Activitats per a tota la família' },
-        ].map(s => (
-          <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition border border-gray-100">
-            <div class="text-4xl mb-3">{s.icon}</div>
-            <h3 class="text-lg font-bold text-gray-800 mb-1">{s.nom}</h3>
-            <p class="text-gray-500 text-sm">{s.desc}</p>
-          </div>
-        ))}
+        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition border border-gray-100">
+          <div class="text-4xl mb-3">🥾</div>
+          <h3 class="text-lg font-bold text-gray-800 mb-1" data-i18n="sec_hiking">Senderismo</h3>
+          <p class="text-gray-500 text-sm" data-i18n="sec_hiking_desc">Rutas y excursiones por la naturaleza</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition border border-gray-100">
+          <div class="text-4xl mb-3">🎭</div>
+          <h3 class="text-lg font-bold text-gray-800 mb-1" data-i18n="sec_culture">Cultura</h3>
+          <p class="text-gray-500 text-sm" data-i18n="sec_culture_desc">Visitas culturales, teatro y música</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition border border-gray-100">
+          <div class="text-4xl mb-3">⚽</div>
+          <h3 class="text-lg font-bold text-gray-800 mb-1" data-i18n="sec_sport">Deporte</h3>
+          <p class="text-gray-500 text-sm" data-i18n="sec_sport_desc">Actividades deportivas y torneos</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition border border-gray-100">
+          <div class="text-4xl mb-3">✈️</div>
+          <h3 class="text-lg font-bold text-gray-800 mb-1" data-i18n="sec_travel">Viajes</h3>
+          <p class="text-gray-500 text-sm" data-i18n="sec_travel_desc">Viajes y escapadas organizadas</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition border border-gray-100">
+          <div class="text-4xl mb-3">🍷</div>
+          <h3 class="text-lg font-bold text-gray-800 mb-1" data-i18n="sec_gastro">Gastronomía</h3>
+          <p class="text-gray-500 text-sm" data-i18n="sec_gastro_desc">Cenas, catas y eventos</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition border border-gray-100">
+          <div class="text-4xl mb-3">👨‍👩‍👧</div>
+          <h3 class="text-lg font-bold text-gray-800 mb-1" data-i18n="sec_family">Familia</h3>
+          <p class="text-gray-500 text-sm" data-i18n="sec_family_desc">Actividades para toda la familia</p>
+        </div>
       </div>
     </div>
   </section>
@@ -52,30 +68,101 @@ import Layout from '../layouts/Layout.astro';
   <!-- POR QUÉ ASOCIARSE -->
   <section class="py-20 px-6 bg-white">
     <div class="max-w-5xl mx-auto">
-      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12">Per què associar-se?</h2>
+      <h2 class="text-3xl font-bold text-center text-gray-800 mb-12" data-i18n="home_why_title">¿Por qué asociarse?</h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {[
-          { icon: '🎟️', title: 'Descomptes exclusius', desc: 'Accés a preus especials en activitats i serveis' },
-          { icon: '📅', title: 'Agenda d\'activitats', desc: 'Participa en events i activitats durant tot l\'any' },
-          { icon: '👥', title: 'Comunitat', desc: 'Connecta amb altres empleats de CaixaBank' },
-        ].map(b => (
-          <div class="text-center">
-            <div class="text-5xl mb-4">{b.icon}</div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">{b.title}</h3>
-            <p class="text-gray-500">{b.desc}</p>
-          </div>
-        ))}
+        <div class="text-center">
+          <div class="text-5xl mb-4">🎟️</div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2" data-i18n="home_why_1_title">Descuentos exclusivos</h3>
+          <p class="text-gray-500" data-i18n="home_why_1_desc">Acceso a precios especiales en actividades y servicios</p>
+        </div>
+        <div class="text-center">
+          <div class="text-5xl mb-4">📅</div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2" data-i18n="home_why_2_title">Agenda de actividades</h3>
+          <p class="text-gray-500" data-i18n="home_why_2_desc">Participa en eventos y actividades durante todo el año</p>
+        </div>
+        <div class="text-center">
+          <div class="text-5xl mb-4">👥</div>
+          <h3 class="text-xl font-bold text-gray-800 mb-2" data-i18n="home_why_3_title">Comunidad</h3>
+          <p class="text-gray-500" data-i18n="home_why_3_desc">Conecta con otros empleados de CaixaBank</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- CTA -->
   <section class="py-16 px-6 bg-blue-900 text-white text-center">
-    <h2 class="text-3xl font-bold mb-4">Ja ets soci?</h2>
-    <p class="text-blue-200 mb-8">Accedeix al teu àrea privada per gestionar les teves inscripcions</p>
-    <a href="/socios/login" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-lg transition">
-      Accedeix ara
+    <h2 class="text-3xl font-bold mb-4" data-i18n="home_cta_title">¿Ya eres socio?</h2>
+    <p class="text-blue-200 mb-8" data-i18n="home_cta_sub">Accede a tu área privada para gestionar tus inscripciones</p>
+    <a href="/socios/login" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-lg transition" data-i18n="home_cta_btn">
+      Accede ahora
     </a>
   </section>
+
+  <script>
+    const T = {
+      es: {
+        home_hero_welcome: 'Bienvenido a',
+        home_hero_sub: 'La asociación del personal de CaixaBank. Actividades, cultura, deporte y mucho más para sus asociados.',
+        home_hero_join: 'Hazte socio', home_hero_access: 'Acceso socios',
+        home_sections_title: 'Nuestras secciones', home_sections_sub: 'Actividades para todos los gustos',
+        home_why_title: '¿Por qué asociarse?',
+        home_why_1_title: 'Descuentos exclusivos', home_why_1_desc: 'Acceso a precios especiales en actividades y servicios',
+        home_why_2_title: 'Agenda de actividades', home_why_2_desc: 'Participa en eventos y actividades durante todo el año',
+        home_why_3_title: 'Comunidad', home_why_3_desc: 'Conecta con otros empleados de CaixaBank',
+        home_cta_title: '¿Ya eres socio?', home_cta_sub: 'Accede a tu área privada para gestionar tus inscripciones', home_cta_btn: 'Accede ahora',
+        sec_hiking: 'Senderismo', sec_hiking_desc: 'Rutas y excursiones por la naturaleza',
+        sec_culture: 'Cultura', sec_culture_desc: 'Visitas culturales, teatro y música',
+        sec_sport: 'Deporte', sec_sport_desc: 'Actividades deportivas y torneos',
+        sec_travel: 'Viajes', sec_travel_desc: 'Viajes y escapadas organizadas',
+        sec_gastro: 'Gastronomía', sec_gastro_desc: 'Cenas, catas y eventos',
+        sec_family: 'Familia', sec_family_desc: 'Actividades para toda la familia',
+      },
+      ca: {
+        home_hero_welcome: 'Benvingut a',
+        home_hero_sub: "L'associació del personal de CaixaBank. Activitats, cultura, esport i molt més per als seus associats.",
+        home_hero_join: 'Fes-te soci', home_hero_access: 'Accés socis',
+        home_sections_title: 'Les nostres seccions', home_sections_sub: 'Activitats per a tots els gustos',
+        home_why_title: 'Per què associar-se?',
+        home_why_1_title: 'Descomptes exclusius', home_why_1_desc: 'Accés a preus especials en activitats i serveis',
+        home_why_2_title: "Agenda d'activitats", home_why_2_desc: "Participa en events i activitats durant tot l'any",
+        home_why_3_title: 'Comunitat', home_why_3_desc: 'Connecta amb altres empleats de CaixaBank',
+        home_cta_title: 'Ja ets soci?', home_cta_sub: 'Accedeix al teu àrea privada per gestionar les teves inscripcions', home_cta_btn: 'Accedeix ara',
+        sec_hiking: 'Senderisme', sec_hiking_desc: 'Rutes i excursions per la natura',
+        sec_culture: 'Cultura', sec_culture_desc: 'Visites culturals, teatre i música',
+        sec_sport: 'Esport', sec_sport_desc: 'Activitats esportives i tornejos',
+        sec_travel: 'Viatges', sec_travel_desc: 'Viatges i escapades organitzades',
+        sec_gastro: 'Gastronomia', sec_gastro_desc: 'Sopars, tastaments i events',
+        sec_family: 'Família', sec_family_desc: 'Activitats per a tota la família',
+      },
+      en: {
+        home_hero_welcome: 'Welcome to',
+        home_hero_sub: 'The CaixaBank staff association. Activities, culture, sport and much more for its members.',
+        home_hero_join: 'Join us', home_hero_access: 'Members access',
+        home_sections_title: 'Our sections', home_sections_sub: 'Activities for all tastes',
+        home_why_title: 'Why join?',
+        home_why_1_title: 'Exclusive discounts', home_why_1_desc: 'Access to special prices on activities and services',
+        home_why_2_title: 'Activity calendar', home_why_2_desc: 'Participate in events and activities throughout the year',
+        home_why_3_title: 'Community', home_why_3_desc: 'Connect with other CaixaBank employees',
+        home_cta_title: 'Already a member?', home_cta_sub: 'Access your private area to manage your registrations', home_cta_btn: 'Access now',
+        sec_hiking: 'Hiking', sec_hiking_desc: 'Routes and excursions in nature',
+        sec_culture: 'Culture', sec_culture_desc: 'Cultural visits, theatre and music',
+        sec_sport: 'Sport', sec_sport_desc: 'Sports activities and tournaments',
+        sec_travel: 'Travel', sec_travel_desc: 'Organised trips and getaways',
+        sec_gastro: 'Gastronomy', sec_gastro_desc: 'Dinners, tastings and events',
+        sec_family: 'Family', sec_family_desc: 'Activities for the whole family',
+      }
+    };
+
+    function applyLang(lang) {
+      const t = T[lang] || T.es;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.textContent = t[key];
+      });
+    }
+
+    applyLang(localStorage.getItem('lasoci_lang') || 'es');
+    window.addEventListener('langchange', e => applyLang(e.detail.lang));
+  </script>
 
 </Layout>
