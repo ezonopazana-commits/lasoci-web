@@ -38,6 +38,28 @@ import Layout from '../../layouts/Layout.astro';
       <!-- Content -->
       <div id="admin-content" class="hidden space-y-5">
 
+        <!-- Accesos rápidos -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <a href="/admin/altas" class="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition border border-amber-100">
+            <p class="text-2xl mb-1">👤</p>
+            <p class="text-xs font-semibold text-gray-700">Gestión Altas</p>
+            <p class="text-xs text-amber-500" id="badge-altas">0 pendientes</p>
+          </a>
+          <a href="/admin/secciones" class="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition border border-blue-100">
+            <p class="text-2xl mb-1">🏷️</p>
+            <p class="text-xs font-semibold text-gray-700">Secciones</p>
+            <p class="text-xs text-blue-500" id="badge-secciones">— secciones</p>
+          </a>
+          <a href="/admin/agenda" class="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition border border-green-100">
+            <p class="text-2xl mb-1">📅</p>
+            <p class="text-xs font-semibold text-gray-700">Agenda</p>
+          </a>
+          <a href="/admin/contactos" class="bg-white rounded-xl shadow-sm p-4 text-center hover:shadow-md transition border border-purple-100">
+            <p class="text-2xl mb-1">✉️</p>
+            <p class="text-xs font-semibold text-gray-700">Contactos</p>
+          </a>
+        </div>
+
         <!-- Stats -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
           <div class="bg-white rounded-xl shadow-sm p-4 text-center">
