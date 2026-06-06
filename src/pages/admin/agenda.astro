@@ -567,17 +567,31 @@ import Layout from '../../layouts/Layout.astro';
       });
     }
 
+    async function loadFlatpickr() {
+      return new Promise((resolve) => {
+        if (window.flatpickr) { resolve(); return; }
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css';
+        document.head.appendChild(link);
+        const s1 = document.createElement('script');
+        s1.src = 'https://cdn.jsdelivr.net/npm/flatpickr';
+        s1.onload = () => {
+          const s2 = document.createElement('script');
+          s2.src = 'https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js';
+          s2.onload = () => {
+            if (window.flatpickr && window.flatpickr.l10ns && window.flatpickr.l10ns.es) {
+              window.flatpickr.localize(window.flatpickr.l10ns.es);
+            }
+            resolve();
+          };
+          document.head.appendChild(s2);
+        };
+        document.head.appendChild(s1);
+      });
+    }
+
+    loadFlatpickr().then(() => initFlatpickr());
     init();
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof flatpickr !== 'undefined') {
-        flatpickr.localize(flatpickr.l10ns.es);
-        initFlatpickr();
-      }
-    });
-  </script>
-
 </Layout>
