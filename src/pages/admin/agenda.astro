@@ -383,19 +383,19 @@ import Layout from '../../layouts/Layout.astro';
         imagen_url:   uploadedImageUrl || document.getElementById('f-imagen-url').value || null,
       };
 
-      let error, result;
+      let error;
       if (editandoId) {
-        result = await supabase.from('eventos').update(datos).eq('id', editandoId).select();
-        error = result.error;
-        console.log('UPDATE result:', result);
+        const res = await supabase.from('eventos').update(datos).eq('id', editandoId).select();
+        error = res.error;
+        console.log('UPDATE res:', JSON.stringify(res));
       } else {
-        result = await supabase.from('eventos').insert(datos).select();
-        error = result.error;
-        console.log('INSERT result:', result);
+        const res = await supabase.from('eventos').insert(datos).select();
+        error = res.error;
+        console.log('INSERT res:', JSON.stringify(res));
       }
 
       btn.textContent = 'Guardar'; btn.disabled = false;
-      if (error) { mostrarError('Error: ' + error.message + ' | Code: ' + error.code); }
+      if (error) { mostrarError('Error: ' + error.message + ' | ' + error.code); }
       else {
         document.getElementById('form-ok').textContent = editandoId ? 'Evento actualizado.' : 'Evento creado.';
         document.getElementById('form-ok').classList.remove('hidden');
