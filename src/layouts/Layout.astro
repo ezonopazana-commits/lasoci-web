@@ -314,11 +314,11 @@ const { title, lang = 'es' } = Astro.props;
     </main>
 
     <!-- FOOTER -->
-    <footer style="background:linear-gradient(160deg,#0d1b2e 0%,#111827 50%,#0f172a 100%);border-top:1px solid rgba(255,255,255,0.06);" class="text-gray-400 pt-14 pb-6 px-6 mt-0">
+    <footer style="background:linear-gradient(160deg,#1e2d45 0%,#243350 50%,#1a2840 100%);border-top:1px solid rgba(255,255,255,0.1);" class="text-gray-400 pt-14 pb-6 px-6 mt-0">
       <div class="max-w-6xl mx-auto">
 
         <!-- Top row -->
-        <div class="grid grid-cols-1 md:grid-cols-5 pb-10 footer-cols" style="border-bottom:1px solid rgba(255,255,255,0.08);gap:0;">
+        <div class="grid grid-cols-1 md:grid-cols-6 pb-10 footer-cols" style="border-bottom:1px solid rgba(255,255,255,0.1);gap:0;">
 
           <!-- Brand -->
           <div class="md:col-span-2">
@@ -379,6 +379,20 @@ const { title, lang = 'es' } = Astro.props;
             </ul>
           </div>
 
+          <!-- Mapa web -->
+          <div>
+            <p class="text-xs font-bold uppercase tracking-widest mb-4" style="color:#94a3b8;letter-spacing:0.12em;">Mapa web</p>
+            <ul class="space-y-2 text-sm">
+              <li><a href="/" class="footer-link">Inicio</a></li>
+              <li><a href="/agenda" class="footer-link">Agenda</a></li>
+              <li><a href="/viajes" class="footer-link">Viajes</a></li>
+              <li><a href="/ventajas" class="footer-link">Ventajas</a></li>
+              <li><a href="/revista" class="footer-link">Revista</a></li>
+              <li><a href="/contacto" class="footer-link">Contacto</a></li>
+              <li><a href="/socios/dashboard" class="footer-link">Área socios</a></li>
+            </ul>
+          </div>
+
           <!-- Contacto -->
           <div>
             <p class="text-xs font-bold uppercase tracking-widest mb-4" style="color:#94a3b8;letter-spacing:0.12em;" data-i18n="footer_contact">Contacto</p>
@@ -405,7 +419,7 @@ const { title, lang = 'es' } = Astro.props;
 
         <!-- Bottom row -->
         <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs" style="border-top:1px solid rgba(255,255,255,0.06);padding-top:1.5rem;">
-          <p style="color:#475569;">© {new Date().getFullYear()} <span style="color:#fb923c;font-weight:600;">la</span><span style="color:#64748b;font-weight:600;">Soci</span> · Associació del Personal de CaixaBank</p>
+          <p style="color:#64748b;">© {new Date().getFullYear()} <span style="color:#fb923c;font-weight:600;">la</span><span style="color:#64748b;font-weight:600;">Soci</span> · Associació del Personal de CaixaBank</p>
           <div class="flex items-center gap-2">
             <a href="/aviso-legal" class="transition px-3 py-1.5 rounded-lg text-xs" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'" data-i18n="footer_legal">Aviso legal</a>
             <a href="/privacidad" class="transition px-3 py-1.5 rounded-lg text-xs" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'" data-i18n="footer_privacy">Privacidad</a>
