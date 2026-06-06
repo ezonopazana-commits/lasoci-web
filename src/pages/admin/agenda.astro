@@ -332,8 +332,8 @@ import Layout from '../../layouts/Layout.astro';
       document.getElementById('f-titulo-ca').value  = e.titulo_ca || '';
       document.getElementById('f-descripcion').value= e.descripcion || '';
       document.getElementById('f-lugar').value      = e.lugar || '';
-      document.getElementById('f-fecha-inicio').value = e.fecha_inicio ? e.fecha_inicio.slice(0,16) : '';
-      document.getElementById('f-fecha-fin').value    = e.fecha_fin   ? e.fecha_fin.slice(0,16)    : '';
+      document.getElementById('f-fecha-inicio').value = e.fecha_inicio ? toLocalInput(e.fecha_inicio) : '';
+      document.getElementById('f-fecha-fin').value    = e.fecha_fin   ? toLocalInput(e.fecha_fin)   : '';
       document.getElementById('f-aforo').value      = e.plazas || '';
       document.getElementById('f-precio').value     = e.precio || 0;
       document.getElementById('f-activo').checked   = e.activo || false;
@@ -378,8 +378,8 @@ import Layout from '../../layouts/Layout.astro';
         plazas:       document.getElementById('f-aforo').value ? parseInt(document.getElementById('f-aforo').value) : null,
         precio:       parseFloat(document.getElementById('f-precio').value) || 0,
         activo:       document.getElementById('f-activo').checked,
-        fecha_inicio: new Date(fechaInicio).toISOString(),
-        fecha_fin:    document.getElementById('f-fecha-fin').value ? new Date(document.getElementById('f-fecha-fin').value).toISOString() : null,
+        fecha_inicio: fechaInicio,
+        fecha_fin:    document.getElementById('f-fecha-fin').value || null,
         imagen_url:   uploadedImageUrl || document.getElementById('f-imagen-url').value || null,
       };
 
@@ -496,6 +496,13 @@ import Layout from '../../layouts/Layout.astro';
     function mostrarError(msg) {
       const el = document.getElementById('form-error');
       el.textContent = msg; el.classList.remove('hidden');
+    }
+
+    function toLocalInput(isoStr) {
+      const d = new Date(isoStr);
+      const pad = n => String(n).padStart(2, '0');
+      return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) +
+             'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
     }
 
     init();
