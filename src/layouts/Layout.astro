@@ -167,12 +167,12 @@ const { title, lang = 'es' } = Astro.props;
       <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-sm">
         <div>
           <div class="text-white font-bold text-2xl mb-3" style="font-family:serif;letter-spacing:-1px;">la<span style="font-size:1.4em;vertical-align:middle;">S</span>OCI</div>
-          <p class="text-sm mb-3">Somos la Asociación de todos los trabajadores y trabajadoras de CaixaBank y la Fundación "la Caixa" y sus familias.</p>
-          <p class="text-xs text-gray-500 mb-4">Todo un mundo de actividades, servicios y ventajas exclusivos.</p>
+          <p class="text-sm mb-3" data-i18n="footer_desc">Somos la Asociación de todos los trabajadores y trabajadoras de CaixaBank y la Fundación "la Caixa" y sus familias.</p>
+          <p class="text-xs text-gray-500 mb-4" data-i18n="footer_sub">Todo un mundo de actividades, servicios y ventajas exclusivos.</p>
           <ul class="space-y-1 text-xs">
-            <li><a href="/aviso-legal" class="hover:text-white transition">Aviso legal</a></li>
-            <li><a href="/privacidad" class="hover:text-white transition">Política de privacidad</a></li>
-            <li><a href="/cookies" class="hover:text-white transition">Política de cookies</a></li>
+            <li><a href="/aviso-legal" class="hover:text-white transition" data-i18n="footer_legal">Aviso legal</a></li>
+            <li><a href="/privacidad" class="hover:text-white transition" data-i18n="footer_privacy">Política de privacidad</a></li>
+            <li><a href="/cookies" class="hover:text-white transition" data-i18n="footer_cookies">Política de cookies</a></li>
           </ul>
         </div>
         <div>
@@ -192,7 +192,7 @@ const { title, lang = 'es' } = Astro.props;
           </ul>
         </div>
         <div>
-          <div class="text-white font-semibold mb-3">Contacto</div>
+          <div class="text-white font-semibold mb-3" data-i18n="footer_contact">Contacto</div>
           <ul class="space-y-2">
             <li><a href="mailto:info@lasoci.org" class="hover:text-white transition flex items-center gap-2"><span>✉️</span> info@lasoci.org</a></li>
             <li><a href="tel:+34932111544" class="hover:text-white transition flex items-center gap-2"><span>📞</span> 93 211 15 44</a></li>
@@ -229,18 +229,30 @@ const { title, lang = 'es' } = Astro.props;
           nav_contacte: 'Contacto', nav_area: 'Área socios', nav_login: 'Iniciar sesión',
           nav_registro: 'Registrarse', footer_links: 'Enlaces', footer_privat: 'Área privada',
           nav_asociate: '+Asóciate',
+          footer_desc: 'Somos la Asociación de todos los trabajadores y trabajadoras de CaixaBank y la Fundación "la Caixa" y sus familias.',
+          footer_sub: 'Todo un mundo de actividades, servicios y ventajas exclusivos.',
+          footer_legal: 'Aviso legal', footer_privacy: 'Política de privacidad', footer_cookies: 'Política de cookies',
+          footer_contact: 'Contacto',
         },
         ca: {
           nav_seccions: 'Seccions', nav_noticies: 'Notícies', nav_revista: 'Revista',
           nav_contacte: 'Contacte', nav_area: 'Àrea socis', nav_login: 'Iniciar sessió',
           nav_registro: 'Registrar-se', footer_links: 'Enllaços', footer_privat: 'Àrea privada',
           nav_asociate: '+Fes-te soci',
+          footer_desc: "Som l'Associació de tots els treballadors i treballadores de CaixaBank i la Fundació \"la Caixa\" i les seves famílies.",
+          footer_sub: 'Tot un món d\'activitats, serveis i avantatges exclusius.',
+          footer_legal: 'Avís legal', footer_privacy: 'Política de privacitat', footer_cookies: 'Política de cookies',
+          footer_contact: 'Contacte',
         },
         en: {
           nav_seccions: 'Sections', nav_noticies: 'News', nav_revista: 'Magazine',
           nav_contacte: 'Contact', nav_area: 'Members area', nav_login: 'Sign in',
           nav_registro: 'Register', footer_links: 'Links', footer_privat: 'Private area',
           nav_asociate: '+Join us',
+          footer_desc: 'We are the Association of all CaixaBank and Fundación "la Caixa" employees and their families.',
+          footer_sub: 'A world of exclusive activities, services and benefits.',
+          footer_legal: 'Legal notice', footer_privacy: 'Privacy policy', footer_cookies: 'Cookie policy',
+          footer_contact: 'Contact',
         }
       };
 
