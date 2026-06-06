@@ -91,6 +91,32 @@ const { title, lang = 'es' } = Astro.props;
           border-bottom: none;
         }
       }
+
+      /* Footer link hover más visible */
+      .footer-link {
+        color: #94a3b8;
+        transition: color 0.18s ease, padding-left 0.18s ease;
+        display: inline-block;
+        position: relative;
+        text-decoration: none;
+      }
+      .footer-link::after {
+        content: '';
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: #f97316;
+        transition: width 0.2s ease;
+      }
+      .footer-link:hover {
+        color: #ffffff !important;
+        padding-left: 6px;
+      }
+      .footer-link:hover::after {
+        width: 100%;
+      }
     </style>
   </head>
   <body class="min-h-screen bg-white font-sans">
@@ -331,12 +357,12 @@ const { title, lang = 'es' } = Astro.props;
           <div>
             <p class="text-xs font-bold uppercase tracking-widest mb-4" style="color:#94a3b8;letter-spacing:0.12em;" data-i18n="footer_actividades">Actividades</p>
             <ul class="space-y-2 text-sm">
-              <li><a href="/secciones" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="nav_seccions">Secciones</a></li>
-              <li><a href="/agenda" class="hover:text-white hover:translate-x-1 transition inline-block">Agenda</a></li>
-              <li><a href="/viajes" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="nav_viajes">Viajes</a></li>
-              <li><a href="/ventajas" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="nav_ventajas">Ventajas</a></li>
-              <li><a href="/noticias" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="nav_noticies">Noticias</a></li>
-              <li><a href="/revista" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="nav_revista">Revista</a></li>
+              <li><a href="/secciones" class="footer-link" data-i18n="nav_seccions">Secciones</a></li>
+              <li><a href="/agenda" class="footer-link">Agenda</a></li>
+              <li><a href="/viajes" class="footer-link" data-i18n="nav_viajes">Viajes</a></li>
+              <li><a href="/ventajas" class="footer-link" data-i18n="nav_ventajas">Ventajas</a></li>
+              <li><a href="/noticias" class="footer-link" data-i18n="nav_noticies">Noticias</a></li>
+              <li><a href="/revista" class="footer-link" data-i18n="nav_revista">Revista</a></li>
             </ul>
           </div>
 
@@ -344,12 +370,12 @@ const { title, lang = 'es' } = Astro.props;
           <div>
             <p class="text-xs font-bold uppercase tracking-widest mb-4" style="color:#94a3b8;letter-spacing:0.12em;" data-i18n="nav_quienes">Quiénes somos</p>
             <ul class="space-y-2 text-sm">
-              <li><a href="/quienes-somos" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="qs_nav_nosotros">Nosotros</a></li>
-              <li><a href="/quienes-somos/historia" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="qs_nav_historia">Historia</a></li>
-              <li><a href="/quienes-somos/organizacion" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="qs_nav_org">Organización</a></li>
-              <li><a href="/quienes-somos/preguntas" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="qs_nav_faq">Preguntas frecuentes</a></li>
-              <li><a href="/socios/login" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="nav_login">Iniciar sesión</a></li>
-              <li><a href="/socios/registro" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="nav_registro">Registrarse</a></li>
+              <li><a href="/quienes-somos" class="footer-link" data-i18n="qs_nav_nosotros">Nosotros</a></li>
+              <li><a href="/quienes-somos/historia" class="footer-link" data-i18n="qs_nav_historia">Historia</a></li>
+              <li><a href="/quienes-somos/organizacion" class="footer-link" data-i18n="qs_nav_org">Organización</a></li>
+              <li><a href="/quienes-somos/preguntas" class="footer-link" data-i18n="qs_nav_faq">Preguntas frecuentes</a></li>
+              <li><a href="/socios/login" class="footer-link" data-i18n="nav_login">Iniciar sesión</a></li>
+              <li><a href="/socios/registro" class="footer-link" data-i18n="nav_registro">Registrarse</a></li>
             </ul>
           </div>
 
