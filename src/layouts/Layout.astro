@@ -64,6 +64,33 @@ const { title, lang = 'es' } = Astro.props;
         background-color: #f0f4ff;
         font-weight: 600;
       }
+
+      /* Footer column separators */
+      .footer-cols { gap: 0; }
+      @media (min-width: 768px) {
+        .footer-cols > div {
+          padding: 0 2.5rem;
+        }
+        .footer-cols > div:first-child {
+          padding-left: 0;
+          padding-right: 2.5rem;
+        }
+        .footer-cols > div:last-child {
+          padding-right: 0;
+        }
+        .footer-cols > div:not(:first-child) {
+          border-left: 1px solid rgba(255,255,255,0.07);
+        }
+      }
+      @media (max-width: 767px) {
+        .footer-cols > div {
+          padding: 1.5rem 0;
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .footer-cols > div:last-child {
+          border-bottom: none;
+        }
+      }
     </style>
   </head>
   <body class="min-h-screen bg-white font-sans">
@@ -265,7 +292,7 @@ const { title, lang = 'es' } = Astro.props;
       <div class="max-w-6xl mx-auto">
 
         <!-- Top row -->
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-10 pb-10" style="border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div class="grid grid-cols-1 md:grid-cols-5 pb-10 footer-cols" style="border-bottom:1px solid rgba(255,255,255,0.08);gap:0;">
 
           <!-- Brand -->
           <div class="md:col-span-2">
