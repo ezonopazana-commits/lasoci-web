@@ -69,7 +69,7 @@ const { title, lang = 'es' } = Astro.props;
   <body class="min-h-screen bg-white font-sans">
 
     <!-- NAVBAR -->
-    <nav style="background:#0f172a;" class="text-white shadow-lg sticky top-0 z-50">
+    <nav style="background:linear-gradient(135deg,#0d1b2e 0%,#1a2744 60%,#1e2f55 100%);border-bottom:1px solid rgba(255,255,255,0.07);" class="text-white shadow-2xl sticky top-0 z-50 backdrop-blur-sm">
       <div class="max-w-7xl mx-auto px-5 flex items-center justify-between h-16">
 
         <!-- Logo -->
@@ -261,11 +261,11 @@ const { title, lang = 'es' } = Astro.props;
     </main>
 
     <!-- FOOTER -->
-    <footer class="bg-gray-950 text-gray-400 pt-14 pb-6 px-6 mt-0">
+    <footer style="background:linear-gradient(160deg,#0d1b2e 0%,#111827 50%,#0f172a 100%);border-top:1px solid rgba(255,255,255,0.06);" class="text-gray-400 pt-14 pb-6 px-6 mt-0">
       <div class="max-w-6xl mx-auto">
 
         <!-- Top row -->
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-10 pb-10 border-b border-gray-800">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-10 pb-10" style="border-bottom:1px solid rgba(255,255,255,0.08);">
 
           <!-- Brand -->
           <div class="md:col-span-2">
@@ -300,7 +300,7 @@ const { title, lang = 'es' } = Astro.props;
 
           <!-- Actividades -->
           <div>
-            <p class="text-white text-xs font-bold uppercase tracking-widest mb-4" data-i18n="footer_actividades">Actividades</p>
+            <p class="text-xs font-bold uppercase tracking-widest mb-4" style="color:#94a3b8;letter-spacing:0.12em;" data-i18n="footer_actividades">Actividades</p>
             <ul class="space-y-2 text-sm">
               <li><a href="/secciones" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="nav_seccions">Secciones</a></li>
               <li><a href="/agenda" class="hover:text-white hover:translate-x-1 transition inline-block">Agenda</a></li>
@@ -313,7 +313,7 @@ const { title, lang = 'es' } = Astro.props;
 
           <!-- La Soci -->
           <div>
-            <p class="text-white text-xs font-bold uppercase tracking-widest mb-4" data-i18n="nav_quienes">Quiénes somos</p>
+            <p class="text-xs font-bold uppercase tracking-widest mb-4" style="color:#94a3b8;letter-spacing:0.12em;" data-i18n="nav_quienes">Quiénes somos</p>
             <ul class="space-y-2 text-sm">
               <li><a href="/quienes-somos" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="qs_nav_nosotros">Nosotros</a></li>
               <li><a href="/quienes-somos/historia" class="hover:text-white hover:translate-x-1 transition inline-block" data-i18n="qs_nav_historia">Historia</a></li>
@@ -326,22 +326,22 @@ const { title, lang = 'es' } = Astro.props;
 
           <!-- Contacto -->
           <div>
-            <p class="text-white text-xs font-bold uppercase tracking-widest mb-4" data-i18n="footer_contact">Contacto</p>
+            <p class="text-xs font-bold uppercase tracking-widest mb-4" style="color:#94a3b8;letter-spacing:0.12em;" data-i18n="footer_contact">Contacto</p>
             <ul class="space-y-3 text-sm">
               <li>
                 <a href="mailto:info@lasoci.org" class="hover:text-white transition flex items-center gap-2">
-                  <span class="w-7 h-7 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0">✉️</span>
+                  <span class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);">✉️</span>
                   info@lasoci.org
                 </a>
               </li>
               <li>
                 <a href="tel:+34932111544" class="hover:text-white transition flex items-center gap-2">
-                  <span class="w-7 h-7 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0">📞</span>
+                  <span class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);">📞</span>
                   93 211 15 44
                 </a>
               </li>
               <li class="flex items-start gap-2">
-                <span class="w-7 h-7 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0 mt-0.5">📍</span>
+                <span class="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);">📍</span>
                 <span>Sardenya, 521-523<br/>08024 Barcelona</span>
               </li>
             </ul>
@@ -349,14 +349,12 @@ const { title, lang = 'es' } = Astro.props;
         </div>
 
         <!-- Bottom row -->
-        <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-600">
-          <p>© {new Date().getFullYear()} <span class="text-orange-400 font-semibold">la</span><span class="text-gray-400 font-semibold">Soci</span> · Associació del Personal de CaixaBank</p>
-          <div class="flex gap-4">
-            <a href="/aviso-legal" class="hover:text-gray-400 transition" data-i18n="footer_legal">Aviso legal</a>
-            <span class="text-gray-800">·</span>
-            <a href="/privacidad" class="hover:text-gray-400 transition" data-i18n="footer_privacy">Privacidad</a>
-            <span class="text-gray-800">·</span>
-            <a href="/cookies" class="hover:text-gray-400 transition" data-i18n="footer_cookies">Cookies</a>
+        <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs" style="border-top:1px solid rgba(255,255,255,0.06);padding-top:1.5rem;">
+          <p style="color:#475569;">© {new Date().getFullYear()} <span style="color:#fb923c;font-weight:600;">la</span><span style="color:#64748b;font-weight:600;">Soci</span> · Associació del Personal de CaixaBank</p>
+          <div class="flex items-center gap-2">
+            <a href="/aviso-legal" class="transition px-3 py-1.5 rounded-lg text-xs" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'" data-i18n="footer_legal">Aviso legal</a>
+            <a href="/privacidad" class="transition px-3 py-1.5 rounded-lg text-xs" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'" data-i18n="footer_privacy">Privacidad</a>
+            <a href="/cookies" class="transition px-3 py-1.5 rounded-lg text-xs" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'" data-i18n="footer_cookies">Cookies</a>
           </div>
         </div>
 
