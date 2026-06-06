@@ -383,15 +383,19 @@ import Layout from '../../layouts/Layout.astro';
         imagen_url:   uploadedImageUrl || document.getElementById('f-imagen-url').value || null,
       };
 
-      let error;
+      let error, result;
       if (editandoId) {
-        ({ error } = await supabase.from('eventos').update(datos).eq('id', editandoId));
+        result = await supabase.from('eventos').update(datos).eq('id', editandoId).select();
+        error = result.error;
+        console.log('UPDATE result:', result);
       } else {
-        ({ error } = await supabase.from('eventos').insert(datos));
+        result = await supabase.from('eventos').insert(datos).select();
+        error = result.error;
+        console.log('INSERT result:', result);
       }
 
       btn.textContent = 'Guardar'; btn.disabled = false;
-      if (error) { mostrarError('Error: ' + error.message); }
+      if (error) { mostrarError('Error: ' + error.message + ' | Code: ' + error.code); }
       else {
         document.getElementById('form-ok').textContent = editandoId ? 'Evento actualizado.' : 'Evento creado.';
         document.getElementById('form-ok').classList.remove('hidden');
