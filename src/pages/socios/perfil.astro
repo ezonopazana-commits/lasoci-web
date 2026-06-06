@@ -1,0 +1,381 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+---
+
+<Layout title="Mi Perfil — la Soci">
+  <div class="min-h-screen bg-gray-50">
+
+    <!-- TOP BAR -->
+    <div class="bg-blue-900 text-white px-6 py-4">
+      <div class="max-w-4xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <a href="/socios/dashboard" class="text-blue-300 hover:text-white text-sm">← Dashboard</a>
+          <span class="text-blue-600">|</span>
+          <h1 class="text-lg font-bold" data-i18n="perfil_title">Mi Perfil</h1>
+        </div>
+        <button onclick="logout()" class="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition" data-i18n="btn_logout">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 py-8 space-y-6">
+
+      <!-- DATOS PERSONALES -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-lg font-bold text-gray-800" data-i18n="perfil_datos">Mis datos personales</h2>
+          <button onclick="toggleEdit('datos')" id="btn-edit-datos" class="text-sm text-blue-600 hover:underline" data-i18n="btn_editar">Editar</button>
+        </div>
+
+        <!-- Vista -->
+        <div id="datos-view" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+          <div><p class="text-xs text-gray-400 mb-1" data-i18n="lbl_nombre">Nombre</p><p class="font-medium" id="v-nombre">—</p></div>
+          <div><p class="text-xs text-gray-400 mb-1" data-i18n="lbl_apellidos">Apellidos</p><p class="font-medium" id="v-apellidos">—</p></div>
+          <div><p class="text-xs text-gray-400 mb-1">Email</p><p class="font-medium" id="v-email">—</p></div>
+          <div><p class="text-xs text-gray-400 mb-1" data-i18n="lbl_telefono">Teléfono</p><p class="font-medium" id="v-telefono">—</p></div>
+          <div><p class="text-xs text-gray-400 mb-1">DNI</p><p class="font-medium" id="v-dni">—</p></div>
+          <div><p class="text-xs text-gray-400 mb-1" data-i18n="lbl_vinculacion">Vinculación</p><p class="font-medium" id="v-vinculacion">—</p></div>
+          <div><p class="text-xs text-gray-400 mb-1" data-i18n="lbl_idioma">Idioma</p><p class="font-medium" id="v-idioma">—</p></div>
+          <div><p class="text-xs text-gray-400 mb-1" data-i18n="lbl_estado">Estado</p><p class="font-medium" id="v-estado">—</p></div>
+        </div>
+
+        <!-- Editar -->
+        <div id="datos-edit" class="hidden mt-5 space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs text-gray-500 block mb-1" data-i18n="lbl_nombre">Nombre</label>
+              <input id="e-nombre" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div>
+              <label class="text-xs text-gray-500 block mb-1" data-i18n="lbl_apellidos">Apellidos</label>
+              <input id="e-apellidos" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+            <div>
+              <label class="text-xs text-gray-500 block mb-1" data-i18n="lbl_telefono">Teléfono</label>
+              <input id="e-telefono" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+          </div>
+          <div id="datos-error" class="hidden text-red-600 text-sm"></div>
+          <div class="flex gap-2">
+            <button onclick="saveDatos()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm transition" data-i18n="btn_guardar">Guardar</button>
+            <button onclick="toggleEdit('datos')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2 rounded-lg text-sm transition" data-i18n="btn_cancelar">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- IBAN -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-lg font-bold text-gray-800">IBAN</h2>
+          <button onclick="toggleEdit('iban')" id="btn-edit-iban" class="text-sm text-blue-600 hover:underline" data-i18n="btn_modificar">Modificar</button>
+        </div>
+
+        <!-- Vista enmascarada -->
+        <div id="iban-view">
+          <div class="flex items-center gap-3">
+            <div class="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 font-mono text-sm tracking-widest flex-1" id="v-iban-masked">—</div>
+            <button onclick="toggleIbanVisible()" id="btn-iban-eye" class="text-gray-400 hover:text-gray-600 p-2 rounded-lg border border-gray-200">
+              <svg id="eye-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+            </button>
+          </div>
+          <p class="text-xs text-gray-400 mt-2" data-i18n="iban_info">Por seguridad el IBAN se muestra enmascarado. Pulsa el ojo para verlo completo.</p>
+        </div>
+
+        <!-- Editar IBAN -->
+        <div id="iban-edit" class="hidden mt-4 space-y-3">
+          <div>
+            <label class="text-xs text-gray-500 block mb-1" data-i18n="iban_nuevo">Nuevo IBAN</label>
+            <input id="e-iban" placeholder="ES00 0000 0000 0000 0000 0000" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase" maxlength="34" />
+            <p id="iban-error" class="hidden text-red-500 text-xs mt-1"></p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="saveIban()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm transition" data-i18n="btn_guardar">Guardar</button>
+            <button onclick="toggleEdit('iban')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2 rounded-lg text-sm transition" data-i18n="btn_cancelar">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUBVENCIÓN DISPONIBLE -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 class="text-lg font-bold text-gray-800 mb-1" data-i18n="subv_title">Subvención disponible</h2>
+        <p class="text-sm text-gray-400 mb-5" id="subv-anio"></p>
+
+        <!-- Barra de progreso -->
+        <div class="flex items-center gap-4 mb-6">
+          <div class="flex-1">
+            <div class="flex justify-between text-xs text-gray-500 mb-1">
+              <span data-i18n="subv_usado">Usado</span>
+              <span data-i18n="subv_disponible">Disponible</span>
+            </div>
+            <div class="h-4 bg-gray-100 rounded-full overflow-hidden">
+              <div id="subv-bar" class="h-full bg-orange-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-sm font-semibold mt-1">
+              <span id="subv-usado" class="text-orange-600">0 €</span>
+              <span id="subv-restante" class="text-green-600">400 €</span>
+            </div>
+          </div>
+          <div class="text-center bg-green-50 border border-green-200 rounded-xl px-5 py-3">
+            <p class="text-xs text-gray-400" data-i18n="subv_saldo">Saldo</p>
+            <p class="text-2xl font-bold text-green-600" id="subv-saldo">400 €</p>
+          </div>
+        </div>
+
+        <!-- Detalle de consumo -->
+        <h3 class="text-sm font-semibold text-gray-600 mb-3" data-i18n="subv_detalle">Detalle de consumo</h3>
+        <div id="subv-lista" class="space-y-2">
+          <p class="text-sm text-gray-400" data-i18n="subv_sin_movimientos">Sin movimientos este año.</p>
+        </div>
+      </div>
+
+      <!-- CAMBIAR CONTRASEÑA -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-lg font-bold text-gray-800" data-i18n="pwd_title">Cambiar contraseña</h2>
+          <button onclick="toggleEdit('pwd')" class="text-sm text-blue-600 hover:underline" data-i18n="btn_cambiar">Cambiar</button>
+        </div>
+        <div id="pwd-edit" class="hidden space-y-3">
+          <div>
+            <label class="text-xs text-gray-500 block mb-1" data-i18n="pwd_nueva">Nueva contraseña</label>
+            <input type="password" id="e-pwd" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <div>
+            <label class="text-xs text-gray-500 block mb-1" data-i18n="pwd_confirmar">Confirmar contraseña</label>
+            <input type="password" id="e-pwd2" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <p id="pwd-error" class="hidden text-red-500 text-xs mt-1"></p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="savePwd()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm transition" data-i18n="btn_guardar">Guardar</button>
+            <button onclick="toggleEdit('pwd')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-5 py-2 rounded-lg text-sm transition" data-i18n="btn_cancelar">Cancelar</button>
+          </div>
+          <p id="pwd-ok" class="hidden text-green-600 text-sm" data-i18n="pwd_ok">Contraseña actualizada correctamente.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script define:vars={{ supabaseUrl, supabaseKey }}>
+    window.__SB_URL = supabaseUrl;
+    window.__SB_KEY = supabaseKey;
+  </script>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+    const db = createClient(window.__SB_URL, window.__SB_KEY);
+
+    const TR = {
+      es: {
+        perfil_title: 'Mi Perfil', btn_logout: 'Cerrar sesión',
+        perfil_datos: 'Mis datos personales', btn_editar: 'Editar', btn_modificar: 'Modificar',
+        btn_guardar: 'Guardar', btn_cancelar: 'Cancelar', btn_cambiar: 'Cambiar',
+        lbl_nombre: 'Nombre', lbl_apellidos: 'Apellidos', lbl_telefono: 'Teléfono',
+        lbl_vinculacion: 'Vinculación', lbl_idioma: 'Idioma', lbl_estado: 'Estado',
+        iban_info: 'Por seguridad el IBAN se muestra enmascarado. Pulsa el ojo para verlo completo.',
+        iban_nuevo: 'Nuevo IBAN',
+        subv_title: 'Subvención disponible', subv_usado: 'Usado', subv_disponible: 'Disponible',
+        subv_saldo: 'Saldo', subv_detalle: 'Detalle de consumo', subv_sin_movimientos: 'Sin movimientos este año.',
+        pwd_title: 'Cambiar contraseña', pwd_nueva: 'Nueva contraseña', pwd_confirmar: 'Confirmar contraseña',
+        pwd_ok: 'Contraseña actualizada correctamente.', pwd_no_match: 'Las contraseñas no coinciden.',
+        estado_activo: '✅ Activo', estado_pendiente: '⏳ Pendiente de aprobación',
+        vinc: { empleado: 'Empleado/a CaixaBank', jubilado: 'Jubilado/a CaixaBank', beneficiario: 'Beneficiario/a', empleado_lasoci: 'Empleado/a LaSoci' },
+        idiomas: { es: 'Español', ca: 'Català', en: 'English' },
+        subv_anio_txt: 'Ejercicio',
+      },
+      ca: {
+        perfil_title: 'El meu perfil', btn_logout: 'Tancar sessió',
+        perfil_datos: 'Les meves dades personals', btn_editar: 'Editar', btn_modificar: 'Modificar',
+        btn_guardar: 'Desar', btn_cancelar: "Cancel·lar", btn_cambiar: 'Canviar',
+        lbl_nombre: 'Nom', lbl_apellidos: 'Cognoms', lbl_telefono: 'Telèfon',
+        lbl_vinculacion: 'Vinculació', lbl_idioma: 'Idioma', lbl_estado: 'Estat',
+        iban_info: "Per seguretat l'IBAN es mostra emmascarat. Prem l'ull per veure'l complet.",
+        iban_nuevo: 'Nou IBAN',
+        subv_title: 'Subvenció disponible', subv_usado: 'Usat', subv_disponible: 'Disponible',
+        subv_saldo: 'Saldo', subv_detalle: 'Detall de consum', subv_sin_movimientos: 'Sense moviments aquest any.',
+        pwd_title: 'Canviar contrasenya', pwd_nueva: 'Nova contrasenya', pwd_confirmar: 'Confirmar contrasenya',
+        pwd_ok: 'Contrasenya actualitzada correctament.', pwd_no_match: 'Les contrasenyes no coincideixen.',
+        estado_activo: '✅ Actiu', estado_pendiente: '⏳ Pendent d\'aprovació',
+        vinc: { empleado: 'Empleat/da CaixaBank', jubilado: 'Jubilat/da CaixaBank', beneficiario: 'Beneficiari/a', empleado_lasoci: 'Empleat/da LaSoci' },
+        idiomas: { es: 'Español', ca: 'Català', en: 'English' },
+        subv_anio_txt: 'Exercici',
+      },
+      en: {
+        perfil_title: 'My Profile', btn_logout: 'Sign out',
+        perfil_datos: 'My personal data', btn_editar: 'Edit', btn_modificar: 'Modify',
+        btn_guardar: 'Save', btn_cancelar: 'Cancel', btn_cambiar: 'Change',
+        lbl_nombre: 'First name', lbl_apellidos: 'Last name', lbl_telefono: 'Phone',
+        lbl_vinculacion: 'Link type', lbl_idioma: 'Language', lbl_estado: 'Status',
+        iban_info: 'For security the IBAN is masked. Click the eye to see it in full.',
+        iban_nuevo: 'New IBAN',
+        subv_title: 'Available subsidy', subv_usado: 'Used', subv_disponible: 'Available',
+        subv_saldo: 'Balance', subv_detalle: 'Usage detail', subv_sin_movimientos: 'No movements this year.',
+        pwd_title: 'Change password', pwd_nueva: 'New password', pwd_confirmar: 'Confirm password',
+        pwd_ok: 'Password updated successfully.', pwd_no_match: 'Passwords do not match.',
+        estado_activo: '✅ Active', estado_pendiente: '⏳ Pending approval',
+        vinc: { empleado: 'CaixaBank Employee', jubilado: 'CaixaBank Retiree', beneficiario: 'Beneficiary', empleado_lasoci: 'LaSoci Employee' },
+        idiomas: { es: 'Spanish', ca: 'Catalan', en: 'English' },
+        subv_anio_txt: 'Year',
+      }
+    };
+
+    let socio = null;
+    let ibanVisible = false;
+    const SUBV_TOTAL = 400;
+
+    function getLang() { return localStorage.getItem('lasoci_lang') || 'es'; }
+    function t(key) { return TR[getLang()]?.[key] || TR.es[key] || key; }
+
+    function applyLang() {
+      const tr = TR[getLang()] || TR.es;
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (tr[key]) el.textContent = tr[key];
+      });
+      if (socio) renderSocio();
+    }
+
+    function maskIban(iban) {
+      if (!iban) return '—';
+      const clean = iban.replace(/\s/g, '');
+      return clean.substring(0, 4) + ' **** **** **** ' + clean.slice(-4);
+    }
+
+    function formatIban(iban) {
+      if (!iban) return '—';
+      return iban.replace(/\s/g, '').match(/.{1,4}/g)?.join(' ') || iban;
+    }
+
+    function renderSocio() {
+      const tr = TR[getLang()] || TR.es;
+      document.getElementById('v-nombre').textContent = socio.nombre || '—';
+      document.getElementById('v-apellidos').textContent = socio.apellidos || '—';
+      document.getElementById('v-email').textContent = socio.email || '—';
+      document.getElementById('v-telefono').textContent = socio.telefono || '—';
+      document.getElementById('v-dni').textContent = socio.dni || '—';
+      document.getElementById('v-vinculacion').textContent = tr.vinc?.[socio.vinculacion] || socio.vinculacion || '—';
+      document.getElementById('v-idioma').textContent = tr.idiomas?.[socio.idioma || 'es'] || '—';
+      document.getElementById('v-estado').textContent = socio.activo ? tr.estado_activo : tr.estado_pendiente;
+
+      // IBAN
+      document.getElementById('v-iban-masked').textContent = ibanVisible ? formatIban(socio.iban) : maskIban(socio.iban);
+
+      // Subvención
+      const anio = socio.subvencion_anio || new Date().getFullYear();
+      document.getElementById('subv-anio').textContent = `${t('subv_anio_txt')} ${anio}`;
+      const disponible = socio.subvencion_disponible ?? SUBV_TOTAL;
+      const usado = SUBV_TOTAL - disponible;
+      const pct = Math.min((usado / SUBV_TOTAL) * 100, 100);
+      document.getElementById('subv-bar').style.width = pct + '%';
+      document.getElementById('subv-usado').textContent = usado.toFixed(2) + ' €';
+      document.getElementById('subv-restante').textContent = disponible.toFixed(2) + ' €';
+      document.getElementById('subv-saldo').textContent = disponible.toFixed(2) + ' €';
+    }
+
+    async function loadDetalle() {
+      const { data } = await db.from('subvenciones_detalle')
+        .select('*')
+        .eq('socio_id', socio.id)
+        .eq('anio', new Date().getFullYear())
+        .order('fecha', { ascending: false });
+
+      const lista = document.getElementById('subv-lista');
+      if (!data || data.length === 0) {
+        lista.innerHTML = `<p class="text-sm text-gray-400">${t('subv_sin_movimientos')}</p>`;
+        return;
+      }
+      lista.innerHTML = data.map(d => `
+        <div class="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-3 text-sm">
+          <div>
+            <p class="font-medium text-gray-800">${d.descripcion}</p>
+            <p class="text-xs text-gray-400">${new Date(d.fecha).toLocaleDateString('es-ES')}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-gray-600">${d.importe_total.toFixed(2)} €</p>
+            <p class="text-xs text-orange-500">-${d.importe_subvencionado.toFixed(2)} € subv.</p>
+            <p class="text-xs font-semibold text-gray-800">${d.importe_coste_real?.toFixed(2) ?? (d.importe_total - d.importe_subvencionado).toFixed(2)} € real</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ── Toggles ──
+    window.toggleEdit = function(section) {
+      const view = document.getElementById(section + '-view');
+      const edit = document.getElementById(section + '-edit');
+      if (view) view.classList.toggle('hidden');
+      if (edit) edit.classList.toggle('hidden');
+      if (section === 'datos' && edit && !edit.classList.contains('hidden')) {
+        document.getElementById('e-nombre').value = socio.nombre || '';
+        document.getElementById('e-apellidos').value = socio.apellidos || '';
+        document.getElementById('e-telefono').value = socio.telefono || '';
+      }
+    };
+
+    window.toggleIbanVisible = function() {
+      ibanVisible = !ibanVisible;
+      document.getElementById('v-iban-masked').textContent = ibanVisible ? formatIban(socio.iban) : maskIban(socio.iban);
+    };
+
+    // ── Guardar datos ──
+    window.saveDatos = async function() {
+      const nombre = document.getElementById('e-nombre').value.trim();
+      const apellidos = document.getElementById('e-apellidos').value.trim();
+      const telefono = document.getElementById('e-telefono').value.trim();
+      const { error } = await db.from('socios').update({ nombre, apellidos, telefono }).eq('id', socio.id);
+      if (error) { document.getElementById('datos-error').textContent = error.message; document.getElementById('datos-error').classList.remove('hidden'); return; }
+      socio = { ...socio, nombre, apellidos, telefono };
+      renderSocio();
+      toggleEdit('datos');
+    };
+
+    // ── Guardar IBAN ──
+    window.saveIban = async function() {
+      const iban = document.getElementById('e-iban').value.replace(/\s/g, '').toUpperCase();
+      const errEl = document.getElementById('iban-error');
+      if (!/^[A-Z]{2}\d{2}[A-Z0-9]{11,28}$/.test(iban)) {
+        errEl.textContent = 'IBAN no válido'; errEl.classList.remove('hidden'); return;
+      }
+      errEl.classList.add('hidden');
+      await db.from('socios').update({ iban }).eq('id', socio.id);
+      socio = { ...socio, iban };
+      ibanVisible = false;
+      renderSocio();
+      toggleEdit('iban');
+    };
+
+    // ── Cambiar contraseña ──
+    window.savePwd = async function() {
+      const pwd = document.getElementById('e-pwd').value;
+      const pwd2 = document.getElementById('e-pwd2').value;
+      const errEl = document.getElementById('pwd-error');
+      if (pwd !== pwd2) { errEl.textContent = t('pwd_no_match'); errEl.classList.remove('hidden'); return; }
+      errEl.classList.add('hidden');
+      const { error } = await db.auth.updateUser({ password: pwd });
+      if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); return; }
+      document.getElementById('pwd-ok').classList.remove('hidden');
+      document.getElementById('e-pwd').value = '';
+      document.getElementById('e-pwd2').value = '';
+    };
+
+    window.logout = async function() {
+      await db.auth.signOut();
+      window.location.href = '/socios/login';
+    };
+
+    // ── Init ──
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { window.location.href = '/socios/login'; }
+    else {
+      const { data } = await db.from('socios').select('*').eq('id', session.user.id).single();
+      socio = { ...data, email: session.user.email };
+      applyLang();
+      await loadDetalle();
+    }
+
+    window.addEventListener('langchange', applyLang);
+  </script>
+</Layout>
