@@ -164,6 +164,97 @@ const { title, lang = 'es' } = Astro.props;
       </div>
     </nav>
 
+    <!-- COOKIE BANNER -->
+    <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 z-[100] bg-white border-t border-gray-200 shadow-2xl hidden">
+      <div class="max-w-5xl mx-auto px-6 py-6">
+        <!-- Logo -->
+        <div class="flex items-center gap-2 mb-4">
+          <img src="/logo-lasoci.png.JPG" alt="la Soci" class="h-7 w-auto" />
+        </div>
+        <!-- Texto -->
+        <p class="text-sm text-gray-700 mb-3">
+          <strong class="text-blue-700" data-i18n="cookie_title">Antes de continuar, te explicamos para qué usamos las cookies.</strong>
+          <span data-i18n="cookie_desc"> Este sitio web de la Soci recoge datos sobre tu navegación a través de cookies propias y de terceros, que analizamos para:</span>
+        </p>
+        <ul class="text-sm text-gray-700 mb-3 space-y-1 list-disc pl-5">
+          <li data-i18n="cookie_li1"><strong>Mejorar nuestro sitio web</strong>, nuestros servicios y funcionalidades.</li>
+          <li data-i18n="cookie_li2"><strong>Recordar tus preferencias</strong> de idioma y sesión.</li>
+          <li data-i18n="cookie_li3"><strong>Analizar el uso</strong> de la web para mejorar la experiencia.</li>
+        </ul>
+        <p class="text-sm text-gray-600 mb-5">
+          <span data-i18n="cookie_more">Puedes conocer más sobre el uso de cookies en nuestra </span>
+          <a href="/cookies" class="text-blue-600 hover:underline" data-i18n="cookie_policy">política de cookies</a>.
+        </p>
+        <!-- Botones -->
+        <div class="flex flex-wrap items-center gap-3">
+          <button onclick="configurarCookies()" class="text-sm font-semibold text-blue-700 hover:underline" data-i18n="cookie_btn_config">Configurar cookies</button>
+          <button onclick="rechazarCookies()" class="bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-6 py-2.5 rounded-full transition" data-i18n="cookie_btn_rechazar">Rechazar</button>
+          <button onclick="aceptarCookies()" class="bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold px-6 py-2.5 rounded-full transition" data-i18n="cookie_btn_aceptar">Aceptar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COOKIE CONFIG MODAL -->
+    <div id="cookie-modal" class="fixed inset-0 bg-black/50 z-[101] hidden flex items-end sm:items-center justify-center p-4">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <h3 class="font-bold text-gray-800" data-i18n="cookie_config_title">Configurar cookies</h3>
+          <button onclick="cerrarConfig()" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+        </div>
+        <div class="p-6 space-y-5">
+          <!-- Técnicas (siempre activas) -->
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="font-semibold text-gray-800 text-sm" data-i18n="cookie_tecnicas">Cookies técnicas</p>
+              <p class="text-xs text-gray-500 mt-1" data-i18n="cookie_tecnicas_desc">Necesarias para el funcionamiento del sitio web. No pueden desactivarse.</p>
+            </div>
+            <div class="flex-shrink-0">
+              <div class="w-12 h-6 bg-blue-600 rounded-full flex items-center justify-end px-1 cursor-not-allowed opacity-70">
+                <div class="w-4 h-4 bg-white rounded-full shadow"></div>
+              </div>
+              <p class="text-xs text-blue-600 text-center mt-1" data-i18n="cookie_siempre">Siempre</p>
+            </div>
+          </div>
+          <div class="border-t border-gray-100"></div>
+          <!-- Analíticas -->
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="font-semibold text-gray-800 text-sm" data-i18n="cookie_analiticas">Cookies analíticas</p>
+              <p class="text-xs text-gray-500 mt-1" data-i18n="cookie_analiticas_desc">Nos permiten analizar el uso del sitio para mejorar la experiencia. Utilizamos datos anónimos.</p>
+            </div>
+            <div class="flex-shrink-0">
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="chk-analiticas" class="sr-only peer" />
+                <div class="w-12 h-6 bg-gray-300 peer-checked:bg-blue-600 rounded-full transition peer-focus:ring-2 peer-focus:ring-blue-300">
+                  <div class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow transition peer-checked:translate-x-6"></div>
+                </div>
+              </label>
+            </div>
+          </div>
+          <div class="border-t border-gray-100"></div>
+          <!-- Preferencias -->
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <p class="font-semibold text-gray-800 text-sm" data-i18n="cookie_preferencias">Cookies de preferencias</p>
+              <p class="text-xs text-gray-500 mt-1" data-i18n="cookie_preferencias_desc">Recuerdan tus preferencias (idioma, sesión, etc.) para personalizar tu experiencia.</p>
+            </div>
+            <div class="flex-shrink-0">
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="chk-preferencias" class="sr-only peer" checked />
+                <div class="w-12 h-6 bg-gray-300 peer-checked:bg-blue-600 rounded-full transition peer-focus:ring-2 peer-focus:ring-blue-300">
+                  <div class="absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow transition peer-checked:translate-x-6"></div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="px-6 py-4 border-t border-gray-100 flex gap-3 justify-end">
+          <button onclick="guardarConfig()" class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition" data-i18n="cookie_btn_guardar">Guardar preferencias</button>
+          <button onclick="aceptarCookies()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-full text-sm font-semibold transition" data-i18n="cookie_btn_aceptar_todas">Aceptar todas</button>
+        </div>
+      </div>
+    </div>
+
     <!-- CONTENT -->
     <main>
       <slot />
@@ -286,6 +377,20 @@ const { title, lang = 'es' } = Astro.props;
           footer_legal: 'Aviso legal', footer_privacy: 'Política de privacidad', footer_cookies: 'Política de cookies',
           footer_contact: 'Contacto',
           footer_actividades: 'Actividades',
+          cookie_title: 'Antes de continuar, te explicamos para qué usamos las cookies.',
+          cookie_desc: ' Este sitio web de la Soci recoge datos sobre tu navegación a través de cookies propias y de terceros.',
+          cookie_li1: 'Mejorar nuestro sitio web, nuestros servicios y funcionalidades.',
+          cookie_li2: 'Recordar tus preferencias de idioma y sesión.',
+          cookie_li3: 'Analizar el uso de la web para mejorar la experiencia.',
+          cookie_more: 'Puedes conocer más sobre el uso de cookies en nuestra ',
+          cookie_policy: 'política de cookies',
+          cookie_btn_config: 'Configurar cookies', cookie_btn_rechazar: 'Rechazar', cookie_btn_aceptar: 'Aceptar',
+          cookie_config_title: 'Configurar cookies',
+          cookie_tecnicas: 'Cookies técnicas', cookie_tecnicas_desc: 'Necesarias para el funcionamiento del sitio web. No pueden desactivarse.',
+          cookie_siempre: 'Siempre',
+          cookie_analiticas: 'Cookies analíticas', cookie_analiticas_desc: 'Nos permiten analizar el uso del sitio para mejorar la experiencia.',
+          cookie_preferencias: 'Cookies de preferencias', cookie_preferencias_desc: 'Recuerdan tus preferencias (idioma, sesión) para personalizar tu experiencia.',
+          cookie_btn_guardar: 'Guardar preferencias', cookie_btn_aceptar_todas: 'Aceptar todas',
           nav_seccions: 'Seccions', nav_noticies: 'Notícies', nav_revista: 'Revista',
           nav_contacte: 'Contacte', nav_area: 'Àrea socis', nav_login: 'Iniciar sessió',
           nav_registro: 'Registrar-se', footer_links: 'Enllaços', footer_privat: 'Àrea privada',
@@ -297,6 +402,20 @@ const { title, lang = 'es' } = Astro.props;
           footer_legal: 'Avís legal', footer_privacy: 'Política de privacitat', footer_cookies: 'Política de cookies',
           footer_contact: 'Contacte',
           footer_actividades: 'Activitats',
+          cookie_title: 'Abans de continuar, t\'expliquem per a què usem les cookies.',
+          cookie_desc: ' Aquest lloc web de la Soci recull dades sobre la teva navegació a través de cookies pròpies i de tercers.',
+          cookie_li1: 'Millorar el nostre lloc web, els nostres serveis i funcionalitats.',
+          cookie_li2: 'Recordar les teves preferències d\'idioma i sessió.',
+          cookie_li3: 'Analitzar l\'ús del web per millorar l\'experiència.',
+          cookie_more: 'Pots conèixer més sobre l\'ús de cookies a la nostra ',
+          cookie_policy: 'política de cookies',
+          cookie_btn_config: 'Configurar cookies', cookie_btn_rechazar: 'Rebutjar', cookie_btn_aceptar: 'Acceptar',
+          cookie_config_title: 'Configurar cookies',
+          cookie_tecnicas: 'Cookies tècniques', cookie_tecnicas_desc: 'Necessàries per al funcionament del lloc web. No es poden desactivar.',
+          cookie_siempre: 'Sempre',
+          cookie_analiticas: 'Cookies analítiques', cookie_analiticas_desc: 'Ens permeten analitzar l\'ús del lloc per millorar l\'experiència.',
+          cookie_preferencias: 'Cookies de preferències', cookie_preferencias_desc: 'Recorden les teves preferències per personalitzar la teva experiència.',
+          cookie_btn_guardar: 'Desar preferències', cookie_btn_aceptar_todas: 'Acceptar totes',
           nav_seccions: 'Sections', nav_noticies: 'News', nav_revista: 'Magazine',
           nav_contacte: 'Contact', nav_area: 'Members area', nav_login: 'Sign in',
           nav_registro: 'Register', footer_links: 'Links', footer_privat: 'Private area',
@@ -308,6 +427,20 @@ const { title, lang = 'es' } = Astro.props;
           footer_legal: 'Legal notice', footer_privacy: 'Privacy policy', footer_cookies: 'Cookie policy',
           footer_contact: 'Contact',
           footer_actividades: 'Activities',
+          cookie_title: 'Before continuing, we explain how we use cookies.',
+          cookie_desc: ' This la Soci website collects data about your browsing through first and third-party cookies.',
+          cookie_li1: 'Improve our website, services and features.',
+          cookie_li2: 'Remember your language and session preferences.',
+          cookie_li3: 'Analyse website usage to improve your experience.',
+          cookie_more: 'You can learn more about our use of cookies in our ',
+          cookie_policy: 'cookie policy',
+          cookie_btn_config: 'Configure cookies', cookie_btn_rechazar: 'Reject', cookie_btn_aceptar: 'Accept',
+          cookie_config_title: 'Configure cookies',
+          cookie_tecnicas: 'Technical cookies', cookie_tecnicas_desc: 'Required for the website to function. Cannot be disabled.',
+          cookie_siempre: 'Always',
+          cookie_analiticas: 'Analytics cookies', cookie_analiticas_desc: 'Allow us to analyse site usage to improve the experience.',
+          cookie_preferencias: 'Preference cookies', cookie_preferencias_desc: 'Remember your preferences to personalise your experience.',
+          cookie_btn_guardar: 'Save preferences', cookie_btn_aceptar_todas: 'Accept all',
       };
 
       const LANG_CONFIG = {
@@ -387,7 +520,35 @@ const { title, lang = 'es' } = Astro.props;
         }
       });
 
-      document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+      // ── COOKIES ──
+    function initCookies() {
+      const consent = localStorage.getItem('lasoci_cookies');
+      if (!consent) document.getElementById('cookie-banner').classList.remove('hidden');
+    }
+    window.aceptarCookies = function() {
+      localStorage.setItem('lasoci_cookies', JSON.stringify({ tecnicas: true, analiticas: true, preferencias: true }));
+      document.getElementById('cookie-banner').classList.add('hidden');
+      document.getElementById('cookie-modal').classList.add('hidden');
+    };
+    window.rechazarCookies = function() {
+      localStorage.setItem('lasoci_cookies', JSON.stringify({ tecnicas: true, analiticas: false, preferencias: false }));
+      document.getElementById('cookie-banner').classList.add('hidden');
+    };
+    window.configurarCookies = function() {
+      document.getElementById('cookie-modal').classList.remove('hidden');
+    };
+    window.cerrarConfig = function() {
+      document.getElementById('cookie-modal').classList.add('hidden');
+    };
+    window.guardarConfig = function() {
+      const analiticas = document.getElementById('chk-analiticas').checked;
+      const preferencias = document.getElementById('chk-preferencias').checked;
+      localStorage.setItem('lasoci_cookies', JSON.stringify({ tecnicas: true, analiticas, preferencias }));
+      document.getElementById('cookie-banner').classList.add('hidden');
+      document.getElementById('cookie-modal').classList.add('hidden');
+    };
+    initCookies();
+
         document.getElementById('mobile-menu')?.classList.toggle('hidden');
       });
     </script>
