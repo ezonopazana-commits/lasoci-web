@@ -398,16 +398,16 @@ const { title, lang = 'es' } = Astro.props;
           nav_viajes: 'Viatges', nav_ventajas: 'Avantatges', nav_quienes: 'Qui som',
           qs_nav_nosotros: 'Nosaltres', qs_nav_historia: 'Història', qs_nav_org: 'Organització', qs_nav_faq: 'Preguntes freqüents',
           footer_desc: "Som l'Associació de tots els treballadors i treballadores de CaixaBank i la Fundació \"la Caixa\" i les seves famílies.",
-          footer_sub: 'Tot un món d\'activitats, serveis i avantatges exclusius.',
+          footer_sub: "Tot un món d'activitats, serveis i avantatges exclusius.",
           footer_legal: 'Avís legal', footer_privacy: 'Política de privacitat', footer_cookies: 'Política de cookies',
           footer_contact: 'Contacte',
           footer_actividades: 'Activitats',
-          cookie_title: 'Abans de continuar, t\'expliquem per a què usem les cookies.',
+          cookie_title: "Abans de continuar, t'expliquem per a què usem les cookies.",
           cookie_desc: ' Aquest lloc web de la Soci recull dades sobre la teva navegació a través de cookies pròpies i de tercers.',
           cookie_li1: 'Millorar el nostre lloc web, els nostres serveis i funcionalitats.',
-          cookie_li2: 'Recordar les teves preferències d\'idioma i sessió.',
-          cookie_li3: 'Analitzar l\'ús del web per millorar l\'experiència.',
-          cookie_more: 'Pots conèixer més sobre l\'ús de cookies a la nostra ',
+          cookie_li2: "Recordar les teves preferències d'idioma i sessió.",
+          cookie_li3: "Analitzar l'ús del web per millorar l'experiència.",
+          cookie_more: "Pots conèixer més sobre l'ús de cookies a la nostra ",
           cookie_policy: 'política de cookies',
           cookie_btn_config: 'Configurar cookies', cookie_btn_rechazar: 'Rebutjar', cookie_btn_aceptar: 'Acceptar',
           cookie_config_title: 'Configurar cookies',
@@ -441,6 +441,7 @@ const { title, lang = 'es' } = Astro.props;
           cookie_analiticas: 'Analytics cookies', cookie_analiticas_desc: 'Allow us to analyse site usage to improve the experience.',
           cookie_preferencias: 'Preference cookies', cookie_preferencias_desc: 'Remember your preferences to personalise your experience.',
           cookie_btn_guardar: 'Save preferences', cookie_btn_aceptar_todas: 'Accept all',
+        }
       };
 
       const LANG_CONFIG = {
@@ -549,8 +550,9 @@ const { title, lang = 'es' } = Astro.props;
     };
     initCookies();
 
-        document.getElementById('mobile-menu')?.classList.toggle('hidden');
-      });
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+      document.getElementById('mobile-menu')?.classList.toggle('hidden');
+    });
     </script>
   </body>
 </html>
