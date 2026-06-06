@@ -507,7 +507,9 @@ const { title, lang = 'es' } = Astro.props;
       }
 
       // Init
-      applyLang(getLang());
+      document.addEventListener('DOMContentLoaded', () => {
+        applyLang(getLang());
+      });
       document.body.classList.add('lang-ready');
 
       document.getElementById('lang-btn')?.addEventListener('click', (e) => {
