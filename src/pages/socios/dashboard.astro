@@ -16,6 +16,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         </div>
         <div class="flex items-center gap-3">
           <span id="estat-badge" class="hidden text-xs px-3 py-1 rounded-full font-medium"></span>
+          <span id="link-delegado" class="hidden"><a href="/socios/delegado" class="text-xs bg-blue-700 hover:bg-blue-600 px-3 py-1.5 rounded-lg text-white transition">Panel Delegado</a></span>
+          <span id="link-admin" class="hidden"><a href="/admin" class="text-xs bg-orange-500 hover:bg-orange-600 px-3 py-1.5 rounded-lg text-white transition">Panel Admin</a></span>
           <button onclick="logout()" class="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition" id="btn-logout">Tancar sessió</button>
         </div>
       </div>
@@ -199,6 +201,10 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         document.getElementById('pending-alert').classList.remove('hidden');
       }
       badge.classList.remove('hidden');
+
+      // Mostrar links según rol
+      if (data?.rol === 'delegado' || data?.rol === 'admin') document.getElementById('link-delegado').classList.remove('hidden');
+      if (data?.rol === 'admin') document.getElementById('link-admin').classList.remove('hidden');
 
       // Fill edit form
       document.getElementById('edit-nombre').value = data?.nombre || '';

@@ -1,0 +1,325 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+---
+
+<Layout title="Gestión de Secciones — Admin la Soci">
+  <div class="min-h-screen bg-gray-100">
+
+    <div class="bg-blue-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-10 shadow">
+      <div class="flex items-center gap-2">
+        <a href="/"><span class="text-lg font-bold text-orange-400">la</span><span class="text-lg font-bold">Soci</span></a>
+        <span class="text-blue-400 text-xs hidden sm:block">| Gestión de Secciones</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="/admin" class="text-xs text-blue-300 hover:text-white">← Panel Admin</a>
+        <button id="btn-logout" class="text-xs bg-blue-800 hover:bg-blue-700 px-3 py-1.5 rounded-lg">Salir</button>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-3 py-6">
+      <div id="loading" class="flex justify-center py-20">
+        <div class="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+      <div id="access-denied" class="hidden text-center py-20">
+        <div class="text-5xl mb-4">🚫</div>
+        <h2 class="text-lg font-bold text-gray-800 mb-2">Acceso denegado</h2>
+        <a href="/socios/dashboard" class="bg-orange-500 text-white px-5 py-2 rounded-xl text-sm">Ir al dashboard</a>
+      </div>
+
+      <div id="admin-content" class="hidden space-y-5">
+
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-3">
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Total secciones</p>
+            <p class="text-2xl font-bold text-blue-900" id="stat-total">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Deportivas</p>
+            <p class="text-2xl font-bold text-blue-600" id="stat-dep">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Culturales</p>
+            <p class="text-2xl font-bold text-purple-600" id="stat-cult">-</p>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="bg-white rounded-xl shadow-sm p-4 flex flex-wrap gap-3 items-center">
+          <input type="text" id="search" placeholder="Buscar sección..." class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 w-48 focus:outline-none focus:border-blue-400" />
+          <select id="fil-tipo" class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none">
+            <option value="">Todos los tipos</option>
+            <option value="deportiva">Deportivas</option>
+            <option value="cultural">Culturales</option>
+          </select>
+          <div class="ml-auto">
+            <button onclick="abrirModalNueva()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition">+ Nueva sección</button>
+          </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 border-b border-gray-100">
+              <tr>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Sección</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Tipo</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Provincia</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Miembros</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Delegado</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Estado</th>
+                <th class="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-secciones" class="divide-y divide-gray-50"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal nueva/editar sección -->
+  <div id="modal-seccion" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <h3 class="font-bold text-gray-800" id="modal-titulo">Nueva sección</h3>
+        <button onclick="cerrarModal()" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+      </div>
+      <div class="p-6 space-y-4">
+        <input type="hidden" id="m-id" />
+        <div>
+          <label class="text-xs text-gray-500 block mb-1">Nombre *</label>
+          <input id="m-nombre" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        <div>
+          <label class="text-xs text-gray-500 block mb-1">Descripción</label>
+          <textarea id="m-descripcion" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs text-gray-500 block mb-1">Tipo</label>
+            <select id="m-tipo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="deportiva">Deportiva</option>
+              <option value="cultural">Cultural</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs text-gray-500 block mb-1">Provincia</label>
+            <input id="m-provincia" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+        </div>
+        <div>
+          <label class="text-xs text-gray-500 block mb-1">Delegado (buscar por nombre)</label>
+          <input id="m-delegado-search" placeholder="Escribe nombre o apellidos..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <div id="m-delegado-resultados" class="hidden border border-gray-200 rounded-lg mt-1 max-h-40 overflow-y-auto shadow-sm"></div>
+          <div id="m-delegado-selected" class="hidden mt-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-sm flex items-center justify-between">
+            <span id="m-delegado-nombre" class="text-blue-800 font-medium"></span>
+            <button onclick="clearDelegado()" class="text-red-400 hover:text-red-600 text-xs ml-2">✕</button>
+          </div>
+          <input type="hidden" id="m-delegado-id" />
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="m-activa" checked class="w-4 h-4 accent-orange-500" />
+          <label for="m-activa" class="text-sm text-gray-600">Sección activa</label>
+        </div>
+      </div>
+      <div class="px-6 py-4 border-t border-gray-100 flex gap-3 justify-end">
+        <button onclick="guardarSeccion()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-medium transition">Guardar</button>
+        <button onclick="cerrarModal()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-5 py-2 rounded-xl text-sm font-medium transition">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script define:vars={{ supabaseUrl, supabaseKey }}>
+    window.__SB_URL = supabaseUrl;
+    window.__SB_KEY = supabaseKey;
+  </script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+    const db = createClient(window.__SB_URL, window.__SB_KEY);
+
+    let todasSecciones = [];
+    let conteoMiembros = {};
+
+    async function init() {
+      const { data: { session } } = await db.auth.getSession();
+      if (!session) { window.location.href = '/socios/login'; return; }
+      const { data: socio } = await db.from('socios').select('rol').eq('id', session.user.id).single();
+      if (!socio || socio.rol !== 'admin') {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('access-denied').classList.remove('hidden');
+        return;
+      }
+      await cargar();
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('admin-content').classList.remove('hidden');
+    }
+
+    async function cargar() {
+      const { data: secciones } = await db.from('secciones')
+        .select('*, delegado:delegado_id(id, nombre, apellidos)')
+        .order('nombre');
+      todasSecciones = secciones || [];
+
+      const { data: miembros } = await db.from('secciones_miembros').select('seccion_id');
+      conteoMiembros = {};
+      (miembros || []).forEach(m => { conteoMiembros[m.seccion_id] = (conteoMiembros[m.seccion_id] || 0) + 1; });
+
+      actualizarStats();
+      renderTabla();
+    }
+
+    function actualizarStats() {
+      document.getElementById('stat-total').textContent = todasSecciones.filter(s => s.activa).length;
+      document.getElementById('stat-dep').textContent = todasSecciones.filter(s => s.tipo === 'deportiva' && s.activa).length;
+      document.getElementById('stat-cult').textContent = todasSecciones.filter(s => s.tipo === 'cultural' && s.activa).length;
+    }
+
+    function renderTabla() {
+      const search = document.getElementById('search').value.toLowerCase();
+      const tipo = document.getElementById('fil-tipo').value;
+      let lista = todasSecciones;
+      if (tipo) lista = lista.filter(s => s.tipo === tipo);
+      if (search) lista = lista.filter(s => s.nombre.toLowerCase().includes(search) || s.provincia?.toLowerCase().includes(search));
+
+      const tbody = document.getElementById('tabla-secciones');
+      if (!lista.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-gray-400 text-sm">No hay secciones</td></tr>';
+        return;
+      }
+      tbody.innerHTML = lista.map(s => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-3">
+            <p class="font-medium text-gray-800">${s.nombre}</p>
+            ${s.descripcion ? `<p class="text-xs text-gray-400 truncate max-w-xs">${s.descripcion}</p>` : ''}
+          </td>
+          <td class="px-4 py-3 hidden md:table-cell">
+            <span class="text-xs px-2 py-1 rounded-full ${s.tipo === 'cultural' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}">${s.tipo === 'cultural' ? '🎭 Cultural' : '⚽ Deportiva'}</span>
+          </td>
+          <td class="px-4 py-3 text-gray-500 text-sm hidden lg:table-cell">${s.provincia || '—'}</td>
+          <td class="px-4 py-3">
+            <span class="font-semibold text-gray-800">${conteoMiembros[s.id] || 0}</span>
+            <span class="text-xs text-gray-400"> miembros</span>
+          </td>
+          <td class="px-4 py-3 text-sm hidden md:table-cell">
+            ${s.delegado ? `<span class="text-gray-700">${s.delegado.nombre} ${s.delegado.apellidos}</span>` : '<span class="text-gray-300 italic">Sin delegado</span>'}
+          </td>
+          <td class="px-4 py-3">
+            <span class="text-xs px-2 py-1 rounded-full font-medium ${s.activa ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">${s.activa ? '✅ Activa' : '⏸ Inactiva'}</span>
+          </td>
+          <td class="px-4 py-3 text-right">
+            <button onclick="editarSeccion('${s.id}')" class="text-xs bg-blue-50 hover:bg-blue-100 text-blue-600 px-3 py-1.5 rounded-lg mr-1">Editar</button>
+            <button onclick="toggleActiva('${s.id}', ${s.activa})" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-lg">${s.activa ? 'Desactivar' : 'Activar'}</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    window.toggleActiva = async function(id, activa) {
+      await db.from('secciones').update({ activa: !activa }).eq('id', id);
+      await cargar();
+    };
+
+    window.abrirModalNueva = function() {
+      document.getElementById('m-id').value = '';
+      document.getElementById('m-nombre').value = '';
+      document.getElementById('m-descripcion').value = '';
+      document.getElementById('m-tipo').value = 'deportiva';
+      document.getElementById('m-provincia').value = '';
+      document.getElementById('m-activa').checked = true;
+      document.getElementById('m-delegado-id').value = '';
+      document.getElementById('m-delegado-search').value = '';
+      document.getElementById('m-delegado-selected').classList.add('hidden');
+      document.getElementById('modal-titulo').textContent = 'Nueva sección';
+      document.getElementById('modal-seccion').classList.remove('hidden');
+    };
+
+    window.editarSeccion = function(id) {
+      const s = todasSecciones.find(x => x.id === id);
+      if (!s) return;
+      document.getElementById('m-id').value = s.id;
+      document.getElementById('m-nombre').value = s.nombre;
+      document.getElementById('m-descripcion').value = s.descripcion || '';
+      document.getElementById('m-tipo').value = s.tipo || 'deportiva';
+      document.getElementById('m-provincia').value = s.provincia || '';
+      document.getElementById('m-activa').checked = s.activa;
+      document.getElementById('m-delegado-id').value = s.delegado_id || '';
+      if (s.delegado) {
+        document.getElementById('m-delegado-nombre').textContent = `${s.delegado.nombre} ${s.delegado.apellidos}`;
+        document.getElementById('m-delegado-selected').classList.remove('hidden');
+        document.getElementById('m-delegado-search').value = '';
+      } else {
+        document.getElementById('m-delegado-selected').classList.add('hidden');
+      }
+      document.getElementById('modal-titulo').textContent = 'Editar sección';
+      document.getElementById('modal-seccion').classList.remove('hidden');
+    };
+
+    window.guardarSeccion = async function() {
+      const id = document.getElementById('m-id').value;
+      const datos = {
+        nombre: document.getElementById('m-nombre').value.trim(),
+        descripcion: document.getElementById('m-descripcion').value.trim() || null,
+        tipo: document.getElementById('m-tipo').value,
+        provincia: document.getElementById('m-provincia').value.trim() || null,
+        activa: document.getElementById('m-activa').checked,
+        delegado_id: document.getElementById('m-delegado-id').value || null,
+      };
+      if (!datos.nombre) return;
+      if (id) {
+        await db.from('secciones').update(datos).eq('id', id);
+      } else {
+        await db.from('secciones').insert(datos);
+      }
+      cerrarModal();
+      await cargar();
+    };
+
+    window.cerrarModal = function() {
+      document.getElementById('modal-seccion').classList.add('hidden');
+    };
+
+    window.clearDelegado = function() {
+      document.getElementById('m-delegado-id').value = '';
+      document.getElementById('m-delegado-selected').classList.add('hidden');
+      document.getElementById('m-delegado-search').value = '';
+    };
+
+    let searchDelegadoTimeout;
+    document.getElementById('m-delegado-search').addEventListener('input', (e) => {
+      clearTimeout(searchDelegadoTimeout);
+      const q = e.target.value.trim();
+      if (q.length < 2) { document.getElementById('m-delegado-resultados').classList.add('hidden'); return; }
+      searchDelegadoTimeout = setTimeout(async () => {
+        const { data } = await db.from('socios').select('id, nombre, apellidos')
+          .eq('activo', true).or(`nombre.ilike.%${q}%,apellidos.ilike.%${q}%`).limit(8);
+        const container = document.getElementById('m-delegado-resultados');
+        if (!data?.length) { container.innerHTML = '<p class="px-3 py-2 text-sm text-gray-400">Sin resultados</p>'; }
+        else {
+          container.innerHTML = data.map(s => `
+            <button type="button" onclick="selectDelegado('${s.id}','${s.nombre} ${s.apellidos}')"
+              class="w-full text-left px-3 py-2 hover:bg-blue-50 text-sm border-b border-gray-100 last:border-0">
+              ${s.apellidos}, ${s.nombre}
+            </button>`).join('');
+        }
+        container.classList.remove('hidden');
+      }, 300);
+    });
+
+    window.selectDelegado = function(id, nombre) {
+      document.getElementById('m-delegado-id').value = id;
+      document.getElementById('m-delegado-nombre').textContent = nombre;
+      document.getElementById('m-delegado-selected').classList.remove('hidden');
+      document.getElementById('m-delegado-resultados').classList.add('hidden');
+      document.getElementById('m-delegado-search').value = '';
+    };
+
+    document.getElementById('search').addEventListener('input', renderTabla);
+    document.getElementById('fil-tipo').addEventListener('change', renderTabla);
+    document.getElementById('btn-logout').addEventListener('click', async () => { await db.auth.signOut(); window.location.href = '/socios/login'; });
+
+    init();
+  </script>
+</Layout>

@@ -1,0 +1,222 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+---
+
+<Layout title="Panel Delegado — la Soci">
+  <div class="min-h-screen bg-gray-50">
+
+    <div class="bg-blue-900 text-white px-6 py-4">
+      <div class="max-w-5xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <a href="/socios/dashboard" class="text-blue-300 hover:text-white text-sm">← Dashboard</a>
+          <span class="text-blue-600">|</span>
+          <h1 class="text-lg font-bold">Panel Delegado</h1>
+        </div>
+        <button onclick="logout()" class="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <div id="loading" class="flex justify-center py-20">
+      <div class="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+    <div id="access-denied" class="hidden text-center py-20">
+      <div class="text-5xl mb-4">🚫</div>
+      <p class="text-gray-600">Solo accesible para delegados.</p>
+    </div>
+
+    <div id="delegado-content" class="hidden max-w-5xl mx-auto px-4 py-8 space-y-6">
+
+      <!-- Info sección -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="text-xs text-orange-500 font-semibold uppercase tracking-wide mb-1">Mi sección</p>
+            <h2 class="text-2xl font-bold text-gray-800" id="sec-nombre">—</h2>
+            <div class="flex items-center gap-4 mt-2 text-sm text-gray-500">
+              <span id="sec-tipo"></span>
+              <span id="sec-provincia"></span>
+            </div>
+            <p class="text-gray-500 text-sm mt-2" id="sec-descripcion"></p>
+          </div>
+          <div class="text-center bg-blue-50 border border-blue-200 rounded-xl px-6 py-4">
+            <p class="text-xs text-gray-400">Miembros</p>
+            <p class="text-3xl font-bold text-blue-900" id="sec-miembros">0</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex gap-2 border-b border-gray-200">
+        <button onclick="setTab('miembros')" id="tab-miembros" class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-orange-500 text-orange-600">👥 Miembros</button>
+        <button onclick="setTab('eventos')" id="tab-eventos" class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700">📅 Eventos</button>
+        <button onclick="setTab('info')" id="tab-info" class="tab-btn px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700">✏️ Info sección</button>
+      </div>
+
+      <!-- Tab: Miembros -->
+      <div id="panel-miembros" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-4 border-b border-gray-100 flex items-center gap-3">
+          <input type="text" id="search-miembros" placeholder="Buscar miembro..." class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 w-56 focus:outline-none focus:border-blue-400" />
+        </div>
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Socio</th>
+              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Email</th>
+              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Teléfono</th>
+              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Estado</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-miembros" class="divide-y divide-gray-50">
+            <tr><td colspan="4" class="text-center py-8 text-gray-400">Cargando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tab: Eventos -->
+      <div id="panel-eventos" class="hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="font-semibold text-gray-700">Eventos de mi sección</h3>
+        </div>
+        <div id="lista-eventos" class="space-y-3">
+          <p class="text-gray-400 text-sm">No hay eventos para esta sección.</p>
+        </div>
+      </div>
+
+      <!-- Tab: Info sección -->
+      <div id="panel-info" class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
+        <h3 class="font-semibold text-gray-700 mb-3">Editar información de la sección</h3>
+        <div>
+          <label class="text-xs text-gray-500 block mb-1">Descripción</label>
+          <textarea id="edit-descripcion" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+        </div>
+        <div>
+          <label class="text-xs text-gray-500 block mb-1">URL imagen</label>
+          <input id="edit-imagen" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        <button onclick="guardarInfo()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg text-sm transition">Guardar cambios</button>
+        <p id="info-ok" class="hidden text-green-600 text-sm">✅ Guardado correctamente.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script define:vars={{ supabaseUrl, supabaseKey }}>
+    window.__SB_URL = supabaseUrl;
+    window.__SB_KEY = supabaseKey;
+  </script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+    const db = createClient(window.__SB_URL, window.__SB_KEY);
+
+    let seccion = null;
+    let miembros = [];
+
+    async function init() {
+      const { data: { session } } = await db.auth.getSession();
+      if (!session) { window.location.href = '/socios/login'; return; }
+
+      const { data: socio } = await db.from('socios').select('rol').eq('id', session.user.id).single();
+      if (!socio || !['admin','delegado'].includes(socio.rol)) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('access-denied').classList.remove('hidden');
+        return;
+      }
+
+      // Buscar sección donde es delegado
+      const { data: sec } = await db.from('secciones').select('*').eq('delegado_id', session.user.id).single();
+      if (!sec) {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('access-denied').classList.remove('hidden');
+        return;
+      }
+      seccion = sec;
+
+      // Cargar miembros
+      const { data: mRaw } = await db.from('secciones_miembros')
+        .select('socio:socio_id(id, nombre, apellidos, email, telefono, activo)')
+        .eq('seccion_id', sec.id);
+      miembros = (mRaw || []).map(m => m.socio).filter(Boolean);
+
+      // Cargar eventos
+      const { data: eventos } = await db.from('eventos').select('*').eq('seccion_id', sec.id).order('fecha_inicio', { ascending: false });
+
+      // Render
+      document.getElementById('sec-nombre').textContent = sec.nombre;
+      document.getElementById('sec-tipo').textContent = sec.tipo === 'cultural' ? '🎭 Cultural' : '⚽ Deportiva';
+      document.getElementById('sec-provincia').textContent = sec.provincia ? `📍 ${sec.provincia}` : '';
+      document.getElementById('sec-descripcion').textContent = sec.descripcion || '';
+      document.getElementById('sec-miembros').textContent = miembros.length;
+      document.getElementById('edit-descripcion').value = sec.descripcion || '';
+      document.getElementById('edit-imagen').value = sec.imagen_url || '';
+
+      renderMiembros('');
+      renderEventos(eventos || []);
+
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('delegado-content').classList.remove('hidden');
+    }
+
+    function renderMiembros(search) {
+      const lista = search ? miembros.filter(m => `${m.nombre} ${m.apellidos}`.toLowerCase().includes(search)) : miembros;
+      const tbody = document.getElementById('tabla-miembros');
+      if (!lista.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8 text-gray-400 text-sm">Sin miembros</td></tr>'; return; }
+      tbody.innerHTML = lista.map(m => `
+        <tr class="hover:bg-gray-50">
+          <td class="px-4 py-3 font-medium text-gray-800">${m.apellidos}, ${m.nombre}</td>
+          <td class="px-4 py-3 text-gray-500 hidden md:table-cell">${m.email || '—'}</td>
+          <td class="px-4 py-3 text-gray-500 hidden md:table-cell">${m.telefono || '—'}</td>
+          <td class="px-4 py-3">
+            <span class="text-xs px-2 py-1 rounded-full ${m.activo ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">${m.activo ? '✅ Activo' : '⏳ Pendiente'}</span>
+          </td>
+        </tr>`).join('');
+    }
+
+    function renderEventos(eventos) {
+      const lista = document.getElementById('lista-eventos');
+      if (!eventos.length) { lista.innerHTML = '<p class="text-gray-400 text-sm">No hay eventos para esta sección.</p>'; return; }
+      lista.innerHTML = eventos.map(e => `
+        <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm">
+          <div class="flex items-start justify-between">
+            <div>
+              <h4 class="font-semibold text-gray-800">${e.titulo}</h4>
+              <p class="text-xs text-gray-400 mt-1">${new Date(e.fecha_inicio).toLocaleDateString('es-ES')}${e.lugar ? ' · ' + e.lugar : ''}</p>
+              ${e.descripcion ? `<p class="text-sm text-gray-500 mt-1">${e.descripcion}</p>` : ''}
+            </div>
+            <div class="text-right ml-4">
+              <p class="text-sm font-bold text-gray-700">${e.precio ? e.precio + ' €' : 'Gratis'}</p>
+              ${e.plazas ? `<p class="text-xs text-gray-400">${e.plazas} plazas</p>` : ''}
+            </div>
+          </div>
+        </div>`).join('');
+    }
+
+    window.setTab = function(tab) {
+      ['miembros','eventos','info'].forEach(t => {
+        document.getElementById('panel-' + t).classList.toggle('hidden', t !== tab);
+        const btn = document.getElementById('tab-' + t);
+        if (btn) {
+          btn.classList.toggle('border-orange-500', t === tab);
+          btn.classList.toggle('text-orange-600', t === tab);
+          btn.classList.toggle('border-transparent', t !== tab);
+          btn.classList.toggle('text-gray-500', t !== tab);
+        }
+      });
+    };
+
+    window.guardarInfo = async function() {
+      const desc = document.getElementById('edit-descripcion').value.trim();
+      const img = document.getElementById('edit-imagen').value.trim();
+      await db.from('secciones').update({ descripcion: desc, imagen_url: img || null }).eq('id', seccion.id);
+      document.getElementById('info-ok').classList.remove('hidden');
+      setTimeout(() => document.getElementById('info-ok').classList.add('hidden'), 3000);
+    };
+
+    document.getElementById('search-miembros').addEventListener('input', e => renderMiembros(e.target.value.toLowerCase()));
+
+    window.logout = async function() { await db.auth.signOut(); window.location.href = '/socios/login'; };
+
+    init();
+  </script>
+</Layout>
