@@ -1,7 +1,10 @@
-name = "lasoci-web" 
-pages_build_output_dir = "dist" 
+name = "lasoci-web"
+pages_build_output_dir = "dist"
 
 [vars]
 PUBLIC_SUPABASE_URL = "https://pllxyjbknzhgutuhmmuj.supabase.co"
 PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsbHh5amJrbnpoZ3V0dWhtbXVqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjgwODMsImV4cCI6MjA5NDk0NDA4M30.6_GsRUlmHyWBnjUTF6lNvB3TQePLY1_mzOKFZX5P7Ik"
-# deploy with supabase secrets
+
+[[kv_namespaces]]
+binding = "SESSION"
+id = "755852d44f03430fa95c63703e056aea"
