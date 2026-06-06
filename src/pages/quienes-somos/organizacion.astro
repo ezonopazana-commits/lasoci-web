@@ -1,0 +1,63 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+<Layout title="Organización — la Soci">
+
+  <div class="bg-gradient-to-br from-blue-950 to-blue-800 text-white py-16 px-6 text-center">
+    <p class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-2">la Soci</p>
+    <h1 class="text-4xl font-bold mb-4" data-i18n="org_title">Organización</h1>
+    <p class="text-blue-200 max-w-xl mx-auto" data-i18n="org_sub">Estructura y órganos de gobierno de la asociación</p>
+  </div>
+
+  <div class="bg-white border-b border-gray-200 sticky top-16 z-40">
+    <div class="max-w-5xl mx-auto px-6 flex gap-1 overflow-x-auto">
+      <a href="/quienes-somos" class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 whitespace-nowrap" data-i18n="qs_nav_nosotros">Nosotros</a>
+      <a href="/quienes-somos/historia" class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 whitespace-nowrap" data-i18n="qs_nav_historia">Historia</a>
+      <a href="/quienes-somos/organizacion" class="px-4 py-3 text-sm font-medium text-orange-600 border-b-2 border-orange-500 whitespace-nowrap" data-i18n="qs_nav_org">Organización</a>
+      <a href="/quienes-somos/preguntas" class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 whitespace-nowrap" data-i18n="qs_nav_faq">Preguntas frecuentes</a>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 py-16 space-y-12">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+        <div class="text-4xl mb-4">🏛️</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3" data-i18n="org_junta">Junta Rectora</h3>
+        <p class="text-gray-500 text-sm leading-relaxed" data-i18n="org_junta_desc">Órgano de gobierno elegido democráticamente por los asociados. Se renueva periódicamente mediante proceso electoral abierto a todos los socios.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+        <div class="text-4xl mb-4">📋</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3" data-i18n="org_asamblea">Asamblea General</h3>
+        <p class="text-gray-500 text-sm leading-relaxed" data-i18n="org_asamblea_desc">Órgano soberano de la asociación. Se reúne anualmente para aprobar cuentas, presupuestos y líneas estratégicas. Todos los socios pueden participar.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+        <div class="text-4xl mb-4">📍</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3" data-i18n="org_delegados">Delegados territoriales</h3>
+        <p class="text-gray-500 text-sm leading-relaxed" data-i18n="org_delegados_desc">Cada sección cuenta con un delegado o delegada responsable de organizar las actividades, gestionar las inscripciones y ser el punto de contacto con los socios.</p>
+      </div>
+      <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+        <div class="text-4xl mb-4">🏢</div>
+        <h3 class="text-xl font-bold text-gray-800 mb-3" data-i18n="org_sede">Sede central</h3>
+        <p class="text-gray-500 text-sm leading-relaxed" data-i18n="org_sede_desc">La oficina central de la asociación está ubicada en Sardenya, 521-523, 08024 Barcelona. Cuenta con un equipo profesional de gestión y atención al asociado.</p>
+      </div>
+    </div>
+
+    <div class="bg-blue-50 border border-blue-200 rounded-2xl p-8 text-center">
+      <h3 class="text-xl font-bold text-blue-900 mb-2" data-i18n="org_buen_gov">Canal de buen gobierno corporativo</h3>
+      <p class="text-blue-700 text-sm mb-4" data-i18n="org_buen_gov_desc">Disponemos de un canal confidencial para comunicar posibles irregularidades o incumplimientos de las normas de la asociación.</p>
+      <a href="/contacto" class="bg-blue-900 hover:bg-blue-800 text-white font-semibold px-8 py-3 rounded-xl transition inline-block" data-i18n="org_contactar">Contactar</a>
+    </div>
+  </div>
+
+  <script>
+    const T = {
+      es: { org_title:'Organización', org_sub:'Estructura y órganos de gobierno de la asociación', qs_nav_nosotros:'Nosotros', qs_nav_historia:'Historia', qs_nav_org:'Organización', qs_nav_faq:'Preguntas frecuentes', org_junta:'Junta Rectora', org_junta_desc:'Órgano de gobierno elegido democráticamente por los asociados. Se renueva periódicamente mediante proceso electoral abierto a todos los socios.', org_asamblea:'Asamblea General', org_asamblea_desc:'Órgano soberano de la asociación. Se reúne anualmente para aprobar cuentas, presupuestos y líneas estratégicas.', org_delegados:'Delegados territoriales', org_delegados_desc:'Cada sección cuenta con un delegado responsable de organizar actividades y ser el punto de contacto con los socios.', org_sede:'Sede central', org_sede_desc:'La oficina central está en Sardenya, 521-523, 08024 Barcelona.', org_buen_gov:'Canal de buen gobierno corporativo', org_buen_gov_desc:'Canal confidencial para comunicar posibles irregularidades o incumplimientos.', org_contactar:'Contactar' },
+      ca: { org_title:'Organització', org_sub:"Estructura i òrgans de govern de l'associació", qs_nav_nosotros:'Nosaltres', qs_nav_historia:'Història', qs_nav_org:'Organització', qs_nav_faq:'Preguntes freqüents', org_junta:'Junta Rectora', org_junta_desc:"Òrgan de govern elegit democràticament pels associats.", org_asamblea:'Assemblea General', org_asamblea_desc:"Òrgan sobirà de l'associació. Es reuneix anualment.", org_delegados:'Delegats territorials', org_delegados_desc:"Cada secció té un delegat responsable d'organitzar activitats.", org_sede:'Seu central', org_sede_desc:'Les oficines centrals estan a Sardenya, 521-523, 08024 Barcelona.', org_buen_gov:'Canal de bon govern corporatiu', org_buen_gov_desc:'Canal confidencial per comunicar possibles irregularitats.', org_contactar:'Contactar' },
+      en: { org_title:'Organisation', org_sub:'Structure and governing bodies of the association', qs_nav_nosotros:'About us', qs_nav_historia:'History', qs_nav_org:'Organisation', qs_nav_faq:'FAQ', org_junta:'Governing Board', org_junta_desc:'Democratically elected governing body. Renewed periodically through an election open to all members.', org_asamblea:'General Assembly', org_asamblea_desc:'Sovereign body of the association. Meets annually to approve accounts and budgets.', org_delegados:'Territorial delegates', org_delegados_desc:'Each section has a delegate responsible for organising activities and being the contact point for members.', org_sede:'Head office', org_sede_desc:'The central office is located at Sardenya, 521-523, 08024 Barcelona.', org_buen_gov:'Corporate governance channel', org_buen_gov_desc:'Confidential channel to report possible irregularities.', org_contactar:'Contact' }
+    };
+    function applyLang(lang) { const t=T[lang]||T.es; document.querySelectorAll('[data-i18n]').forEach(el => { const k=el.getAttribute('data-i18n'); if(t[k]) el.textContent=t[k]; }); }
+    applyLang(localStorage.getItem('lasoci_lang')||'es');
+    window.addEventListener('langchange', e => applyLang(e.detail.lang));
+  </script>
+</Layout>
