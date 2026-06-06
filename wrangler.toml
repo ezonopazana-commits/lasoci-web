@@ -1,5 +1,8 @@
 name = "lasoci-web"
-pages_build_output_dir = "dist"
+main = "./dist/server/entry.mjs"
+compatibility_date = "2026-05-21"
+compatibility_flags = ["global_fetch_strictly_public"]
+no_bundle = true
 
 [vars]
 PUBLIC_SUPABASE_URL = "https://pllxyjbknzhgutuhmmuj.supabase.co"
@@ -8,3 +11,7 @@ PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXB
 [[kv_namespaces]]
 binding = "SESSION"
 id = "755852d44f03430fa95c63703e056aea"
+
+[assets]
+directory = "./dist/client"
+binding = "ASSETS"
