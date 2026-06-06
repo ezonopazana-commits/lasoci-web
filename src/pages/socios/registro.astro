@@ -307,25 +307,67 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
           <p class="text-sm text-amber-700" id="modal-warning">Has d'arribar al final del document i prémer Acceptar</p>
         </div>
         <div id="privacy-content" class="overflow-y-auto flex-1 p-8 text-sm text-gray-700 leading-relaxed" onscroll="checkScroll()">
-          <h4 class="text-base font-bold text-blue-900 mb-4" id="privacy-heading">INFORMACIÓ BÀSICA SOBRE PROTECCIÓ DE DADES</h4>
-          <p class="font-semibold mb-2">Responsable del tractament</p>
-          <p class="mb-4">Identitat: la Soci — Associació del Personal de CaixaBank</p>
-          <p class="font-semibold mb-2">Per què i per a què tractem les seves dades?</p>
-          <p class="mb-4">L'associació tracta les seves dades personals amb les finalitats següents:</p>
-          <ul class="list-disc pl-5 mb-4 space-y-2">
-            <li>Gestionar la seva condició de soci/sòcia, incloent-hi el cobrament de quotes i la prestació de serveis associatius.</li>
-            <li>Complir les obligacions legals aplicables a les associacions sense ànim de lucre.</li>
-            <li>Enviar comunicacions relacionades amb les activitats, seccions i esdeveniments de l'associació.</li>
-          </ul>
-          <p class="font-semibold mb-2">Quant de temps conservarem les seves dades?</p>
-          <p class="mb-4">Les seves dades es conservaran mentre mantingui la condició de soci/sòcia i, posteriorment, durant els terminis legalment establerts.</p>
-          <p class="font-semibold mb-2">Quins són els seus drets?</p>
-          <ul class="list-disc pl-5 mb-4 space-y-2">
-            <li>Dret d'accés, rectificació, supressió, oposició i portabilitat.</li>
-            <li>Per exercir els seus drets, pot contactar amb nosaltres a través de la secció de contacte de la web.</li>
-          </ul>
-          <p class="font-semibold mb-2">Dret a presentar una reclamació</p>
-          <p class="mb-8">Té dret a presentar una reclamació davant l'Agència Espanyola de Protecció de Dades (www.aepd.es).</p>
+          <h4 class="text-base font-bold text-blue-900 mb-4" id="privacy-heading">INFORMACIÓN BÁSICA SOBRE PROTECCIÓN DE DATOS</h4>
+          <div id="privacy-body-es">
+            <p class="font-semibold mb-2">Responsable del tratamiento</p>
+            <p class="mb-4">Identidad: la Soci — Asociación del Personal de CaixaBank</p>
+            <p class="font-semibold mb-2">¿Por qué y para qué tratamos sus datos?</p>
+            <p class="mb-4">La asociación trata sus datos personales con las siguientes finalidades:</p>
+            <ul class="list-disc pl-5 mb-4 space-y-2">
+              <li>Gestionar su condición de socio/a, incluyendo el cobro de cuotas y la prestación de servicios asociativos.</li>
+              <li>Cumplir las obligaciones legales aplicables a las asociaciones sin ánimo de lucro.</li>
+              <li>Enviar comunicaciones relacionadas con las actividades, secciones y eventos de la asociación.</li>
+            </ul>
+            <p class="font-semibold mb-2">¿Cuánto tiempo conservaremos sus datos?</p>
+            <p class="mb-4">Sus datos se conservarán mientras mantenga la condición de socio/a y, posteriormente, durante los plazos legalmente establecidos.</p>
+            <p class="font-semibold mb-2">¿Cuáles son sus derechos?</p>
+            <ul class="list-disc pl-5 mb-4 space-y-2">
+              <li>Derecho de acceso, rectificación, supresión, oposición y portabilidad.</li>
+              <li>Para ejercer sus derechos, puede contactar con nosotros a través de la sección de contacto de la web.</li>
+            </ul>
+            <p class="font-semibold mb-2">Derecho a presentar una reclamación</p>
+            <p class="mb-8">Tiene derecho a presentar una reclamación ante la Agencia Española de Protección de Datos (www.aepd.es).</p>
+          </div>
+          <div id="privacy-body-ca" class="hidden">
+            <p class="font-semibold mb-2">Responsable del tractament</p>
+            <p class="mb-4">Identitat: la Soci — Associació del Personal de CaixaBank</p>
+            <p class="font-semibold mb-2">Per què i per a què tractem les seves dades?</p>
+            <p class="mb-4">L'associació tracta les seves dades personals amb les finalitats següents:</p>
+            <ul class="list-disc pl-5 mb-4 space-y-2">
+              <li>Gestionar la seva condició de soci/sòcia, incloent-hi el cobrament de quotes i la prestació de serveis associatius.</li>
+              <li>Complir les obligacions legals aplicables a les associacions sense ànim de lucre.</li>
+              <li>Enviar comunicacions relacionades amb les activitats, seccions i esdeveniments de l'associació.</li>
+            </ul>
+            <p class="font-semibold mb-2">Quant de temps conservarem les seves dades?</p>
+            <p class="mb-4">Les seves dades es conservaran mentre mantingui la condició de soci/sòcia i, posteriorment, durant els terminis legalment establerts.</p>
+            <p class="font-semibold mb-2">Quins són els seus drets?</p>
+            <ul class="list-disc pl-5 mb-4 space-y-2">
+              <li>Dret d'accés, rectificació, supressió, oposició i portabilitat.</li>
+              <li>Per exercir els seus drets, pot contactar amb nosaltres a través de la secció de contacte de la web.</li>
+            </ul>
+            <p class="font-semibold mb-2">Dret a presentar una reclamació</p>
+            <p class="mb-8">Té dret a presentar una reclamació davant l'Agència Espanyola de Protecció de Dades (www.aepd.es).</p>
+          </div>
+          <div id="privacy-body-en" class="hidden">
+            <p class="font-semibold mb-2">Data Controller</p>
+            <p class="mb-4">Identity: la Soci — CaixaBank Staff Association</p>
+            <p class="font-semibold mb-2">Why and for what purpose do we process your data?</p>
+            <p class="mb-4">The association processes your personal data for the following purposes:</p>
+            <ul class="list-disc pl-5 mb-4 space-y-2">
+              <li>Managing your membership, including collection of fees and provision of association services.</li>
+              <li>Complying with legal obligations applicable to non-profit associations.</li>
+              <li>Sending communications related to the association's activities, sections and events.</li>
+            </ul>
+            <p class="font-semibold mb-2">How long will we keep your data?</p>
+            <p class="mb-4">Your data will be kept for as long as you remain a member and, thereafter, for the legally established periods.</p>
+            <p class="font-semibold mb-2">What are your rights?</p>
+            <ul class="list-disc pl-5 mb-4 space-y-2">
+              <li>Right of access, rectification, erasure, objection and portability.</li>
+              <li>To exercise your rights, you can contact us through the contact section of the website.</li>
+            </ul>
+            <p class="font-semibold mb-2">Right to lodge a complaint</p>
+            <p class="mb-8">You have the right to lodge a complaint with the Spanish Data Protection Agency (www.aepd.es).</p>
+          </div>
           <div class="h-4"></div>
         </div>
         <div class="px-6 py-4 border-t border-gray-100 flex justify-center flex-shrink-0">
@@ -462,6 +504,11 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         if (el) el.textContent = val;
       });
       document.getElementById('buscar-titular').placeholder = t.buscar_placeholder;
+      // Mostrar bloque de privacidad según idioma
+      ['es','ca','en'].forEach(l => {
+        const el = document.getElementById('privacy-body-' + l);
+        if (el) el.classList.toggle('hidden', l !== lang);
+      });
       renderSidebar(lang);
     }
 
