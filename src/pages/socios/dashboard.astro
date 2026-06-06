@@ -188,7 +188,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       document.getElementById('val-dni').textContent = data?.dni || '—';
       document.getElementById('val-vinculacion').textContent = tr.vinc?.[data?.vinculacion] || data?.vinculacion || '—';
       document.getElementById('val-telefon').textContent = data?.telefono || '—';
-      document.getElementById('val-iban').textContent = data?.iban ? data.iban.replace(/(.{4})/g,'$1 ').trim() : '—';
+      document.getElementById('val-iban').textContent = data?.iban ? data.iban.replace(/\s/g,'').substring(0,4) + ' **** **** **** ' + data.iban.replace(/\s/g,'').slice(-4) : '—';
 
       // Estat badge
       const badge = document.getElementById('estat-badge');
