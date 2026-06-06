@@ -1,0 +1,58 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+<Layout title="Historia — la Soci">
+
+  <div class="bg-gradient-to-br from-blue-950 to-blue-800 text-white py-16 px-6 text-center">
+    <p class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-2">la Soci</p>
+    <h1 class="text-4xl font-bold mb-4" data-i18n="hist_title">Historia</h1>
+    <p class="text-blue-200 max-w-xl mx-auto" data-i18n="hist_sub">Más de 50 años construyendo comunidad</p>
+  </div>
+
+  <div class="bg-white border-b border-gray-200 sticky top-16 z-40">
+    <div class="max-w-5xl mx-auto px-6 flex gap-1 overflow-x-auto">
+      <a href="/quienes-somos" class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 whitespace-nowrap" data-i18n="qs_nav_nosotros">Nosotros</a>
+      <a href="/quienes-somos/historia" class="px-4 py-3 text-sm font-medium text-orange-600 border-b-2 border-orange-500 whitespace-nowrap" data-i18n="qs_nav_historia">Historia</a>
+      <a href="/quienes-somos/organizacion" class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 whitespace-nowrap" data-i18n="qs_nav_org">Organización</a>
+      <a href="/quienes-somos/preguntas" class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 whitespace-nowrap" data-i18n="qs_nav_faq">Preguntas frecuentes</a>
+    </div>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-6 py-16">
+    <div class="space-y-12">
+      <!-- Timeline -->
+      <div class="relative">
+        <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-blue-100"></div>
+        <div class="space-y-10">
+          {[
+            { anio: '1972', titulo: 'Fundación', desc: 'Se constituye la Associació del Personal de «la Caixa» como entidad sin ánimo de lucro para los empleados de la entidad.' },
+            { anio: '1980s', titulo: 'Crecimiento de secciones', desc: 'Se multiplican las secciones deportivas y culturales por todo el territorio. El golf, el esquí y el senderismo se convierten en actividades clave.' },
+            { anio: '1990s', titulo: 'Expansión territorial', desc: 'La asociación crece con la expansión de CaixaBank. Se crean delegaciones en nuevas provincias y comunidades autónomas.' },
+            { anio: '2000s', titulo: 'Era digital', desc: 'Se moderniza la gestión y comunicación con los asociados. Primera plataforma web para inscripciones y gestión de actividades.' },
+            { anio: '2012', titulo: 'Fusión CaixaBank', desc: 'Tras la fusión bancaria, la asociación adapta su estructura para dar servicio a todos los empleados del nuevo grupo.' },
+            { anio: '2020s', titulo: 'Transformación digital', desc: 'Nueva plataforma tecnológica, aplicación móvil y gestión digitalizada de todos los servicios para asociados.' },
+          ].map(h => (
+            <div class="flex gap-6 items-start relative">
+              <div class="w-16 h-16 rounded-full bg-blue-900 text-white flex items-center justify-center text-xs font-bold text-center flex-shrink-0 z-10 shadow">{h.anio}</div>
+              <div class="bg-white border border-gray-100 rounded-xl p-5 shadow-sm flex-1">
+                <h3 class="font-bold text-gray-800 mb-2">{h.titulo}</h3>
+                <p class="text-gray-500 text-sm leading-relaxed">{h.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const T = {
+      es: { hist_title:'Historia', hist_sub:'Más de 50 años construyendo comunidad', qs_nav_nosotros:'Nosotros', qs_nav_historia:'Historia', qs_nav_org:'Organización', qs_nav_faq:'Preguntas frecuentes' },
+      ca: { hist_title:'Història', hist_sub:'Més de 50 anys construint comunitat', qs_nav_nosotros:'Nosaltres', qs_nav_historia:'Història', qs_nav_org:'Organització', qs_nav_faq:'Preguntes freqüents' },
+      en: { hist_title:'History', hist_sub:'Over 50 years building community', qs_nav_nosotros:'About us', qs_nav_historia:'History', qs_nav_org:'Organisation', qs_nav_faq:'FAQ' }
+    };
+    function applyLang(lang) { const t=T[lang]||T.es; document.querySelectorAll('[data-i18n]').forEach(el => { const k=el.getAttribute('data-i18n'); if(t[k]) el.textContent=t[k]; }); }
+    applyLang(localStorage.getItem('lasoci_lang')||'es');
+    window.addEventListener('langchange', e => applyLang(e.detail.lang));
+  </script>
+</Layout>

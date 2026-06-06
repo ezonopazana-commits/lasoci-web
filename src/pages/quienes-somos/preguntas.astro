@@ -1,0 +1,100 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+<Layout title="Preguntas frecuentes — la Soci">
+
+  <div class="bg-gradient-to-br from-blue-950 to-blue-800 text-white py-16 px-6 text-center">
+    <p class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-2">la Soci</p>
+    <h1 class="text-4xl font-bold mb-4" data-i18n="faq_title">Preguntas frecuentes</h1>
+    <p class="text-blue-200 max-w-xl mx-auto" data-i18n="faq_sub">Todo lo que necesitas saber sobre la Soci</p>
+  </div>
+
+  <div class="bg-white border-b border-gray-200 sticky top-16 z-40">
+    <div class="max-w-5xl mx-auto px-6 flex gap-1 overflow-x-auto">
+      <a href="/quienes-somos" class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 whitespace-nowrap" data-i18n="qs_nav_nosotros">Nosotros</a>
+      <a href="/quienes-somos/historia" class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 whitespace-nowrap" data-i18n="qs_nav_historia">Historia</a>
+      <a href="/quienes-somos/organizacion" class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 whitespace-nowrap" data-i18n="qs_nav_org">Organización</a>
+      <a href="/quienes-somos/preguntas" class="px-4 py-3 text-sm font-medium text-orange-600 border-b-2 border-orange-500 whitespace-nowrap" data-i18n="qs_nav_faq">Preguntas frecuentes</a>
+    </div>
+  </div>
+
+  <div class="max-w-3xl mx-auto px-6 py-16">
+    <div id="faq-lista" class="space-y-3"></div>
+
+    <div class="mt-12 bg-blue-50 border border-blue-200 rounded-2xl p-8 text-center">
+      <h3 class="font-bold text-blue-900 text-lg mb-2" data-i18n="faq_mas">¿Tienes más preguntas?</h3>
+      <p class="text-blue-700 text-sm mb-4" data-i18n="faq_mas_desc">Estamos aquí para ayudarte. Contáctanos por email o teléfono.</p>
+      <a href="/contacto" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition inline-block" data-i18n="faq_contactar">Contáctanos</a>
+    </div>
+  </div>
+
+  <script>
+    const FAQS = {
+      es: [
+        { q:'¿Quién se puede asociar?', a:'Todos los empleados en activo, jubilados, prejubilados y afectados por un ERE de CaixaBank y la Fundación «la Caixa».' },
+        { q:'¿Mi familia se puede beneficiar?', a:'Sí, los familiares de primer y segundo grado: abuelos, padres, hermanos, hijos, nietos, cónyuge o pareja, suegros, cuñados y yerno/nuera.' },
+        { q:'¿Estoy obligado a ser de alguna sección?', a:'No. Siempre puedes beneficiarte de actividades para toda la familia y de las ventajas al colectivo.' },
+        { q:'¿Puedo crear una sección nueva?', a:'Sí. Si no encuentras la sección que buscas en tu zona, puedes proponerla. Si hay quórum, podrás practicar tu afición.' },
+        { q:'¿Hasta cuándo puedo ser de la Soci?', a:'Mientras seas empleado/a de CaixaBank o la Fundación «la Caixa», y también si te jubilas, prejubilas o te acoges a un ERE.' },
+        { q:'¿Cómo me puedo dar de alta?', a:'Pulsa "+Asóciate" en la web y rellena el formulario. Tu solicitud será revisada por el administrador.' },
+        { q:'¿Cuánto cuesta ser de la Soci?', a:'La cuota anual es de 49,50 € para asociados y 45 € para familiares mayores de 17 años. Los menores de esa edad tienen cuota gratuita.' },
+      ],
+      ca: [
+        { q:'Qui es pot associar?', a:'Tots els empleats en actiu, jubilats, prejubilats i afectats per un ERE de CaixaBank i la Fundació «la Caixa».' },
+        { q:'La meva família es pot beneficiar?', a:"Sí, els familiars de primer i segon grau: avis, pares, germans, fills, néts, cònjuge o parella, sogres, cunyats i gendre/nora." },
+        { q:'Estic obligat a ser d\'alguna secció?', a:'No. Sempre pots beneficiar-te d\'activitats per a tota la família i dels avantatges al col·lectiu.' },
+        { q:'Puc crear una secció nova?', a:"Sí. Si no trobes la secció que busques a la teva zona, pots proposar-la. Si hi ha quòrum, podràs practicar la teva afició." },
+        { q:'Fins quan puc ser de la Soci?', a:"Mentre siguis empleat/da de CaixaBank o la Fundació «la Caixa», i també si et jubiles, prejubiles o t'aculls a un ERE." },
+        { q:'Com me puc donar d\'alta?', a:"Prem \"+Fes-te soci\" a la web i omple el formulari. La teva sol·licitud serà revisada per l'administrador." },
+        { q:'Quant costa ser de la Soci?', a:"La quota anual és de 49,50 € per a associats i 45 € per a familiars majors de 17 anys. Els menors d'aquesta edat tenen quota gratuïta." },
+      ],
+      en: [
+        { q:'Who can join?', a:'All active employees, retirees, early retirees and those affected by redundancy at CaixaBank and Fundación «la Caixa».' },
+        { q:'Can my family benefit?', a:'Yes, first and second-degree relatives: grandparents, parents, siblings, children, grandchildren, spouse or partner, in-laws and siblings-in-law.' },
+        { q:'Do I have to join a section?', a:'No. You can always enjoy family activities and collective benefits without joining a specific section.' },
+        { q:'Can I create a new section?', a:'Yes. If you cannot find the section you are looking for in your area, you can propose it. If there is a quorum, you can start your activity.' },
+        { q:'How long can I be a member?', a:'As long as you are an employee of CaixaBank or Fundación «la Caixa», and also if you retire or take early retirement.' },
+        { q:'How do I sign up?', a:'Click "+Join us" on the website and fill in the form. Your request will be reviewed by the administrator.' },
+        { q:'How much does it cost?', a:'The annual fee is €49.50 for members and €45 for family members over 17. Under-17s have free membership.' },
+      ]
+    };
+
+    const T = {
+      es: { faq_title:'Preguntas frecuentes', faq_sub:'Todo lo que necesitas saber sobre la Soci', qs_nav_nosotros:'Nosotros', qs_nav_historia:'Historia', qs_nav_org:'Organización', qs_nav_faq:'Preguntas frecuentes', faq_mas:'¿Tienes más preguntas?', faq_mas_desc:'Estamos aquí para ayudarte. Contáctanos por email o teléfono.', faq_contactar:'Contáctanos' },
+      ca: { faq_title:'Preguntes freqüents', faq_sub:'Tot el que necessites saber sobre la Soci', qs_nav_nosotros:'Nosaltres', qs_nav_historia:'Història', qs_nav_org:'Organització', qs_nav_faq:'Preguntes freqüents', faq_mas:'Tens més preguntes?', faq_mas_desc:"Estem aquí per ajudar-te. Contacta'ns per email o telèfon.", faq_contactar:"Contacta'ns" },
+      en: { faq_title:'FAQ', faq_sub:'Everything you need to know about la Soci', qs_nav_nosotros:'About us', qs_nav_historia:'History', qs_nav_org:'Organisation', qs_nav_faq:'FAQ', faq_mas:'More questions?', faq_mas_desc:"We're here to help. Contact us by email or phone.", faq_contactar:'Contact us' }
+    };
+
+    let openIdx = null;
+
+    function renderFaqs(lang) {
+      const faqs = FAQS[lang] || FAQS.es;
+      const lista = document.getElementById('faq-lista');
+      lista.innerHTML = faqs.map((f, i) => `
+        <div class="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden">
+          <button onclick="toggleFaq(${i})" class="w-full text-left px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition">
+            <span class="font-medium text-gray-800 text-sm">${f.q}</span>
+            <span id="faq-icon-${i}" class="text-gray-400 text-lg transition-transform">${openIdx === i ? '−' : '+'}</span>
+          </button>
+          <div id="faq-body-${i}" class="${openIdx === i ? '' : 'hidden'} px-6 pb-4 text-gray-500 text-sm leading-relaxed">
+            ${f.a}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.toggleFaq = function(i) {
+      openIdx = openIdx === i ? null : i;
+      renderFaqs(localStorage.getItem('lasoci_lang') || 'es');
+    };
+
+    function applyLang(lang) {
+      const t = T[lang] || T.es;
+      document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if (t[k]) el.textContent = t[k]; });
+      renderFaqs(lang);
+    }
+
+    applyLang(localStorage.getItem('lasoci_lang') || 'es');
+    window.addEventListener('langchange', e => applyLang(e.detail.lang));
+  </script>
+</Layout>

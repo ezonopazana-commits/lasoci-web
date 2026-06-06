@@ -1,0 +1,66 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+<Layout title="Quiénes somos — la Soci">
+
+  <div class="bg-gradient-to-br from-blue-950 to-blue-800 text-white py-16 px-6 text-center">
+    <p class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-2">la Soci</p>
+    <h1 class="text-4xl font-bold mb-4" data-i18n="qs_title">Quiénes somos</h1>
+    <p class="text-blue-200 max-w-2xl mx-auto" data-i18n="qs_sub">Todo un mundo de servicios y ventajas para los empleados de CaixaBank y la Fundación «la Caixa» y sus familias</p>
+  </div>
+
+  <!-- Subsecciones nav -->
+  <div class="bg-white border-b border-gray-200 sticky top-16 z-40">
+    <div class="max-w-5xl mx-auto px-6 flex gap-1 overflow-x-auto">
+      <a href="/quienes-somos" class="px-4 py-3 text-sm font-medium text-orange-600 border-b-2 border-orange-500 whitespace-nowrap" data-i18n="qs_nav_nosotros">Nosotros</a>
+      <a href="/quienes-somos/historia" class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 whitespace-nowrap" data-i18n="qs_nav_historia">Historia</a>
+      <a href="/quienes-somos/organizacion" class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 whitespace-nowrap" data-i18n="qs_nav_org">Organización</a>
+      <a href="/quienes-somos/preguntas" class="px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-800 whitespace-nowrap" data-i18n="qs_nav_faq">Preguntas frecuentes</a>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 py-12 space-y-16">
+
+    <!-- Intro -->
+    <div class="text-center max-w-3xl mx-auto">
+      <p class="text-lg text-gray-600 leading-relaxed" data-i18n="qs_intro">Somos la Associació del Personal de «la Caixa», una entidad sin ánimo de lucro, de la que podemos formar parte todos los empleados y empleadas de CaixaBank y la Fundación «la Caixa», junto con nuestros familiares.</p>
+    </div>
+
+    <!-- Misión / Visión / Valores -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="text-center">
+        <img src="https://www.lasoci.org/wp-content/uploads/2022/07/missio-1024x1024.jpg" alt="Misión" class="w-24 h-24 rounded-2xl object-cover mx-auto mb-4 shadow-sm" />
+        <h3 class="text-xl font-bold text-blue-900 mb-3" data-i18n="qs_mision">MISIÓN</h3>
+        <p class="text-gray-500 text-sm leading-relaxed" data-i18n="qs_mision_desc">Relacionarnos entre compañeros en un ambiente lúdico y transversal, compartiendo deporte y actividades culturales, aportando nuestro potencial al servicio de la sociedad.</p>
+      </div>
+      <div class="text-center">
+        <img src="https://www.lasoci.org/wp-content/uploads/2022/07/visio-1024x1024.png" alt="Visión" class="w-24 h-24 rounded-2xl object-cover mx-auto mb-4 shadow-sm" />
+        <h3 class="text-xl font-bold text-blue-900 mb-3" data-i18n="qs_vision">VISIÓN</h3>
+        <p class="text-gray-500 text-sm leading-relaxed" data-i18n="qs_vision_desc">Crecer como comunidad, compartir momentos, subvencionar actividades, conseguir ventajas exclusivas y colaborar en acciones solidarias.</p>
+      </div>
+      <div class="text-center">
+        <img src="https://www.lasoci.org/wp-content/uploads/2022/07/valors-1024x1024.png" alt="Valores" class="w-24 h-24 rounded-2xl object-cover mx-auto mb-4 shadow-sm" />
+        <h3 class="text-xl font-bold text-blue-900 mb-3" data-i18n="qs_valores">VALORES</h3>
+        <p class="text-gray-500 text-sm leading-relaxed" data-i18n="qs_valores_desc">Compañerismo, participación, iniciativa, solidaridad y respeto. Poner en valor quiénes somos más allá del ámbito profesional.</p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="bg-blue-900 rounded-2xl p-10 text-center text-white">
+      <h2 class="text-2xl font-bold mb-3" data-i18n="qs_cta_title">¿Quieres ser parte de la Soci?</h2>
+      <p class="text-blue-200 mb-6" data-i18n="qs_cta_sub">Únete a la asociación y disfruta de todas las ventajas, actividades y descuentos exclusivos.</p>
+      <a href="/socios/registro" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition inline-block" data-i18n="qs_cta_btn">Asóciate ahora</a>
+    </div>
+  </div>
+
+  <script>
+    const T = {
+      es: { qs_title:'Quiénes somos', qs_sub:'Todo un mundo de servicios y ventajas para los empleados de CaixaBank y la Fundación «la Caixa» y sus familias', qs_nav_nosotros:'Nosotros', qs_nav_historia:'Historia', qs_nav_org:'Organización', qs_nav_faq:'Preguntas frecuentes', qs_intro:'Somos la Associació del Personal de «la Caixa», una entidad sin ánimo de lucro, de la que podemos formar parte todos los empleados y empleadas de CaixaBank y la Fundación «la Caixa», junto con nuestros familiares.', qs_mision:'MISIÓN', qs_mision_desc:'Relacionarnos entre compañeros en un ambiente lúdico y transversal, compartiendo deporte y actividades culturales, aportando nuestro potencial al servicio de la sociedad.', qs_vision:'VISIÓN', qs_vision_desc:'Crecer como comunidad, compartir momentos, subvencionar actividades, conseguir ventajas exclusivas y colaborar en acciones solidarias.', qs_valores:'VALORES', qs_valores_desc:'Compañerismo, participación, iniciativa, solidaridad y respeto. Poner en valor quiénes somos más allá del ámbito profesional.', qs_cta_title:'¿Quieres ser parte de la Soci?', qs_cta_sub:'Únete a la asociación y disfruta de todas las ventajas, actividades y descuentos exclusivos.', qs_cta_btn:'Asóciate ahora' },
+      ca: { qs_title:'Qui som', qs_sub:"Tot un món de serveis i avantatges per als empleats de CaixaBank i la Fundació «la Caixa» i les seves famílies", qs_nav_nosotros:'Nosaltres', qs_nav_historia:'Història', qs_nav_org:'Organització', qs_nav_faq:'Preguntes freqüents', qs_intro:"Som l'Associació del Personal de «la Caixa», una entitat sense ànim de lucre.", qs_mision:'MISSIÓ', qs_mision_desc:"Relacionar-nos entre companys en un ambient lúdic i transversal, compartint esport i activitats culturals.", qs_vision:'VISIÓ', qs_vision_desc:"Créixer com a comunitat, compartir moments, subvencionar activitats i aconseguir avantatges exclusius.", qs_valores:'VALORS', qs_valores_desc:"Companyonia, participació, iniciativa, solidaritat i respecte.", qs_cta_title:'Vols ser part de la Soci?', qs_cta_sub:"Uneix-te a l'associació i gaudeix de tots els avantatges, activitats i descomptes exclusius.", qs_cta_btn:'Associa\'t ara' },
+      en: { qs_title:'Who we are', qs_sub:'A world of services and benefits for CaixaBank and Fundación «la Caixa» employees and their families', qs_nav_nosotros:'About us', qs_nav_historia:'History', qs_nav_org:'Organisation', qs_nav_faq:'FAQ', qs_intro:'We are the Associació del Personal de «la Caixa», a non-profit organisation open to all CaixaBank and Fundación «la Caixa» employees and their families.', qs_mision:'MISSION', qs_mision_desc:'To bring colleagues together in a fun, cross-functional environment, sharing sport and cultural activities, contributing our potential to society.', qs_vision:'VISION', qs_vision_desc:'To grow as a community, share moments, subsidise activities, secure exclusive benefits and collaborate on solidarity actions.', qs_valores:'VALUES', qs_valores_desc:'Camaraderie, participation, initiative, solidarity and respect. Valuing who we are beyond the professional sphere.', qs_cta_title:'Want to be part of la Soci?', qs_cta_sub:'Join the association and enjoy all the exclusive benefits, activities and discounts.', qs_cta_btn:'Join now' }
+    };
+    function applyLang(lang) { const t=T[lang]||T.es; document.querySelectorAll('[data-i18n]').forEach(el => { const k=el.getAttribute('data-i18n'); if(t[k]) el.textContent=t[k]; }); }
+    applyLang(localStorage.getItem('lasoci_lang')||'es');
+    window.addEventListener('langchange', e => applyLang(e.detail.lang));
+  </script>
+</Layout>
