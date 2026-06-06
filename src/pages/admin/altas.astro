@@ -1,0 +1,280 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
+const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
+---
+
+<Layout title="Gestión de Altas — Admin la Soci">
+
+  <div class="min-h-screen bg-gray-100">
+
+    <!-- Header -->
+    <div class="bg-blue-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-10 shadow">
+      <div class="flex items-center gap-2">
+        <a href="/"><span class="text-lg font-bold text-orange-400">la</span><span class="text-lg font-bold text-white">Soci</span></a>
+        <span class="text-blue-400 text-xs hidden sm:block">| Gestión de Altas</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="/admin" class="text-xs text-blue-300 hover:text-white">← Panel Admin</a>
+        <button id="btn-logout" class="text-xs bg-blue-800 hover:bg-blue-700 px-3 py-1.5 rounded-lg transition">Salir</button>
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-3 py-6">
+
+      <!-- Loading -->
+      <div id="loading" class="flex items-center justify-center py-20">
+        <div class="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+      </div>
+
+      <!-- Access denied -->
+      <div id="access-denied" class="hidden text-center py-20">
+        <div class="text-5xl mb-4">🚫</div>
+        <h2 class="text-lg font-bold text-gray-800 mb-2">Acceso denegado</h2>
+        <a href="/socios/dashboard" class="bg-orange-500 text-white px-5 py-2 rounded-xl text-sm font-medium">Ir al dashboard</a>
+      </div>
+
+      <!-- Content -->
+      <div id="admin-content" class="hidden space-y-5">
+
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-3 mb-6">
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Pendientes</p>
+            <p class="text-2xl font-bold text-amber-500" id="stat-pendientes">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Aprobados hoy</p>
+            <p class="text-2xl font-bold text-green-500" id="stat-aprobados">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center">
+            <p class="text-xs text-gray-400 mb-1">Total socios</p>
+            <p class="text-2xl font-bold text-blue-900" id="stat-total">-</p>
+          </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="bg-white rounded-xl shadow-sm p-4 flex flex-wrap gap-3 items-center">
+          <span class="text-sm font-medium text-gray-600">Filtrar:</span>
+          <button onclick="setFiltro('pendiente')" id="f-pendiente" class="filtro-btn active px-3 py-1.5 rounded-lg text-sm font-medium bg-amber-100 text-amber-700 border border-amber-200">Pendientes</button>
+          <button onclick="setFiltro('activo')" id="f-activo" class="filtro-btn px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 border border-gray-200">Activos</button>
+          <button onclick="setFiltro('todos')" id="f-todos" class="filtro-btn px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 border border-gray-200">Todos</button>
+          <div class="ml-auto">
+            <input type="text" id="search-input" placeholder="Buscar por nombre, email, DNI..." class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 w-64 focus:outline-none focus:border-blue-400" />
+          </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <table class="w-full text-sm">
+            <thead class="bg-gray-50 border-b border-gray-100">
+              <tr>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Socio</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">DNI</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Teléfono</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Vinculación</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Estado</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Fecha alta</th>
+                <th class="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-socios" class="divide-y divide-gray-50">
+              <tr><td colspan="7" class="text-center py-8 text-gray-400 text-sm">Cargando socios...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal detalle socio -->
+  <div id="modal-socio" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <h3 class="font-bold text-gray-800 text-lg">Detalle del socio</h3>
+        <button onclick="cerrarModal()" class="text-gray-400 hover:text-gray-600 text-xl">✕</button>
+      </div>
+      <div id="modal-contenido" class="p-6 space-y-4"></div>
+      <div id="modal-acciones" class="px-6 py-4 border-t border-gray-100 flex gap-3 justify-end"></div>
+    </div>
+  </div>
+
+  <script define:vars={{ supabaseUrl, supabaseKey }}>
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+    const db = createClient(supabaseUrl, supabaseKey);
+
+    let todosSocios = [];
+    let filtroActual = 'pendiente';
+
+    async function init() {
+      const { data: { session } } = await db.auth.getSession();
+      if (!session) { window.location.href = '/socios/login'; return; }
+
+      const { data: socio } = await db.from('socios').select('rol').eq('id', session.user.id).single();
+      if (!socio || socio.rol !== 'admin') {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('access-denied').classList.remove('hidden');
+        return;
+      }
+
+      await cargarSocios();
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('admin-content').classList.remove('hidden');
+    }
+
+    async function cargarSocios() {
+      const { data } = await db.from('socios')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      todosSocios = data || [];
+      actualizarStats();
+      renderTabla();
+    }
+
+    function actualizarStats() {
+      const pendientes = todosSocios.filter(s => !s.activo).length;
+      const hoy = new Date().toISOString().split('T')[0];
+      const aprobados = todosSocios.filter(s => s.activo && s.created_at?.startsWith(hoy)).length;
+      document.getElementById('stat-pendientes').textContent = pendientes;
+      document.getElementById('stat-aprobados').textContent = aprobados;
+      document.getElementById('stat-total').textContent = todosSocios.filter(s => s.activo).length;
+    }
+
+    function renderTabla() {
+      const search = document.getElementById('search-input').value.toLowerCase();
+      let socios = todosSocios;
+
+      if (filtroActual === 'pendiente') socios = socios.filter(s => !s.activo);
+      else if (filtroActual === 'activo') socios = socios.filter(s => s.activo);
+
+      if (search) {
+        socios = socios.filter(s =>
+          `${s.nombre} ${s.apellidos} ${s.email} ${s.dni}`.toLowerCase().includes(search)
+        );
+      }
+
+      const tbody = document.getElementById('tabla-socios');
+      if (socios.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-8 text-gray-400 text-sm">No hay socios en este estado</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = socios.map(s => `
+        <tr class="hover:bg-gray-50 cursor-pointer" onclick="abrirModal('${s.id}')">
+          <td class="px-4 py-3">
+            <div class="font-medium text-gray-800">${s.apellidos}, ${s.nombre}</div>
+            <div class="text-xs text-gray-400">${s.email}</div>
+          </td>
+          <td class="px-4 py-3 text-gray-500 hidden md:table-cell">${s.dni || '-'}</td>
+          <td class="px-4 py-3 text-gray-500 hidden lg:table-cell">${s.telefono || '-'}</td>
+          <td class="px-4 py-3 hidden lg:table-cell">
+            <span class="text-xs px-2 py-1 rounded-full ${s.rol === 'admin' ? 'bg-purple-100 text-purple-700' : s.rol === 'delegado' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'}">${s.rol}</span>
+          </td>
+          <td class="px-4 py-3">
+            <span class="text-xs px-2 py-1 rounded-full font-medium ${s.activo ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}">
+              ${s.activo ? '✅ Activo' : '⏳ Pendiente'}
+            </span>
+          </td>
+          <td class="px-4 py-3 text-xs text-gray-400 hidden md:table-cell">${new Date(s.created_at).toLocaleDateString('es-ES')}</td>
+          <td class="px-4 py-3 text-right">
+            ${!s.activo ? `
+              <button onclick="event.stopPropagation(); aprobar('${s.id}')" class="text-xs bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-lg mr-1 transition">Aprobar</button>
+              <button onclick="event.stopPropagation(); rechazar('${s.id}')" class="text-xs bg-red-100 hover:bg-red-200 text-red-600 px-3 py-1.5 rounded-lg transition">Rechazar</button>
+            ` : `
+              <button onclick="event.stopPropagation(); desactivar('${s.id}')" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-lg transition">Desactivar</button>
+            `}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    window.setFiltro = function(f) {
+      filtroActual = f;
+      document.querySelectorAll('.filtro-btn').forEach(b => {
+        b.classList.remove('bg-amber-100', 'text-amber-700', 'border-amber-200', 'bg-blue-100', 'text-blue-700', 'border-blue-200', 'bg-purple-100', 'text-purple-700', 'border-purple-200');
+        b.classList.add('bg-gray-100', 'text-gray-600', 'border-gray-200');
+      });
+      const active = document.getElementById('f-' + f);
+      active?.classList.remove('bg-gray-100', 'text-gray-600', 'border-gray-200');
+      active?.classList.add('bg-amber-100', 'text-amber-700', 'border-amber-200');
+      renderTabla();
+    };
+
+    window.aprobar = async function(id) {
+      await db.from('socios').update({ activo: true }).eq('id', id);
+      await cargarSocios();
+    };
+
+    window.rechazar = async function(id) {
+      if (!confirm('¿Seguro que quieres eliminar este registro de alta?')) return;
+      await db.from('socios').delete().eq('id', id);
+      await cargarSocios();
+    };
+
+    window.desactivar = async function(id) {
+      if (!confirm('¿Desactivar este socio?')) return;
+      await db.from('socios').update({ activo: false }).eq('id', id);
+      await cargarSocios();
+    };
+
+    window.abrirModal = function(id) {
+      const s = todosSocios.find(x => x.id === id);
+      if (!s) return;
+
+      const ibanMask = s.iban ? s.iban.substring(0, 4) + ' **** **** **** ' + s.iban.slice(-4) : '-';
+
+      document.getElementById('modal-contenido').innerHTML = `
+        <div class="grid grid-cols-2 gap-4">
+          <div><p class="text-xs text-gray-400">Nombre</p><p class="font-medium">${s.nombre} ${s.apellidos}</p></div>
+          <div><p class="text-xs text-gray-400">Email</p><p class="font-medium text-sm">${s.email}</p></div>
+          <div><p class="text-xs text-gray-400">DNI</p><p class="font-medium">${s.dni || '-'}</p></div>
+          <div><p class="text-xs text-gray-400">Teléfono</p><p class="font-medium">${s.telefono || '-'}</p></div>
+          <div><p class="text-xs text-gray-400">Rol</p><p class="font-medium">${s.rol}</p></div>
+          <div><p class="text-xs text-gray-400">Sección</p><p class="font-medium">${s.seccion || '-'}</p></div>
+          <div class="col-span-2"><p class="text-xs text-gray-400">IBAN</p><p class="font-medium font-mono text-sm">${ibanMask}</p></div>
+          <div><p class="text-xs text-gray-400">Estado</p><p class="font-medium">${s.activo ? '✅ Activo' : '⏳ Pendiente'}</p></div>
+          <div><p class="text-xs text-gray-400">Fecha alta</p><p class="font-medium">${new Date(s.created_at).toLocaleDateString('es-ES')}</p></div>
+        </div>
+        <div class="mt-4">
+          <label class="text-xs text-gray-400 block mb-1">Cambiar rol</label>
+          <select id="modal-rol" class="text-sm border border-gray-200 rounded-lg px-3 py-2 w-full">
+            <option value="asociado" ${s.rol === 'asociado' ? 'selected' : ''}>Asociado</option>
+            <option value="delegado" ${s.rol === 'delegado' ? 'selected' : ''}>Delegado</option>
+            <option value="admin" ${s.rol === 'admin' ? 'selected' : ''}>Admin</option>
+          </select>
+        </div>
+      `;
+
+      document.getElementById('modal-acciones').innerHTML = `
+        ${!s.activo ? `<button onclick="aprobar('${s.id}'); cerrarModal()" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-xl text-sm font-medium transition">✅ Aprobar alta</button>` : ''}
+        <button onclick="guardarRol('${s.id}')" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-xl text-sm font-medium transition">Guardar rol</button>
+        <button onclick="cerrarModal()" class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-5 py-2 rounded-xl text-sm font-medium transition">Cerrar</button>
+      `;
+
+      document.getElementById('modal-socio').classList.remove('hidden');
+    };
+
+    window.cerrarModal = function() {
+      document.getElementById('modal-socio').classList.add('hidden');
+    };
+
+    window.guardarRol = async function(id) {
+      const rol = document.getElementById('modal-rol').value;
+      await db.from('socios').update({ rol }).eq('id', id);
+      cerrarModal();
+      await cargarSocios();
+    };
+
+    document.getElementById('search-input').addEventListener('input', renderTabla);
+
+    document.getElementById('btn-logout').addEventListener('click', async () => {
+      await db.auth.signOut();
+      window.location.href = '/socios/login';
+    });
+
+    init();
+  </script>
+
+</Layout>
