@@ -69,19 +69,24 @@ const { title, lang = 'es' } = Astro.props;
   <body class="min-h-screen bg-white font-sans">
 
     <!-- NAVBAR -->
-    <nav class="bg-blue-900 text-white shadow-lg sticky top-0 z-50">
-      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="/" class="font-bold text-xl text-orange-400 hover:text-orange-300 transition">
-          la <span class="text-white">Soci</span>
+    <nav style="background:#0f172a;" class="text-white shadow-lg sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-5 flex items-center justify-between h-16">
+
+        <!-- Logo -->
+        <a href="/" class="flex items-center flex-shrink-0">
+          <img src="/logo-lasoci.png.JPG" alt="la Soci" class="h-9 w-auto object-contain" />
         </a>
-        <div class="hidden md:flex items-center gap-6 text-sm font-medium">
-          <a href="/secciones" class="text-blue-200 px-3 py-2 rounded-lg nav-link" data-i18n="nav_seccions">Seccions</a>
-          <a href="/agenda" class="text-blue-200 px-3 py-2 rounded-lg nav-link">Agenda</a>
-          <a href="/viajes" class="text-blue-200 px-3 py-2 rounded-lg nav-link" data-i18n="nav_viajes">Viajes</a>
-          <a href="/ventajas" class="text-blue-200 px-3 py-2 rounded-lg nav-link" data-i18n="nav_ventajas">Ventajas</a>
+
+        <!-- Nav links desktop -->
+        <div class="hidden lg:flex items-center gap-1 text-sm font-medium flex-1 justify-center">
+          <a href="/secciones" class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition whitespace-nowrap" data-i18n="nav_seccions">Secciones</a>
+          <a href="/agenda" class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition whitespace-nowrap">Agenda</a>
+          <a href="/viajes" class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition whitespace-nowrap" data-i18n="nav_viajes">Viajes</a>
+          <a href="/ventajas" class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition whitespace-nowrap" data-i18n="nav_ventajas">Ventajas</a>
+          <!-- Quiénes somos dropdown -->
           <div class="relative group">
-            <button class="text-blue-200 px-3 py-2 rounded-lg nav-link flex items-center gap-1" data-i18n="nav_quienes">Quiénes somos
-              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <button class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition flex items-center gap-1 whitespace-nowrap" data-i18n="nav_quienes">Quiénes somos
+              <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </button>
             <div class="absolute top-full left-0 mt-1 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-1 hidden group-hover:block z-50">
               <a href="/quienes-somos" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" data-i18n="qs_nav_nosotros">Nosotros</a>
@@ -90,82 +95,72 @@ const { title, lang = 'es' } = Astro.props;
               <a href="/quienes-somos/preguntas" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" data-i18n="qs_nav_faq">Preguntas frecuentes</a>
             </div>
           </div>
-          <a href="/noticias" class="text-blue-200 px-3 py-2 rounded-lg nav-link" data-i18n="nav_noticies">Notícies</a>
-          <a href="/contacto" class="text-blue-200 px-3 py-2 rounded-lg nav-link" data-i18n="nav_contacte">Contacte</a>
+          <a href="/noticias" class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition whitespace-nowrap" data-i18n="nav_noticies">Noticias</a>
+          <a href="/contacto" class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition whitespace-nowrap" data-i18n="nav_contacte">Contacto</a>
+        </div>
 
-          <!-- LANGUAGE SELECTOR - Santander style -->
+        <!-- Right side -->
+        <div class="hidden lg:flex items-center gap-2 flex-shrink-0">
+          <!-- Selector idioma -->
           <div class="relative" id="lang-dropdown">
-            <button id="lang-btn" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition text-sm">
-              <img id="lang-flag-img" src="https://flagcdn.com/w40/es.png" class="w-6 h-6 rounded-full object-cover flex-shrink-0" alt="" />
-              <span id="lang-label">Español</span>
-              <svg id="lang-chevron" class="w-3 h-3 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button id="lang-btn" class="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg transition text-sm">
+              <img id="lang-flag-img" src="https://flagcdn.com/w40/es.png" class="w-5 h-5 rounded-full object-cover flex-shrink-0" alt="" />
+              <span id="lang-label" class="text-xs">Español</span>
+              <svg id="lang-chevron" class="w-3 h-3 opacity-60 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
               </svg>
             </button>
-
-            <div id="lang-dropdown-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-2xl overflow-hidden z-50 border border-gray-200 py-1">
-              <!-- ES -->
-              <button onclick="setLang('es')" id="lang-opt-es"
-                class="lang-option w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors">
-                <div class="flex items-center gap-3">
-                  <img src="https://flagcdn.com/w40/es.png" class="w-8 h-8 rounded-full object-cover border-2 border-gray-200 shadow-sm flex-shrink-0" alt="ES" />
-                  <span class="font-medium">Español</span>
+            <div id="lang-dropdown-menu" class="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-2xl overflow-hidden z-50 border border-gray-200 py-1">
+              <button onclick="setLang('es')" id="lang-opt-es" class="lang-option w-full flex items-center justify-between px-4 py-2.5 text-gray-700 hover:bg-gray-50 text-sm transition-colors">
+                <div class="flex items-center gap-2">
+                  <img src="https://flagcdn.com/w40/es.png" class="w-6 h-6 rounded-full object-cover" alt="ES" />
+                  <span>Español</span>
                 </div>
-                <svg id="check-es" class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                </svg>
+                <svg id="check-es" class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
               </button>
-              <!-- CA -->
-              <button onclick="setLang('ca')" id="lang-opt-ca"
-                class="lang-option w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors">
-                <div class="flex items-center gap-3">
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Catalonia.svg/40px-Flag_of_Catalonia.svg.png" class="w-8 h-8 rounded-full object-cover border-2 border-gray-200 shadow-sm flex-shrink-0" alt="CA" />
-                  <span class="font-medium">Català</span>
+              <button onclick="setLang('ca')" id="lang-opt-ca" class="lang-option w-full flex items-center justify-between px-4 py-2.5 text-gray-700 hover:bg-gray-50 text-sm transition-colors">
+                <div class="flex items-center gap-2">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Catalonia.svg/40px-Flag_of_Catalonia.svg.png" class="w-6 h-6 rounded-full object-cover" alt="CA" />
+                  <span>Català</span>
                 </div>
-                <svg id="check-ca" class="w-5 h-5 text-blue-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                </svg>
+                <svg id="check-ca" class="w-4 h-4 text-blue-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
               </button>
-              <!-- EN -->
-              <button onclick="setLang('en')" id="lang-opt-en"
-                class="lang-option w-full flex items-center justify-between px-4 py-3 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors">
-                <div class="flex items-center gap-3">
-                  <img src="https://flagcdn.com/w40/gb.png" class="w-8 h-8 rounded-full object-cover border-2 border-gray-200 shadow-sm flex-shrink-0" alt="EN" />
-                  <span class="font-medium">Inglés</span>
+              <button onclick="setLang('en')" id="lang-opt-en" class="lang-option w-full flex items-center justify-between px-4 py-2.5 text-gray-700 hover:bg-gray-50 text-sm transition-colors">
+                <div class="flex items-center gap-2">
+                  <img src="https://flagcdn.com/w40/gb.png" class="w-6 h-6 rounded-full object-cover" alt="EN" />
+                  <span>English</span>
                 </div>
-                <svg id="check-en" class="w-5 h-5 text-blue-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                </svg>
+                <svg id="check-en" class="w-4 h-4 text-blue-600 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
               </button>
             </div>
           </div>
 
-          <a href="/socios/registro" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition font-semibold flex items-center gap-1" data-i18n="nav_asociate">
+          <a href="/socios/registro" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition font-semibold text-sm flex items-center gap-1 whitespace-nowrap" data-i18n="nav_asociate">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
             +Asóciate
           </a>
-          <a href="/socios/login" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition" data-i18n="nav_area">
-            Àrea socis
-          </a>
+          <a href="/socios/login" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition font-semibold text-sm whitespace-nowrap" data-i18n="nav_area">Área socios</a>
         </div>
-        <button id="menu-btn" class="md:hidden text-white">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
+
+        <!-- Mobile burger -->
+        <button id="mobile-menu-btn" class="lg:hidden p-2 rounded-lg hover:bg-white/10 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </div>
+
       <!-- Mobile menu -->
-      <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 space-y-2 text-sm">
-        <a href="/secciones" class="block text-blue-200 hover:text-white py-1" data-i18n="nav_seccions">Seccions</a>
-        <a href="/noticias" class="block text-blue-200 hover:text-white py-1" data-i18n="nav_noticies">Notícies</a>
-        <a href="/revista" class="block text-blue-200 hover:text-white py-1" data-i18n="nav_revista">Revista</a>
-        <a href="/contacto" class="block text-blue-200 hover:text-white py-1" data-i18n="nav_contacte">Contacte</a>
-        <div class="flex gap-2 py-1">
-          <button onclick="setLang('es')" class="flex items-center gap-1 bg-white/10 px-3 py-1 rounded text-xs">🇪🇸 Español</button>
-          <button onclick="setLang('ca')" class="flex items-center gap-1 bg-white/10 px-3 py-1 rounded text-xs">🏴󠁥󠁳󠁣󠁴󠁿 Català</button>
-          <button onclick="setLang('en')" class="flex items-center gap-1 bg-white/10 px-3 py-1 rounded text-xs">🇬🇧 English</button>
+      <div id="mobile-menu" class="hidden lg:hidden border-t border-white/10 px-5 py-4 space-y-1">
+        <a href="/secciones" class="block text-gray-300 hover:text-white py-2 text-sm" data-i18n="nav_seccions">Secciones</a>
+        <a href="/agenda" class="block text-gray-300 hover:text-white py-2 text-sm">Agenda</a>
+        <a href="/viajes" class="block text-gray-300 hover:text-white py-2 text-sm" data-i18n="nav_viajes">Viajes</a>
+        <a href="/ventajas" class="block text-gray-300 hover:text-white py-2 text-sm" data-i18n="nav_ventajas">Ventajas</a>
+        <a href="/quienes-somos" class="block text-gray-300 hover:text-white py-2 text-sm" data-i18n="nav_quienes">Quiénes somos</a>
+        <a href="/noticias" class="block text-gray-300 hover:text-white py-2 text-sm" data-i18n="nav_noticies">Noticias</a>
+        <a href="/contacto" class="block text-gray-300 hover:text-white py-2 text-sm" data-i18n="nav_contacte">Contacto</a>
+        <div class="flex gap-2 pt-3">
+          <a href="/socios/registro" class="flex-1 bg-green-500 text-white text-center py-2 rounded-lg text-sm font-semibold" data-i18n="nav_asociate">+Asóciate</a>
+          <a href="/socios/login" class="flex-1 bg-orange-500 text-white text-center py-2 rounded-lg text-sm font-semibold" data-i18n="nav_area">Área socios</a>
         </div>
-        <a href="/socios/login" class="block bg-orange-500 text-white px-4 py-2 rounded-lg text-center mt-2" data-i18n="nav_area">Àrea socis</a>
       </div>
     </nav>
 
@@ -392,7 +387,7 @@ const { title, lang = 'es' } = Astro.props;
         }
       });
 
-      document.getElementById('menu-btn')?.addEventListener('click', () => {
+      document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
         document.getElementById('mobile-menu')?.classList.toggle('hidden');
       });
     </script>
