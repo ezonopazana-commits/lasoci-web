@@ -167,7 +167,7 @@ import Layout from '../../layouts/Layout.astro';
         return;
       }
 
-      tbody.innerHTML = lista.map(m => {
+      tbody.innerHTML = lista.map((m, i) => {
         const fecha = new Date(m.created_at).toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric' });
         const hora  = new Date(m.created_at).toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
         const punto = m.leido ? '' : '<div class="w-2.5 h-2.5 rounded-full bg-blue-600"></div>';
