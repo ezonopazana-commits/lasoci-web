@@ -84,6 +84,19 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
         <h2 class="text-lg font-bold text-gray-800 mb-1" id="title-totes">Apunta't a una secció</h2>
         <p class="text-gray-500 text-sm mb-4" id="sub-totes">Descobreix totes les activitats disponibles</p>
+        <!-- Filtros -->
+        <div class="flex flex-wrap gap-3 mb-5">
+          <input id="dash-search" type="text" placeholder="🔍 Buscar sección..." class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 w-48" />
+          <select id="dash-tipo" class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <option value="">Todos los tipos</option>
+            <option value="deportiva">🏃 Deportivas</option>
+            <option value="cultural">🎭 Culturales</option>
+          </select>
+          <select id="dash-provincia" class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <option value="">📍 Todas las provincias</option>
+          </select>
+          <span id="dash-contador" class="text-xs text-gray-400 self-center"></span>
+        </div>
         <div id="totes-seccions" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </div>
 
@@ -217,11 +230,24 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       const { data: all } = await db.from('secciones').select('*').eq('activa', true).order('nombre');
       allSeccions = all || [];
 
-      // Mis inscripciones (usando tabla socios_secciones si existe, sino campo seccion)
-      // Por simplicidad usamos el campo seccion del socio
+      // Poblar provincias
+      const selProv = document.getElementById('dash-provincia');
+      const provincias = [...new Set(allSeccions.map(s => s.provincia).filter(Boolean))].sort();
+      provincias.forEach(p => {
+        const o = document.createElement('option');
+        o.value = p; o.textContent = p;
+        selProv.appendChild(o);
+      });
+
+      // Mis inscripciones
       if (currentSoci?.seccion) {
         mySeccions = currentSoci.seccion.split(',').map(s => s.trim()).filter(Boolean);
       }
+
+      // Listeners filtros
+      document.getElementById('dash-search').addEventListener('input', renderSeccions);
+      document.getElementById('dash-tipo').addEventListener('change', renderSeccions);
+      document.getElementById('dash-provincia').addEventListener('change', renderSeccions);
     }
 
     function renderSeccions() {
@@ -249,9 +275,27 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         `).join('');
       }
 
-      // Todas las secciones
+      // Todas las secciones con filtros
+      const busqueda = (document.getElementById('dash-search')?.value || '').toLowerCase();
+      const filtroTipo = document.getElementById('dash-tipo')?.value || '';
+      const filtroProv = document.getElementById('dash-provincia')?.value || '';
+
+      const seccionsFiltrades = allSeccions.filter(s => {
+        const mt = !filtroTipo || s.tipo === filtroTipo;
+        const mp = !filtroProv || s.provincia === filtroProv;
+        const mb = !busqueda || s.nombre.toLowerCase().includes(busqueda);
+        return mt && mp && mb;
+      });
+
+      const contador = document.getElementById('dash-contador');
+      if (contador) contador.textContent = `${seccionsFiltrades.length} sección${seccionsFiltrades.length !== 1 ? 'es' : ''}`;
+
       const totesEl = document.getElementById('totes-seccions');
-      totesEl.innerHTML = allSeccions.map((s, i) => {
+      if (!seccionsFiltrades.length) {
+        totesEl.innerHTML = '<p class="text-gray-400 text-sm col-span-3">No hay secciones que coincidan.</p>';
+        return;
+      }
+      totesEl.innerHTML = seccionsFiltrades.map((s, i) => {
         const joined = mySeccions.includes(s.id);
         return `
           <div class="border ${joined ? 'border-blue-300 bg-blue-50' : 'border-gray-200 bg-white'} rounded-xl p-4 flex flex-col gap-2">
