@@ -84,11 +84,15 @@ const { title, lang = 'es' } = Astro.props;
       }
       @media (max-width: 767px) {
         .footer-cols > div {
-          padding: 1.5rem 0;
+          padding: 1.25rem 0;
           border-bottom: 1px solid rgba(255,255,255,0.07);
         }
         .footer-cols > div:last-child {
           border-bottom: none;
+        }
+        footer .px-6 {
+          padding-left: 1rem;
+          padding-right: 1rem;
         }
       }
 
@@ -203,16 +207,25 @@ const { title, lang = 'es' } = Astro.props;
 
       <!-- Mobile menu -->
       <div id="mobile-menu" class="hidden lg:hidden border-t border-white/10 px-5 py-4 space-y-1">
-        <a href="/secciones" class="block text-gray-300 hover:text-white py-2 text-sm" data-i18n="nav_seccions">Secciones</a>
-        <a href="/agenda" class="block text-gray-300 hover:text-white py-2 text-sm">Agenda</a>
-        <a href="/viajes" class="block text-gray-300 hover:text-white py-2 text-sm" data-i18n="nav_viajes">Viajes</a>
-        <a href="/ventajas" class="block text-gray-300 hover:text-white py-2 text-sm" data-i18n="nav_ventajas">Ventajas</a>
-        <a href="/quienes-somos" class="block text-gray-300 hover:text-white py-2 text-sm" data-i18n="nav_quienes">Quiénes somos</a>
-        <a href="/noticias" class="block text-gray-300 hover:text-white py-2 text-sm" data-i18n="nav_noticies">Noticias</a>
-        <a href="/contacto" class="block text-gray-300 hover:text-white py-2 text-sm" data-i18n="nav_contacte">Contacto</a>
-        <div class="flex gap-2 pt-3">
-          <a href="/socios/registro" class="flex-1 bg-green-500 text-white text-center py-2 rounded-lg text-sm font-semibold" data-i18n="nav_asociate">+Asóciate</a>
-          <a href="/socios/login" class="flex-1 bg-orange-500 text-white text-center py-2 rounded-lg text-sm font-semibold" data-i18n="nav_area">Área socios</a>
+        <a href="/secciones" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_seccions">Secciones</a>
+        <a href="/agenda" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition">Agenda</a>
+        <a href="/viajes" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_viajes">Viajes</a>
+        <a href="/ventajas" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_ventajas">Ventajas</a>
+        <a href="/quienes-somos" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_quienes">Quiénes somos</a>
+        <a href="/noticias" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_noticies">Noticias</a>
+        <a href="/contacto" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_contacte">Contacto</a>
+        
+        <div class="border-t border-white/10 pt-3 mt-2">
+          <!-- Selector de idioma mobile -->
+          <div class="flex gap-2 mb-3">
+            <button onclick="setLang('es')" id="mob-lang-es" class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-medium border border-white/20 text-gray-300 hover:bg-white/10 transition">🇪🇸 Español</button>
+            <button onclick="setLang('ca')" id="mob-lang-ca" class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-medium border border-white/20 text-gray-300 hover:bg-white/10 transition">🏴󠁥󠁳󠁣󠁴󠁿 Català</button>
+            <button onclick="setLang('en')" id="mob-lang-en" class="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-medium border border-white/20 text-gray-300 hover:bg-white/10 transition">🇬🇧 English</button>
+          </div>
+          <div class="flex gap-2">
+            <a href="/socios/registro" class="flex-1 bg-green-500 hover:bg-green-600 text-white text-center py-2.5 rounded-xl text-sm font-semibold transition" data-i18n="nav_asociate">+Asóciate</a>
+            <a href="/socios/login" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-center py-2.5 rounded-xl text-sm font-semibold transition" data-i18n="nav_area">Área socios</a>
+          </div>
         </div>
       </div>
     </nav>
@@ -318,7 +331,7 @@ const { title, lang = 'es' } = Astro.props;
       <div class="max-w-6xl mx-auto">
 
         <!-- Top row -->
-        <div class="grid grid-cols-1 md:grid-cols-5 pb-10 footer-cols" style="border-bottom:1px solid rgba(255,255,255,0.1);gap:0;">
+        <div class="grid grid-cols-1 md:grid-cols-5 pb-10 footer-cols" style="border-bottom:1px solid rgba(255,255,255,0.1);gap:0;" id="footer-grid">
 
           <!-- Brand -->
           <div class="md:col-span-2">
@@ -406,11 +419,11 @@ const { title, lang = 'es' } = Astro.props;
         <!-- Bottom row -->
         <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs" style="border-top:1px solid rgba(255,255,255,0.06);padding-top:1.5rem;">
           <p style="color:#64748b;">© {new Date().getFullYear()} <span style="color:#fb923c;font-weight:600;">la</span><span style="color:#64748b;font-weight:600;">Soci</span> · Associació del Personal de CaixaBank</p>
-          <div class="flex items-center gap-2">
-            <a href="/aviso-legal" class="transition px-3 py-1.5 rounded-lg text-xs" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'" data-i18n="footer_legal">Aviso legal</a>
-            <a href="/privacidad" class="transition px-3 py-1.5 rounded-lg text-xs" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'" data-i18n="footer_privacy">Privacidad</a>
-            <a href="/cookies" class="transition px-3 py-1.5 rounded-lg text-xs" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'" data-i18n="footer_cookies">Cookies</a>
-            <button id="btn-mapa-web" class="transition px-3 py-1.5 rounded-lg text-xs" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);cursor:pointer;" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'">Mapa web</button>
+          <div class="flex flex-wrap items-center gap-2">
+            <a href="/aviso-legal" class="transition px-3 py-1.5 rounded-lg text-xs whitespace-nowrap" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'" data-i18n="footer_legal">Aviso legal</a>
+            <a href="/privacidad" class="transition px-3 py-1.5 rounded-lg text-xs whitespace-nowrap" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'" data-i18n="footer_privacy">Privacidad</a>
+            <a href="/cookies" class="transition px-3 py-1.5 rounded-lg text-xs whitespace-nowrap" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'" data-i18n="footer_cookies">Cookies</a>
+            <button id="btn-mapa-web" class="transition px-3 py-1.5 rounded-lg text-xs whitespace-nowrap" style="color:#64748b;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);cursor:pointer;" onmouseover="this.style.color='#94a3b8';this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.color='#64748b';this.style.background='rgba(255,255,255,0.04)'">Mapa web</button>
           </div>
         </div>
 
