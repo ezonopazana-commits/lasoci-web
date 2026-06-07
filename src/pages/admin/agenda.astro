@@ -255,7 +255,7 @@ import Layout from '../../layouts/Layout.astro';
         const badge = e.activo
           ? '<span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">Publicado</span>'
           : '<span class="bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded-full">Borrador</span>';
-        return `<tr class="hover:bg-gray-50">
+        return `<tr class="${i%2===0?'bg-white':'bg-gray-50'} hover:bg-orange-50 transition-colors">
           <td class="px-4 py-3 font-medium text-gray-900">${e.titulo} <span class="text-xs text-gray-400">${e.tipo}</span></td>
           <td class="px-4 py-3 text-gray-500 text-xs">${fecha} ${hora}h</td>
           <td class="px-4 py-3 text-gray-500 text-xs">${e.lugar || '—'}</td>
