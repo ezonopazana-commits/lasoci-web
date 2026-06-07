@@ -142,7 +142,7 @@ import Layout from '../../layouts/Layout.astro';
         : '<span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">⚽ Deportiva</span>';
       const img = s.imagen_url
         ? `<img src="${s.imagen_url}" class="w-12 h-12 rounded-xl object-cover flex-shrink-0" />`
-        : `<div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-xl flex-shrink-0">${s.tipo === 'cultural' ? '🎭' : '⚽'}</div>`;
+        : `<div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-white text-2xl" style="background:${s.tipo==='cultural'?'linear-gradient(135deg,#7c3aed,#a855f7)':'linear-gradient(135deg,#1d4ed8,#3b82f6)'}">${getSeccionIcon(s.nombre, s.tipo)}</div>`;
       return `
         <a href="/secciones/${s.id}" class="seccion-row flex items-center gap-4 bg-white rounded-xl border border-gray-100 shadow-sm p-4 hover:shadow-md">
           ${img}
