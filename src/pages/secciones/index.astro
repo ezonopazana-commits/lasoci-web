@@ -1,5 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE_URL;
+const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 ---
 
 <Layout title="Secciones — la Soci">
@@ -70,11 +72,16 @@ import Layout from '../../layouts/Layout.astro';
   </div>
 </div>
 
+<script define:vars={{ SUPABASE_URL, SUPABASE_KEY }}>
+  window.__SB_URL = SUPABASE_URL;
+  window.__SB_KEY = SUPABASE_KEY;
+</script>
+
 <script>
   import { createClient } from '@supabase/supabase-js';
   const supabase = createClient(
-    import.meta.env.PUBLIC_SUPABASE_URL,
-    import.meta.env.PUBLIC_SUPABASE_ANON_KEY
+    window.__SB_URL,
+    window.__SB_KEY
   );
 
   let todasSecciones = [];
