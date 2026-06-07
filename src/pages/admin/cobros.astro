@@ -324,7 +324,7 @@ const resendKey   = import.meta.env.RESEND_API_KEY ?? '';
     document.getElementById('gen-tbody').innerHTML = inscritosEvento.map(s => {
       const ibanOk = s.iban && s.iban.length >= 20;
       const ibanMask = s.iban ? s.iban.replace(/\s/g,'').substring(0,4) + ' **** **** **** ' + s.iban.replace(/\s/g,'').slice(-4) : '—';
-      return `<tr class="hover:bg-gray-50">
+      return `<tr class="${i%2===0?'bg-white':'bg-gray-50'} hover:bg-orange-50 transition-colors">
         <td class="px-4 py-2">${s.apellidos}, ${s.nombre}</td>
         <td class="px-4 py-2 font-mono text-xs hidden md:table-cell">${ibanMask}</td>
         <td class="px-4 py-2 text-right font-semibold">${importeOp.toFixed(2)} €</td>
@@ -352,7 +352,7 @@ const resendKey   = import.meta.env.RESEND_API_KEY ?? '';
     const tbody = document.getElementById('tabla-pendientes');
     if (!lista.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-400 text-sm">No hay operaciones pendientes</td></tr>'; return; }
     tbody.innerHTML = lista.map(o => `
-      <tr class="hover:bg-gray-50">
+      <tr class="even:bg-gray-50 hover:bg-orange-50 transition-colors">
         <td class="px-4 py-3"><input type="checkbox" class="chk-op" data-id="${o.id}" /></td>
         <td class="px-4 py-3"><p class="font-medium text-gray-800">${o.socio?.apellidos}, ${o.socio?.nombre}</p><p class="text-xs text-gray-400">${o.socio?.email}</p></td>
         <td class="px-4 py-3 text-gray-500 hidden md:table-cell text-xs">${o.descripcion || '—'}</td>
