@@ -321,7 +321,7 @@ const resendKey   = import.meta.env.RESEND_API_KEY ?? '';
     document.getElementById('prev-total').textContent = (importeOp * inscritosEvento.length).toFixed(2) + ' €';
     document.getElementById('gen-preview').classList.remove('hidden');
 
-    document.getElementById('gen-tbody').innerHTML = inscritosEvento.map(s => {
+    document.getElementById('gen-tbody').innerHTML = inscritosEvento.map((s, i) => {
       const ibanOk = s.iban && s.iban.length >= 20;
       const ibanMask = s.iban ? s.iban.replace(/\s/g,'').substring(0,4) + ' **** **** **** ' + s.iban.replace(/\s/g,'').slice(-4) : '—';
       return `<tr class="${i%2===0?'bg-white':'bg-gray-50'} hover:bg-orange-50 transition-colors">
