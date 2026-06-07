@@ -83,11 +83,17 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                 <p class="text-sm text-gray-500" id="s1-sub">Los usaremos para enviarte información necesaria</p>
               </div>
             </div>
-            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 flex gap-3">
-              <svg class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              <p class="text-sm text-amber-700" id="s1-info">Los pedimos para que puedas recuperar el proceso en cualquier momento</p>
+            <div class="flex items-center gap-1.5 mb-5 mt-1">
+              <div class="relative group inline-flex items-center">
+                <svg class="w-4 h-4 text-amber-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <div class="absolute left-0 bottom-6 w-64 bg-gray-800 text-white text-xs rounded-xl px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 shadow-lg">
+                  <span id="s1-info">Los pedimos para que puedas recuperar el proceso en cualquier momento</span>
+                  <div class="absolute top-full left-3 border-4 border-transparent border-t-gray-800"></div>
+                </div>
+              </div>
+              <span class="text-xs text-gray-400">¿Por qué pedimos estos datos?</span>
             </div>
             <div class="space-y-5">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
