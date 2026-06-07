@@ -52,10 +52,10 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         <!-- Edit form -->
         <div id="dades-edit" class="hidden space-y-3 mt-4">
           <div class="grid grid-cols-2 gap-3">
-            <div><label class="text-xs text-gray-500" id="lbl-edit-nombre">Nom</label><input id="edit-nombre" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
-            <div><label class="text-xs text-gray-500" id="lbl-edit-apellidos">Cognoms</label><input id="edit-apellidos" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+            <div><label class="text-xs text-gray-500" id="lbl-edit-nombre">Nom</label><input id="edit-nombre" class="form-input w-full mt-1 px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" /></div>
+            <div><label class="text-xs text-gray-500" id="lbl-edit-apellidos">Cognoms</label><input id="edit-apellidos" class="form-input w-full mt-1 px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" /></div>
           </div>
-          <div><label class="text-xs text-gray-500" id="lbl-edit-telefon">Telèfon</label><input id="edit-telefon" class="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+          <div><label class="text-xs text-gray-500" id="lbl-edit-telefon">Telèfon</label><input id="edit-telefon" class="form-input w-full mt-1 px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" /></div>
           <div id="edit-error" class="hidden text-red-600 text-sm"></div>
           <div class="flex gap-2">
             <button onclick="saveDades()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition" id="btn-save-dades">Desar</button>
