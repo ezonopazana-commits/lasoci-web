@@ -12,7 +12,7 @@
 
 .form-input {
   border-color: #f97316 !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 .form-input:hover {
   border-color: #22c55e !important;
@@ -29,8 +29,15 @@
 
 /* Pijama en tablas */
 tbody tr:nth-child(even) {
-  background-color: #f8faff;
+  background-color: #f0f6ff;
+}
+tbody tr {
+  transition: all 0.15s ease;
 }
 tbody tr:hover {
   background-color: #dbeafe !important;
+  outline: 2px solid #22c55e;
+  outline-offset: -1px;
+  position: relative;
+  z-index: 1;
 }
