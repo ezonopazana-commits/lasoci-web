@@ -14,10 +14,17 @@
   border-color: #f97316 !important;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+.form-input:hover {
+  border-color: #22c55e !important;
+  border-width: 3px !important;
+  background-color: #eef6ff !important;
+}
 .form-input:focus {
   border-color: #22c55e !important;
+  border-width: 3px !important;
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15) !important;
   outline: none !important;
+  background-color: #eef6ff !important;
 }
 
 /* Pijama en tablas */
@@ -25,5 +32,5 @@ tbody tr:nth-child(even) {
   background-color: #f8faff;
 }
 tbody tr:hover {
-  background-color: #fff7ed !important;
+  background-color: #dbeafe !important;
 }
