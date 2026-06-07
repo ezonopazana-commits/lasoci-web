@@ -314,7 +314,7 @@ import Layout from '../../layouts/Layout.astro';
                  <button onclick="confirmarAccion('rechazar','${s.id}','${s.nombre} ${s.apellidos}')" class="text-xs text-red-500 hover:underline">Rechazar</button>`}
           </div>`;
 
-        return `<tr class="hover:bg-gray-50">
+        return `<tr class="${i%2===0?'bg-white':'bg-gray-50'} hover:bg-orange-50 transition-colors">
           <td class="px-4 py-3">
             <p class="text-sm font-medium text-gray-800">${s.nombre} ${s.apellidos}</p>
             <p class="text-xs text-gray-400">${s.email}</p>
