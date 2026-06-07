@@ -250,6 +250,35 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       document.getElementById('dash-provincia').addEventListener('change', renderSeccions);
     }
 
+    function getSeccionIcon(nombre, tipo) {
+      const n = nombre.toLowerCase();
+      if (n.includes('karting') || n.includes('kart')) return '🏎️';
+      if (n.includes('natac') || n.includes('piscina') || n.includes('aqua') || n.includes('subacuat')) return '🏊';
+      if (n.includes('futbol') || n.includes('fútbol')) return '⚽';
+      if (n.includes('tenis') || n.includes('pádel') || n.includes('padel')) return '🎾';
+      if (n.includes('cicl') || n.includes('bici') || n.includes('mountain')) return '🚴';
+      if (n.includes('senderis') || n.includes('montaña') || n.includes('hiking')) return '🥾';
+      if (n.includes('esqui') || n.includes('esquí') || n.includes('nieve')) return '⛷️';
+      if (n.includes('golf')) return '⛳';
+      if (n.includes('basket') || n.includes('baloncesto')) return '🏀';
+      if (n.includes('volei') || n.includes('voley')) return '🏐';
+      if (n.includes('running') || n.includes('atletis') || n.includes('maraton')) return '🏃';
+      if (n.includes('yoga') || n.includes('pilates') || n.includes('fitness') || n.includes('activ')) return '🧘';
+      if (n.includes('teatro') || n.includes('teatre')) return '🎭';
+      if (n.includes('musica') || n.includes('música') || n.includes('coral')) return '🎵';
+      if (n.includes('fotograf')) return '📷';
+      if (n.includes('pintura') || n.includes('art') || n.includes('manualidad')) return '🎨';
+      if (n.includes('cocina') || n.includes('gastro')) return '🍳';
+      if (n.includes('viaje') || n.includes('viatge') || n.includes('excursio')) return '✈️';
+      if (n.includes('vela') || n.includes('nautic')) return '⛵';
+      if (n.includes('escalada')) return '🧗';
+      if (n.includes('ajedrez') || n.includes('escacs')) return '♟️';
+      if (n.includes('cine') || n.includes('film')) return '🎬';
+      if (n.includes('lectura') || n.includes('llibre')) return '📚';
+      if (n.includes('voluntar')) return '🤝';
+      if (tipo === 'cultural') return '🎭';
+      return '⚽';
+    }
     function renderSeccions() {
       const lang = localStorage.getItem('lasoci_lang') || 'ca';
       const tr = T[lang] || T.ca;
@@ -262,7 +291,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       } else {
         misEl.innerHTML = myList.map((s, i) => `
           <div class="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-xl p-4">
-            <span class="text-3xl">${ICONS[i % ICONS.length]}</span>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl text-white flex-shrink-0" style="background:${s.tipo==='cultural'?'linear-gradient(135deg,#7c3aed,#a855f7)':'linear-gradient(135deg,#1d4ed8,#3b82f6)'}">${s.imagen_url ? `<img src="${s.imagen_url}" class="w-10 h-10 rounded-xl object-cover" />` : getSeccionIcon(s.nombre, s.tipo)}</div>
             <div class="flex-1">
               <p class="font-semibold text-gray-800">${s.nombre}</p>
               <p class="text-xs text-gray-500">${s.descripcion || ''}</p>
@@ -299,7 +328,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         const joined = mySeccions.includes(s.id);
         return `
           <div class="border ${joined ? 'border-blue-300 bg-blue-50' : 'border-gray-200 bg-white'} rounded-xl p-4 flex flex-col gap-2">
-            <div class="text-3xl">${ICONS[i % ICONS.length]}</div>
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl text-white flex-shrink-0" style="background:${s.tipo==='cultural'?'linear-gradient(135deg,#7c3aed,#a855f7)':'linear-gradient(135deg,#1d4ed8,#3b82f6)'}">${s.imagen_url ? `<img src="${s.imagen_url}" class="w-10 h-10 rounded-xl object-cover" />` : getSeccionIcon(s.nombre, s.tipo)}</div>
             <p class="font-bold text-gray-800">${s.nombre}</p>
             <p class="text-xs text-gray-500 flex-1">${s.descripcion || ''}</p>
             ${joined
