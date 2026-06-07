@@ -556,12 +556,12 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         const isActive = step === currentStep;
         const isDone = step < currentStep;
         return `
-          <div class="flex items-center gap-3 py-2 px-3 rounded-xl ${isActive ? 'bg-green-50 border-2 border-green-300' : ''}">
+          <div class="flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all ${isActive ? 'bg-orange-50 border-2 border-orange-400 shadow-sm' : ''}">
             <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0
-              ${isDone ? 'bg-green-500 text-white' : isActive ? 'bg-green-500 text-white ring-4 ring-green-100' : 'border-2 border-gray-200 text-gray-400'}">
+              ${isDone ? 'bg-green-500 text-white' : isActive ? 'bg-orange-500 text-white' : 'border-2 border-gray-200 text-gray-400'}">
               ${isDone ? '✓' : step}
             </div>
-            <span class="text-sm ${isActive ? 'font-bold text-green-700' : isDone ? 'text-green-600 font-medium' : 'text-gray-400'}">${name}</span>
+            <span class="text-sm ${isActive ? 'font-bold text-orange-700' : isDone ? 'text-green-600 font-medium' : 'text-gray-400'}">${name}</span>
           </div>
           ${step < totalSteps ? '<div class="ml-4 w-px h-4 bg-gray-200"></div>' : ''}
         `;
