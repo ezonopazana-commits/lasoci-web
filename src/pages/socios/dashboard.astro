@@ -86,13 +86,13 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         <p class="text-gray-500 text-sm mb-4" id="sub-totes">Descobreix totes les activitats disponibles</p>
         <!-- Filtros -->
         <div class="flex flex-wrap gap-3 mb-5">
-          <input id="dash-search" type="text" placeholder="🔍 Buscar sección..." class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 w-48" />
-          <select id="dash-tipo" class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <input id="dash-search" type="text" placeholder="🔍 Buscar sección..." class="form-input px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors w-52 bg-white" />
+          <select id="dash-tipo" class="form-input px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors bg-white">
             <option value="">Todos los tipos</option>
             <option value="deportiva">🏃 Deportivas</option>
             <option value="cultural">🎭 Culturales</option>
           </select>
-          <select id="dash-provincia" class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+          <select id="dash-provincia" class="form-input px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors bg-white">
             <option value="">📍 Todas las provincias</option>
           </select>
           <span id="dash-contador" class="text-xs text-gray-400 self-center"></span>
