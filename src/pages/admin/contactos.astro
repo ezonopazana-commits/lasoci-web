@@ -14,12 +14,12 @@ import Layout from '../../layouts/Layout.astro';
     </div>
 
     <div class="flex gap-3 mb-5">
-      <select id="filter-leido" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <select id="filter-leido" class="form-input px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white">
         <option value="">Todos</option>
         <option value="false">No leídos</option>
         <option value="true">Leídos</option>
       </select>
-      <select id="filter-asunto" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <select id="filter-asunto" class="form-input px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white">
         <option value="">Todos los asuntos</option>
         <option value="informacion">Información general</option>
         <option value="socio">Hacerse socio</option>
@@ -99,7 +99,7 @@ import Layout from '../../layouts/Layout.astro';
         <!-- Formulario respuesta -->
         <div id="form-respuesta">
           <label class="block text-xs text-gray-400 font-medium mb-2">Respuesta al usuario</label>
-          <textarea id="f-respuesta" rows="4" class="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Escribe tu respuesta aquí..."></textarea>
+          <textarea id="f-respuesta" rows="4" class="w-full form-input px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" placeholder="Escribe tu respuesta aquí..."></textarea>
           <p class="text-xs text-gray-400 mt-1">El usuario podrá consultar esta respuesta con su ID de seguimiento.</p>
         </div>
 
