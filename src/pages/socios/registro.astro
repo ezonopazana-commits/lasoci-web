@@ -389,6 +389,22 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
     const db = createClient(window.__SB_URL, window.__SB_KEY);
 
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
+    }
+    function showEmailError(inputId, msgId, msg) {
+      const input = document.getElementById(inputId);
+      const msgEl = document.getElementById(msgId);
+      if (input) { input.style.borderColor = '#ef4444'; }
+      if (msgEl) { msgEl.textContent = msg; msgEl.classList.remove('hidden'); }
+    }
+    function clearEmailError(inputId, msgId) {
+      const input = document.getElementById(inputId);
+      const msgEl = document.getElementById(msgId);
+      if (input) { input.style.borderColor = ''; }
+      if (msgEl) { msgEl.classList.add('hidden'); }
+    }
+
     const T = {
       es: {
         banner:'Estás en un entorno 100% seguro', sidebar_title:'Proceso de registro',
@@ -793,6 +809,15 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     };
 
     // ── Submit ──
+    function validateEmailInput(inputId, errorId) {
+      const val = document.getElementById(inputId)?.value || '';
+      if (val && !isValidEmail(val)) {
+        showEmailError(inputId, errorId, 'Email no válido (ej: nombre@dominio.com)');
+      } else {
+        clearEmailError(inputId, errorId);
+      }
+    }
+
     window.submitForm = async function() {
       const lang = getLang();
       const t = T[lang] || T.es;
@@ -817,6 +842,11 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       const vinculacion = document.getElementById('vinculacion').value;
       const titular_dni = document.getElementById('titular-dni').value || null;
       const email = document.getElementById('email').value.trim();
+      if (!isValidEmail(email)) {
+        showEmailError('email', 'email-error', 'El email no es válido. Comprueba el formato.');
+        btn.textContent = t.btn_crear;
+        return;
+      }
       const telefon = document.getElementById('telefon').value.trim();
       const idioma = document.getElementById('idioma').value;
       const iban_tipo = document.querySelector('input[name="iban_tipo"]:checked')?.value || 'propio';
