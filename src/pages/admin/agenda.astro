@@ -249,7 +249,7 @@ import Layout from '../../layouts/Layout.astro';
         tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-gray-400">No hay eventos</td></tr>';
         return;
       }
-      tbody.innerHTML = lista.map(e => {
+      tbody.innerHTML = lista.map((e, i) => {
         const fecha = new Date(e.fecha_inicio).toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric' });
         const hora  = new Date(e.fecha_inicio).toLocaleTimeString('es-ES', { hour:'2-digit', minute:'2-digit' });
         const badge = e.activo
