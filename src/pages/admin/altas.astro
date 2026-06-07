@@ -60,7 +60,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
           <button onclick="setFiltro('activo')" id="f-activo" class="filtro-btn px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 border border-gray-200">Activos</button>
           <button onclick="setFiltro('todos')" id="f-todos" class="filtro-btn px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 border border-gray-200">Todos</button>
           <div class="ml-auto">
-            <input type="text" id="search-input" placeholder="Buscar por nombre, email, DNI..." class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 w-64 focus:outline-none focus:border-blue-400" />
+            <input type="text" id="search-input" placeholder="Buscar por nombre, email, DNI..." class="form-input text-sm px-3 py-2 border-2 border-orange-300 rounded-xl w-64 bg-white" />
           </div>
         </div>
 
@@ -239,7 +239,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         </div>
         <div class="mt-4">
           <label class="text-xs text-gray-400 block mb-1">Cambiar rol</label>
-          <select id="modal-rol" class="text-sm border border-gray-200 rounded-lg px-3 py-2 w-full">
+          <select id="modal-rol" class="form-input text-sm px-3 py-2 border-2 border-orange-300 rounded-xl w-full bg-white">
             <option value="asociado" ${s.rol === 'asociado' ? 'selected' : ''}>Asociado</option>
             <option value="delegado" ${s.rol === 'delegado' ? 'selected' : ''}>Delegado</option>
             <option value="admin" ${s.rol === 'admin' ? 'selected' : ''}>Admin</option>
