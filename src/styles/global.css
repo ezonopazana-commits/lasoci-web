@@ -19,3 +19,11 @@
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15) !important;
   outline: none !important;
 }
+
+/* Pijama en tablas */
+tbody tr:nth-child(even) {
+  background-color: #f8faff;
+}
+tbody tr:hover {
+  background-color: #fff7ed !important;
+}
