@@ -48,8 +48,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
         <!-- Toolbar -->
         <div class="bg-white rounded-xl shadow-sm p-4 flex flex-wrap gap-3 items-center">
-          <input type="text" id="search" placeholder="Buscar sección..." class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 w-48 focus:outline-none focus:border-blue-400" />
-          <select id="fil-tipo" class="text-sm border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none">
+          <input type="text" id="search" placeholder="Buscar sección..." class="form-input text-sm px-3 py-2 border-2 border-orange-300 rounded-xl w-48 bg-white" />
+          <select id="fil-tipo" class="form-input text-sm px-3 py-2 border-2 border-orange-300 rounded-xl bg-white">
             <option value="">Todos los tipos</option>
             <option value="deportiva">Deportivas</option>
             <option value="cultural">Culturales</option>
@@ -91,28 +91,28 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         <input type="hidden" id="m-id" />
         <div>
           <label class="text-xs text-gray-500 block mb-1">Nombre *</label>
-          <input id="m-nombre" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input id="m-nombre" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" />
         </div>
         <div>
           <label class="text-xs text-gray-500 block mb-1">Descripción</label>
-          <textarea id="m-descripcion" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+          <textarea id="m-descripcion" rows="2" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white resize-none"></textarea>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="text-xs text-gray-500 block mb-1">Tipo</label>
-            <select id="m-tipo" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select id="m-tipo" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white">
               <option value="deportiva">Deportiva</option>
               <option value="cultural">Cultural</option>
             </select>
           </div>
           <div>
             <label class="text-xs text-gray-500 block mb-1">Provincia</label>
-            <input id="m-provincia" class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <input id="m-provincia" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" />
           </div>
         </div>
         <div>
           <label class="text-xs text-gray-500 block mb-1">Delegado (buscar por nombre)</label>
-          <input id="m-delegado-search" placeholder="Escribe nombre o apellidos..." class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <input id="m-delegado-search" placeholder="Escribe nombre o apellidos..." class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" />
           <div id="m-delegado-resultados" class="hidden border border-gray-200 rounded-lg mt-1 max-h-40 overflow-y-auto shadow-sm"></div>
           <div id="m-delegado-selected" class="hidden mt-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-sm flex items-center justify-between">
             <span id="m-delegado-nombre" class="text-blue-800 font-medium"></span>
