@@ -68,7 +68,7 @@ const { id } = Astro.params;
       if (plazoCerrado && ev.seccion_id) {
         const { data: sec } = await supabase
           .from('secciones')
-          .select('nombre, delegado:delegado_id(nombre, apellidos, email)')
+          .select('nombre, delegado:delegado_id(nombre, apellidos, email, telefono)')
           .eq('id', ev.seccion_id)
           .single();
         if (sec?.delegado) delegadoInfo = sec.delegado;
