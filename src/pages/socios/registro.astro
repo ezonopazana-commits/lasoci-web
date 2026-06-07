@@ -78,23 +78,21 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
               </div>
-              <div>
-                <h3 class="text-lg font-bold text-gray-800" id="s1-title">Datos de contacto</h3>
-                <p class="text-sm text-gray-500" id="s1-sub">Los usaremos para enviarte información necesaria</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-1.5 mb-5 mt-1">
-              <div class="relative group inline-flex items-center">
-                <svg class="w-4 h-4 text-amber-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <div class="absolute left-0 bottom-6 w-64 bg-gray-800 text-white text-xs rounded-xl px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 shadow-lg">
-                  <span id="s1-info">Los pedimos para que puedas recuperar el proceso en cualquier momento</span>
-                  <div class="absolute top-full left-3 border-4 border-transparent border-t-gray-800"></div>
+              <div class="flex items-center gap-2">
+                <div>
+                  <h3 class="text-lg font-bold text-gray-800" id="s1-title">Datos de contacto</h3>
+                  <p class="text-sm text-gray-500" id="s1-sub">Los usaremos para enviarte información necesaria</p>
+                </div>
+                <div class="relative group inline-flex items-center ml-1 flex-shrink-0">
+                  <svg class="w-4 h-4 text-amber-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                  </svg>
+                  <div class="absolute left-0 bottom-6 w-64 bg-gray-800 text-white text-xs rounded-xl px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 shadow-lg">
+                    <span id="s1-info">Los pedimos para que puedas recuperar el proceso en cualquier momento</span>
+                    <div class="absolute top-full left-3 border-4 border-transparent border-t-gray-800"></div>
+                  </div>
                 </div>
               </div>
-              <span class="text-xs text-gray-400">¿Por qué pedimos estos datos?</span>
-            </div>
             <div class="space-y-5">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -430,7 +428,24 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     window.__SB_KEY = supabaseKey;
   </script>
 
-  <script type="module">
+  <script>
+  window.validateField = function(inputId, errId, regex, msg) {
+    const val = (document.getElementById(inputId)?.value || '').trim();
+    const err = document.getElementById(errId);
+    const input = document.getElementById(inputId);
+    if (val && !regex.test(val)) {
+      if (err) { err.textContent = msg; err.classList.remove('hidden'); }
+      if (input) input.style.borderColor = '#ef4444';
+    } else {
+      if (err) err.classList.add('hidden');
+      if (input) input.style.borderColor = '';
+    }
+  };
+  window.isValidEmail = function(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
+  };
+</script>
+<script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
     const db = createClient(window.__SB_URL, window.__SB_KEY);
 
@@ -1009,9 +1024,13 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       showStep(1);
 
       window.addEventListener('langchange', (e) => {
-        applyLang(e.detail.lang);
-        renderSidebar(e.detail.lang);
-        renderStepsBar(e.detail.lang);
+        const l = e.detail.lang;
+        applyLang(l);
+        renderSidebar(l);
+        renderStepsBar(l);
+        // Sincronizar selector interno
+        const idiomaEl = document.getElementById('idioma');
+        if (idiomaEl) idiomaEl.value = l;
       });
       if (idiomaEl) {
         idiomaEl.addEventListener('change', () => {
