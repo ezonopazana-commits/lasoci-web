@@ -319,8 +319,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
           </div>
 
           <p class="text-center text-sm text-gray-500 mt-6">
-            <span id="ya-socio">Ja tens compte?</span>
-            <a href="/socios/login" class="text-orange-500 hover:underline font-medium ml-1" id="link-login">Inicia sessió</a>
+            <span id="ya-socio">¿Ya tienes cuenta?</span>
+            <a href="/socios/login" class="text-orange-500 hover:underline font-medium ml-1" id="link-login">Inicia sesión</a>
           </p>
         </div>
       </div>
@@ -428,7 +428,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
     const db = createClient(window.__SB_URL, window.__SB_KEY);
 
-    function validateField(inputId, errId, regex, msg) {
+    window.validateField = function(inputId, errId, regex, msg) {
       const val = (document.getElementById(inputId)?.value || '').trim();
       const err = document.getElementById(errId);
       const input = document.getElementById(inputId);
@@ -441,7 +441,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       }
     }
 
-    function isValidEmail(email) {
+    window.isValidEmail = function(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
     }
     function showEmailError(inputId, msgId, msg) {
@@ -516,7 +516,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         info_titular_nombre_label:'Titular:', info_titular_iban_label:'IBAN:',
         label_pwd:'Contrasenya *', label_pwd2:'Repetir contrasenya *',
         btn_continuar:'Continuar', btn_anterior:'Anterior', btn_crear:'Crear cuenta',
-        ya_socio:'Ja tens compte?', link_login:'Inicia sessió',
+        ya_socio:'¿Ya tienes cuenta?', link_login:'Inicia sesión',
         rgpd_text:'Afirmo que he leído y acepto la ',
         open_privacy:'información básica sobre protección de datos',
         modal_title:'Informació bàsica sobre protecció de dades',
@@ -872,7 +872,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     };
 
     // ── Submit ──
-    function validateEmailInput(inputId, errorId) {
+    window.validateEmailInput = function(inputId, errorId) {
       const val = document.getElementById(inputId)?.value || '';
       if (val && !isValidEmail(val)) {
         showEmailError(inputId, errorId, 'Email no válido (ej: nombre@dominio.com)');
