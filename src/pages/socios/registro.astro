@@ -921,7 +921,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     };
 
     // ── Init ──
-    (function() {
+    function initRegistro() {
       const lang = getLang();
       const idiomaEl = document.getElementById('idioma');
       if (idiomaEl) idiomaEl.value = lang;
@@ -944,7 +944,14 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
           renderStepsBar(l);
         });
       }
-    })();
+    }
+
+    // Esperar a que el DOM esté completamente listo
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initRegistro);
+    } else {
+      initRegistro();
+    }
   </script>
 
 </Layout>
