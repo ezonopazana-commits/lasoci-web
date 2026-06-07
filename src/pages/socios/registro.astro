@@ -4,13 +4,13 @@ const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 ---
 
-<Layout title="Registrar-se — la Soci">
+<Layout title="Regístrate — la Soci">
 
   <div class="bg-orange-500 text-white py-2 px-4 flex items-center justify-center gap-2 text-sm font-medium">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
     </svg>
-    <span id="banner-text">Estàs en un entorn 100% segur</span>
+    <span id="banner-text">Estás en un entorno 100% seguro</span>
   </div>
 
   <div class="min-h-screen bg-gray-50 py-10 px-4">
@@ -24,7 +24,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       <div class="flex gap-8 items-start">
 
         <div class="hidden md:block w-64 bg-white rounded-2xl shadow-sm p-6 sticky top-24">
-          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4" id="sidebar-title">Procés de registre</h2>
+          <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4" id="sidebar-title">Proceso de registro</h2>
           <div class="space-y-3" id="steps-sidebar"></div>
         </div>
 
@@ -921,10 +921,18 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     };
 
     // ── Init ──
-    const lang = getLang();
-    document.getElementById('idioma').value = lang;
-    applyLang(lang);
-    window.addEventListener('langchange', (e) => applyLang(e.detail.lang));
+    document.addEventListener('DOMContentLoaded', () => {
+      const lang = getLang();
+      document.getElementById('idioma').value = lang;
+      applyLang(lang);
+      renderSidebar(lang);
+      renderStepsBar(lang);
+    });
+    window.addEventListener('langchange', (e) => {
+      applyLang(e.detail.lang);
+      renderSidebar(e.detail.lang);
+      renderStepsBar(e.detail.lang);
+    });
     document.getElementById('idioma').addEventListener('change', () => {
       const l = document.getElementById('idioma').value;
       localStorage.setItem('lasoci_lang', l);
