@@ -46,17 +46,17 @@ import Layout from '../../layouts/Layout.astro';
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Número *</label>
-            <input id="f-numero" type="number" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="612" />
+            <input id="f-numero" type="number" class="w-full form-input px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" placeholder="612" />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Año *</label>
-            <input id="f-anio" type="number" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="2026" />
+            <input id="f-anio" type="number" class="w-full form-input px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" placeholder="2026" />
           </div>
         </div>
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Mes</label>
-          <select id="f-mes" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select id="f-mes" class="w-full form-input px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white">
             <option value="">— Sin mes específico —</option>
             <option value="1">Enero</option><option value="2">Febrero</option>
             <option value="3">Marzo</option><option value="4">Abril</option>
@@ -69,17 +69,17 @@ import Layout from '../../layouts/Layout.astro';
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
-          <input id="f-titulo" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Revista n° 612" />
+          <input id="f-titulo" type="text" class="w-full form-input px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" placeholder="Revista n° 612" />
         </div>
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">URL del visor (pubhtml5) *</label>
-          <input id="f-pdf-url" type="url" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://pubhtml5.com/read/..." />
+          <input id="f-pdf-url" type="url" class="w-full form-input px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" placeholder="https://pubhtml5.com/read/..." />
         </div>
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">URL portada</label>
-          <input id="f-portada-url" type="url" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="https://admin.lasoci.org/documents/butlleti/imgs/..." />
+          <input id="f-portada-url" type="url" class="w-full form-input px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" placeholder="https://admin.lasoci.org/documents/butlleti/imgs/..." />
           <div id="portada-preview" class="hidden mt-2">
             <img id="portada-img" src="" class="h-32 rounded-lg object-cover" />
           </div>
