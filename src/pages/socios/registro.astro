@@ -921,23 +921,30 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     };
 
     // ── Init ──
-    document.addEventListener('DOMContentLoaded', () => {
+    (function() {
       const lang = getLang();
-      document.getElementById('idioma').value = lang;
+      const idiomaEl = document.getElementById('idioma');
+      if (idiomaEl) idiomaEl.value = lang;
       applyLang(lang);
       renderSidebar(lang);
       renderStepsBar(lang);
-    });
-    window.addEventListener('langchange', (e) => {
-      applyLang(e.detail.lang);
-      renderSidebar(e.detail.lang);
-      renderStepsBar(e.detail.lang);
-    });
-    document.getElementById('idioma').addEventListener('change', () => {
-      const l = document.getElementById('idioma').value;
-      localStorage.setItem('lasoci_lang', l);
-      applyLang(l);
-    });
+      showStep(1);
+
+      window.addEventListener('langchange', (e) => {
+        applyLang(e.detail.lang);
+        renderSidebar(e.detail.lang);
+        renderStepsBar(e.detail.lang);
+      });
+      if (idiomaEl) {
+        idiomaEl.addEventListener('change', () => {
+          const l = idiomaEl.value;
+          localStorage.setItem('lasoci_lang', l);
+          applyLang(l);
+          renderSidebar(l);
+          renderStepsBar(l);
+        });
+      }
+    })();
   </script>
 
 </Layout>
