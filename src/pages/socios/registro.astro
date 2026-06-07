@@ -253,7 +253,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-idioma">Idioma preferit</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-idioma">Idioma preferido</label>
                 <select id="idioma" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm bg-white transition-colors">
                   <option value="es">🇪🇸 Español</option>
                   <option value="ca">🏴󠁥󠁳󠁣󠁴󠁿 Català</option>
@@ -691,6 +691,30 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     }
 
     window.nextStep = function(from) {
+      if (from === 1) {
+        const email = document.getElementById('email')?.value?.trim() || '';
+        const telefon = (document.getElementById('telefon')?.value || '').replace(/\s/g,'');
+        if (!email) {
+          window.validateField('email','email-err',/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,'El email es obligatorio');
+          document.getElementById('email')?.focus();
+          return;
+        }
+        if (!window.isValidEmail(email)) {
+          window.validateField('email','email-err',/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,'Email no válido (ej: nombre@dominio.com)');
+          document.getElementById('email')?.focus();
+          return;
+        }
+        if (telefon && !/^[678]\d{8}$/.test(telefon)) {
+          window.validateField('telefon','telefon-err',/^[678]\d{8}$/,'Móvil español: 9 dígitos empezando por 6, 7 u 8');
+          document.getElementById('telefon')?.focus();
+          return;
+        }
+        const privacidad = document.getElementById('privacidad1')?.checked;
+        if (!privacidad) {
+          alert('Debes aceptar la información básica sobre protección de datos para continuar.');
+          return;
+        }
+      }
       const t = T[getLang()] || T.es;
       if (from === 1) {
         if (!document.getElementById('email').value.trim()) { alert(t.label_email); return; }
@@ -990,6 +1014,8 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
           applyLang(l);
           renderSidebar(l);
           renderStepsBar(l);
+          // Sincronizar con el selector del nav
+          window.setLang && window.setLang(l);
         });
       }
     }
