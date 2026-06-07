@@ -537,7 +537,17 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     let privacyScrolled = false;
     let titularIban = null;
 
-    function getLang() { return localStorage.getItem('lasoci_lang') || 'es'; }
+    function getLang() {
+      // Intentar leer el idioma activo del nav (más fiable que localStorage)
+      const navLabel = document.getElementById('lang-label');
+      if (navLabel) {
+        const navText = navLabel.textContent.trim();
+        if (navText === 'Español' || navText.includes('Español')) return 'es';
+        if (navText === 'Català' || navText.includes('Català')) return 'ca';
+        if (navText === 'English' || navText.includes('English')) return 'en';
+      }
+      return localStorage.getItem('lasoci_lang') || 'es';
+    }
 
     function applyLang(lang) {
       const t = T[lang] || T.es;
