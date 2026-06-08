@@ -50,7 +50,7 @@ import Layout from '../../layouts/Layout.astro';
   <div class="max-w-6xl mx-auto flex flex-wrap items-end justify-between gap-4">
     <div>
       <p class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-1">Agenda</p>
-      <h1 class="text-3xl font-bold">Próximos eventos</h1>
+      <h1 class="text-2xl font-bold">Próximos eventos</h1>
       <p class="text-blue-300 text-sm mt-1">Actividades, excursiones y eventos de la Soci</p>
     </div>
     <!-- Toggle vista -->
@@ -84,7 +84,7 @@ import Layout from '../../layouts/Layout.astro';
   <div id="vista-lista">
     <div id="lista-eventos" class="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div class="col-span-2 text-center py-8 text-gray-300">
-        <div class="text-5xl mb-3">📅</div>
+        <div class="text-5xl mb-1">📅</div>
         <p>Cargando eventos...</p>
       </div>
     </div>
@@ -194,7 +194,7 @@ import Layout from '../../layouts/Layout.astro';
     const lista = eventosFiltrados();
     const cont  = document.getElementById('lista-eventos');
     if (!lista.length) {
-      cont.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-300"><div class="text-5xl mb-3">🔍</div><p>No hay eventos que coincidan</p></div>`;
+      cont.innerHTML = `<div class="col-span-2 text-center py-8 text-gray-300"><div class="text-5xl mb-1">🔍</div><p>No hay eventos que coincidan</p></div>`;
       return;
     }
     cont.innerHTML = lista.map(ev => {
@@ -224,7 +224,7 @@ import Layout from '../../layouts/Layout.astro';
               <span class="text-blue-500">📅</span>
               <span class="capitalize">${semN}, ${diaN} ${mesN} · ${hora}h</span>
             </div>
-            ${ev.lugar ? `<div class="flex items-center gap-2 text-sm text-gray-500 mb-3"><span>📍</span><span>${ev.lugar}</span></div>` : '<div class="mb-3"></div>'}
+            ${ev.lugar ? `<div class="flex items-center gap-2 text-sm text-gray-500 mb-1"><span>📍</span><span>${ev.lugar}</span></div>` : '<div class="mb-1"></div>'}
             ${ev.descripcion ? `<p class="text-sm text-gray-400 line-clamp-2 flex-1">${ev.descripcion}</p>` : ''}
             <div class="mt-4 flex items-center justify-between">
               ${ev.plazas ? `<span class="text-xs text-gray-400">👥 ${ev.plazas} plazas</span>` : '<span></span>'}
