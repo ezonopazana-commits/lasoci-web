@@ -68,7 +68,7 @@ const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 <!-- Grid 2 columnas -->
 <div class="max-w-5xl mx-auto px-4 py-6">
   <div id="grid-secciones" class="grid grid-cols-1 md:grid-cols-2 gap-3">
-    <div class="col-span-2 text-center py-12 text-gray-300"><p>Cargando secciones...</p></div>
+    <div class="col-span-2 text-center py-7 text-gray-300"><p>Cargando secciones...</p></div>
   </div>
 </div>
 
@@ -139,7 +139,7 @@ const SUPABASE_KEY = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
 
     const grid = document.getElementById('grid-secciones');
     if (!lista.length) {
-      grid.innerHTML = '<div class="col-span-2 text-center py-12 text-gray-300"><p>No hay secciones que coincidan</p></div>';
+      grid.innerHTML = '<div class="col-span-2 text-center py-7 text-gray-300"><p>No hay secciones que coincidan</p></div>';
       return;
     }
 
