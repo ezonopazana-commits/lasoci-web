@@ -479,11 +479,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     }
   };
 
-  window.acceptPrivacy = function() {
-    document.getElementById('privacy-modal')?.classList.add('hidden');
-    const rgpd = document.getElementById('rgpd');
-    if (rgpd) rgpd.checked = true;
-  };
+
 </script>
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
@@ -850,6 +846,24 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         const btn = document.getElementById('btn-accept-privacy');
         btn.disabled = false;
         btn.className = 'bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-3 rounded-xl transition text-sm cursor-pointer';
+      }
+    };
+    window.openPrivacyModal = function() {
+      document.getElementById('privacy-modal')?.classList.remove('hidden');
+      document.getElementById('scroll-btn')?.classList.remove('hidden');
+      const btn = document.getElementById('btn-accept-privacy');
+      if (btn) { btn.disabled = true; btn.className = 'bg-gray-300 text-gray-500 font-semibold px-10 py-3 rounded-xl transition text-sm cursor-not-allowed'; }
+      privacyScrolled = false;
+      const c = document.getElementById('privacy-modal-content');
+      if (c) {
+        c.scrollTop = 0;
+        c.addEventListener('scroll', function onScroll() {
+          if (c.scrollTop + c.clientHeight >= c.scrollHeight - 30) {
+            const btn2 = document.getElementById('btn-accept-privacy');
+            if (btn2) { btn2.disabled = false; btn2.className = 'bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-3 rounded-xl transition text-sm'; }
+            c.removeEventListener('scroll', onScroll);
+          }
+        });
       }
     };
     window.scrollPrivacy = function() { document.getElementById('privacy-modal-content').scrollBy({ top: 300, behavior: 'smooth' }); };
