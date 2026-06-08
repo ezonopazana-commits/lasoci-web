@@ -120,7 +120,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                   <input type="tel" id="telefon"
                     class="form-input flex-1 px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white"
                     placeholder="666 000 000" maxlength="9"
-                    oninput="this.value=this.value.replace(/[^0-9]/g,'');validateField('telefon','telefon-err',/^[678]\d{8}$/,'9 dígitos empezando por 6, 7 u 8')" />
+                    oninput="this.value=this.value.replace(/[^0-9]/g,'');validateField('telefon','telefon-err',/^[678][0-9]{8}$/,'9 dígitos empezando por 6, 7 u 8')" />
                 </div>
                 <p id="telefon-err" class="hidden text-xs text-red-500 mt-1.5">⚠ Móvil español: 9 dígitos empezando por 6, 7 u 8</p>
               </div>
