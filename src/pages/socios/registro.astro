@@ -369,7 +369,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         <div class="bg-amber-50 border-b border-amber-200 px-6 py-3 flex items-center gap-2 flex-shrink-0">
           <p class="text-sm text-amber-700" id="modal-warning">Desplázate hasta el final para aceptar</p>
         </div>
-        <div id="privacy-modal-content" class="overflow-y-auto flex-1 p-8 text-sm text-gray-700 leading-relaxed">
+        <div id="privacy-modal-content" class="overflow-y-auto flex-1 p-8 text-sm text-gray-700 leading-relaxed" onscroll="window.checkScroll&&window.checkScroll()">
           <h4 class="text-base font-bold text-blue-900 mb-4" id="privacy-heading">INFORMACIÓN BÁSICA SOBRE PROTECCIÓN DE DATOS</h4>
           <div id="privacy-body-es">
             <p class="font-semibold mb-2">Responsable del tratamiento</p>
@@ -475,13 +475,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     const c = document.getElementById('privacy-modal-content');
     if (c) {
       c.scrollTop = 0;
-      c.onscroll = function() {
-        const atBottom = c.scrollTop + c.clientHeight >= c.scrollHeight - 20;
-        if (atBottom && acceptBtn) {
-          acceptBtn.disabled = false;
-          acceptBtn.className = 'bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-3 rounded-xl transition text-sm cursor-pointer';
-        }
-      };
+
     }
   };
 
@@ -850,7 +844,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       document.getElementById('scroll-btn').classList.add('hidden');
     };
     window.checkScroll = function() {
-      const el = document.getElementById('privacy-content');
+      const el = document.getElementById('privacy-modal-content');
       if (el.scrollHeight - el.scrollTop - el.clientHeight < 50 && !privacyScrolled) {
         privacyScrolled = true;
         const btn = document.getElementById('btn-accept-privacy');
@@ -858,7 +852,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         btn.className = 'bg-orange-500 hover:bg-orange-600 text-white font-semibold px-10 py-3 rounded-xl transition text-sm cursor-pointer';
       }
     };
-    window.scrollPrivacy = function() { document.getElementById('privacy-content').scrollBy({ top: 300, behavior: 'smooth' }); };
+    window.scrollPrivacy = function() { document.getElementById('privacy-modal-content').scrollBy({ top: 300, behavior: 'smooth' }); };
     window.acceptPrivacy = function() { privacyAccepted = true; document.getElementById('rgpd').checked = true; closePrivacy(); };
     document.getElementById('rgpd').addEventListener('change', (e) => {
       if (e.target.checked && !privacyAccepted) { e.target.checked = false; document.getElementById('open-privacy').click(); }
