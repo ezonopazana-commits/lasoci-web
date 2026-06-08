@@ -130,7 +130,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
                 <input type="checkbox" id="rgpd" class="mt-0.5 w-5 h-5 accent-orange-500 cursor-pointer flex-shrink-0" />
                 <label for="rgpd" class="text-sm text-gray-600 cursor-pointer leading-relaxed">
                   <span id="rgpd-text">Afirmo que he leído y acepto la </span>
-                  <button type="button" id="open-privacy" class="text-blue-600 hover:underline font-medium">información básica sobre protección de datos</button>
+                  <button type="button" id="open-privacy" onclick="window.openPrivacyModal&&window.openPrivacyModal()" class="text-blue-600 hover:underline font-medium">información básica sobre protección de datos</button>
                 </label>
               </div>
             </div>
@@ -810,7 +810,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     });
 
     // ── Privacy ──
-    document.getElementById('open-privacy').addEventListener('click', () => {
+    window.openPrivacyModal = function() {
       document.getElementById('privacy-modal').classList.remove('hidden');
       document.getElementById('scroll-btn').classList.remove('hidden');
       privacyScrolled = false;
