@@ -6,21 +6,24 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
 <Layout title="Regístrate — la Soci">
 
-  <div class="bg-orange-500 text-white py-2 px-4 flex items-center justify-center gap-2 text-sm font-medium">
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-    </svg>
-    <span id="banner-text">Estás en un entorno 100% seguro</span>
+  <!-- Hero del registro -->
+  <div class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white py-10 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <a href="/" class="inline-block mb-3">
+        <span class="text-3xl font-bold text-orange-400">la</span><span class="text-3xl font-bold text-white">Soci</span>
+      </a>
+      <h1 class="text-2xl font-bold mb-2" id="reg-title">Regístrate</h1>
+      <div class="flex items-center justify-center gap-2 text-blue-200 text-sm">
+        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        <span id="banner-text">Estás en un entorno 100% seguro</span>
+      </div>
+    </div>
   </div>
 
   <div class="min-h-screen bg-gray-50 py-8 px-4">
     <div class="max-w-4xl mx-auto">
-
-      <div class="text-center mb-6">
-        <a href="/"><span class="text-3xl font-bold text-orange-500">la</span><span class="text-3xl font-bold text-blue-900">Soci</span></a>
-        <h1 class="text-xl font-bold text-gray-800 mt-2" id="reg-title">Regístrate</h1>
-      </div>
-
       <div class="flex gap-6 items-start">
 
         <div class="hidden md:block w-60 bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sticky top-24 flex-shrink-0">
