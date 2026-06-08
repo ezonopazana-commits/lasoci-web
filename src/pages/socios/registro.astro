@@ -14,7 +14,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   </div>
 
   <div class="min-h-screen bg-gray-50 py-8 px-4">
-    <div class="max-w-5xl mx-auto">
+    <div class="max-w-4xl mx-auto">
 
       <div class="text-center mb-6">
         <a href="/"><span class="text-3xl font-bold text-orange-500">la</span><span class="text-3xl font-bold text-blue-900">Soci</span></a>
@@ -71,56 +71,74 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
           </div>
 
           <!-- STEP 1 -->
-          <div id="step-1" class="step-panel bg-white rounded-2xl shadow-sm p-8">
-            <div class="flex items-start gap-4 mb-6 pb-6 border-b border-gray-100">
+          <div id="step-1" class="step-panel bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+
+            <!-- Header -->
+            <div class="flex items-center gap-3 mb-6 pb-5 border-b border-gray-100">
               <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
                 <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                 </svg>
               </div>
-              <div>
-                <div class="flex items-center gap-1.5">
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
                   <h3 class="text-lg font-bold text-gray-800" id="s1-title">Datos de contacto</h3>
-                  <div class="relative group inline-flex items-center flex-shrink-0">
+                  <div class="relative group">
                     <svg class="w-4 h-4 text-amber-400 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    <div class="absolute left-0 bottom-6 w-64 bg-gray-800 text-white text-xs rounded-xl px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-10 shadow-lg">
+                    <div class="absolute left-0 bottom-6 w-64 bg-gray-800 text-white text-xs rounded-xl px-3 py-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10 shadow-lg">
                       <span id="s1-info">Los pedimos para que puedas recuperar el proceso en cualquier momento</span>
                       <div class="absolute top-full left-3 border-4 border-transparent border-t-gray-800"></div>
                     </div>
                   </div>
                 </div>
-                <p class="text-sm text-gray-500" id="s1-sub">Los usaremos para enviarte información necesaria</p>
+                <p class="text-sm text-gray-500 mt-0.5" id="s1-sub">Los usaremos para enviarte información necesaria</p>
               </div>
+            </div>
+
+            <!-- Campos -->
             <div class="space-y-5">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-email">Correo electrónico *</label>
-                  <input type="email" id="email" required class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors" placeholder="nombre@caixabank.com" oninput="validateField('email','email-err',/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,'Email no válido (ej: nombre@dominio.com)')" />
-                  <p id="email-err" class="hidden text-xs text-red-500 mt-1">Email no válido</p>
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1.5" id="label-telefon">Móvil</label>
-                  <div class="flex gap-2">
-                    <div class="flex items-center gap-1 border-2 border-orange-300 rounded-xl px-3 py-3 bg-white text-sm">
-                      <span>🇪🇸</span><span class="text-gray-600">+34</span>
-                    </div>
-                    <input type="tel" id="telefon" class="form-input flex-1 px-4 py-3 border-2 border-orange-300 rounded-xl focus:outline-none focus:border-green-500 text-sm transition-colors" placeholder="666 000 000" maxlength="9" oninput="this.value=this.value.replace(/[^0-9]/g,'');validateField('telefon','telefon-err',/^[678]\d{8}$/,'Móvil español: 9 dígitos empezando por 6, 7 u 8')" />
-                  </div>
-                  <p id="telefon-err" class="hidden text-xs text-red-500 mt-1">Móvil español: 9 dígitos empezando por 6, 7 u 8</p>
-                </div>
+              <!-- Email -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2" id="label-email">Correo electrónico *</label>
+                <input type="email" id="email" required
+                  class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white"
+                  placeholder="nombre@caixabank.com"
+                  oninput="validateField('email','email-err',/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/,'Email no válido (ej: nombre@dominio.com)')" />
+                <p id="email-err" class="hidden text-xs text-red-500 mt-1.5 flex items-center gap-1">⚠ Email no válido</p>
               </div>
-              <div class="flex items-start gap-3 pt-2">
+
+              <!-- Móvil -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2" id="label-telefon">Móvil <span class="text-gray-400 font-normal">(opcional)</span></label>
+                <div class="flex gap-2">
+                  <div class="flex items-center gap-1.5 border-2 border-orange-300 rounded-xl px-3 py-3 bg-white text-sm flex-shrink-0">
+                    <span>🇪🇸</span>
+                    <span class="text-gray-600 font-medium">+34</span>
+                  </div>
+                  <input type="tel" id="telefon"
+                    class="form-input flex-1 px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white"
+                    placeholder="666 000 000" maxlength="9"
+                    oninput="this.value=this.value.replace(/[^0-9]/g,'');validateField('telefon','telefon-err',/^[678]\d{8}$/,'9 dígitos empezando por 6, 7 u 8')" />
+                </div>
+                <p id="telefon-err" class="hidden text-xs text-red-500 mt-1.5">⚠ Móvil español: 9 dígitos empezando por 6, 7 u 8</p>
+              </div>
+
+              <!-- RGPD -->
+              <div class="flex items-start gap-3 bg-gray-50 rounded-xl p-4 mt-2">
                 <input type="checkbox" id="rgpd" class="mt-0.5 w-5 h-5 accent-orange-500 cursor-pointer flex-shrink-0" />
-                <label for="rgpd" class="text-sm text-gray-600 cursor-pointer">
+                <label for="rgpd" class="text-sm text-gray-600 cursor-pointer leading-relaxed">
                   <span id="rgpd-text">Afirmo que he leído y acepto la </span>
                   <button type="button" id="open-privacy" class="text-blue-600 hover:underline font-medium">información básica sobre protección de datos</button>
                 </label>
               </div>
             </div>
+
+            <!-- Botón -->
             <div class="mt-8 flex justify-end">
-              <button type="button" onclick="nextStep(1)" class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition text-sm">
+              <button type="button" onclick="nextStep(1)"
+                class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm shadow-orange-200">
                 <span id="btn-continuar-1">Continuar</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
               </button>
