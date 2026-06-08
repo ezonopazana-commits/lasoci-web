@@ -13,7 +13,7 @@ import Layout from '../layouts/Layout.astro';
 <div class="bg-gradient-to-br from-blue-950 to-blue-800 text-white py-4 px-6">
   <div class="max-w-5xl mx-auto">
     <p class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-2">Publicación</p>
-    <h1 class="text-4xl font-bold mb-3">Revista la Soci</h1>
+    <h1 class="text-2xl font-bold mb-1">Revista la Soci</h1>
     <p class="text-blue-200 text-base max-w-2xl">Desde 1935, la revista de la Asociación del Personal de "la Caixa". Publicación bimestral sobre actividades, secciones y la vida de nuestra comunidad.</p>
   </div>
 </div>
@@ -30,10 +30,10 @@ import Layout from '../layouts/Layout.astro';
           <div>
             <span class="bg-orange-100 text-orange-700 text-xs font-bold px-3 py-1 rounded-full">Número actual</span>
             <h3 id="ultima-titulo" class="text-2xl font-bold text-gray-900 mt-3 mb-2"></h3>
-            <p id="ultima-periodo" class="text-blue-700 font-medium mb-4"></p>
+            <p id="ultima-periodo" class="text-blue-700 font-medium mb-2"></p>
             <p class="text-gray-600 text-sm leading-relaxed">Pocas entidades hay que puedan decir que tienen una revista propia que se edita y no ha dejado de publicar desde 1935. Con los nombres de "Boletín" primero, "Revista" después y "La Soci" actualmente, ha sido y es el medio de comunicación de referencia de la Asociación.</p>
           </div>
-          <div class="flex gap-3 mt-6">
+          <div class="flex gap-3 mt-2">
             <button id="btn-leer-ultima" class="bg-blue-900 text-white px-5 py-4.5 rounded-xl font-semibold text-sm hover:bg-blue-800 transition">
               📖 Leer revista
             </button>
@@ -48,7 +48,7 @@ import Layout from '../layouts/Layout.astro';
 
   <!-- Visor embebido -->
   <div id="visor-wrap" class="hidden mb-10">
-    <div class="flex items-center justify-between mb-3">
+    <div class="flex items-center justify-between mb-1">
       <h3 id="visor-titulo" class="text-lg font-bold text-gray-900"></h3>
       <button onclick="cerrarVisor()" class="text-gray-400 hover:text-gray-600 text-sm font-medium">✕ Cerrar visor</button>
     </div>
@@ -110,7 +110,7 @@ import Layout from '../layouts/Layout.astro';
       const per = r.mes ? `${MESES[r.mes]} ${r.anio}` : `${r.anio}`;
       const img = r.portada_url
         ? `<img src="${r.portada_url}" alt="Revista ${r.numero}" class="w-full object-cover" style="aspect-ratio:3/4;" />`
-        : `<div class="w-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-3xl font-bold text-blue-400" style="aspect-ratio:3/4;">${r.numero}</div>`;
+        : `<div class="w-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-2xl font-bold text-blue-400" style="aspect-ratio:3/4;">${r.numero}</div>`;
       return `
         <div class="revista-card bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden" onclick="abrirVisor('${r.pdf_url}','${(r.titulo||'Revista n° '+r.numero).replace(/'/g,"\\'")}')">
           ${img}
