@@ -451,9 +451,9 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
 
   <script>
   window.validateField = function(inputId, errId, regex, msg) {
-    const val = (document.getElementById(inputId)?.value || '').trim();
-    const err = document.getElementById(errId);
-    const input = document.getElementById(inputId);
+    var val = (document.getElementById(inputId) ? document.getElementById(inputId).value : '').trim();
+    var err = document.getElementById(errId);
+    var input = document.getElementById(inputId);
     if (val && !regex.test(val)) {
       if (err) { err.textContent = msg; err.classList.remove('hidden'); }
       if (input) input.style.borderColor = '#ef4444';
@@ -465,21 +465,6 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
   window.isValidEmail = function(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
   };
-  window.openPrivacyModal = function() {
-    const modal = document.getElementById('privacy-modal');
-    const scrollBtn = document.getElementById('scroll-btn');
-    const acceptBtn = document.getElementById('btn-accept-privacy');
-    if (modal) modal.classList.remove('hidden');
-    if (scrollBtn) scrollBtn.classList.remove('hidden');
-    if (acceptBtn) { acceptBtn.disabled = true; acceptBtn.className = 'bg-gray-300 text-gray-500 font-semibold px-10 py-3 rounded-xl transition text-sm cursor-not-allowed'; }
-    const c = document.getElementById('privacy-modal-content');
-    if (c) {
-      c.scrollTop = 0;
-
-    }
-  };
-
-
 </script>
 <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
