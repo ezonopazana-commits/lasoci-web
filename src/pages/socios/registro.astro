@@ -987,7 +987,6 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         btn.textContent = t.btn_crear;
         return;
       }
-      const telefon = document.getElementById('telefon').value.trim();
       const idioma = document.getElementById('idioma').value;
       const iban_tipo = document.querySelector('input[name="iban_tipo"]:checked')?.value || 'propio';
       let iban_raw = document.getElementById('iban').value.replace(/\s/g, '').toUpperCase();
