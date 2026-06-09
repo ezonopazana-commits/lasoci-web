@@ -1015,12 +1015,12 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            id: data.user.id, email, nombre, apellidos, dni,
+            email, password: pwd, nombre, apellidos, dni,
             telefono: telefon || null,
             iban: iban_raw || null,
             vinculacion,
             titular_dni,
-            iban_tipo
+            idioma: localStorage.getItem('lasoci_lang') || 'es'
           })
         });
         const result = await res.json();
