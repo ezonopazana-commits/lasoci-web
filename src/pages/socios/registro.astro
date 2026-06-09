@@ -813,13 +813,6 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
     });
 
     // ── Privacy ──
-    window.openPrivacyModal = function() {
-      document.getElementById('privacy-modal').classList.remove('hidden');
-      document.getElementById('scroll-btn').classList.remove('hidden');
-      privacyScrolled = false;
-      document.getElementById('btn-accept-privacy').disabled = true;
-      document.getElementById('btn-accept-privacy').className = 'bg-gray-300 text-gray-500 font-semibold px-10 py-3 rounded-xl transition text-sm cursor-not-allowed';
-    });
     window.closePrivacy = function() {
       document.getElementById('privacy-modal').classList.add('hidden');
       document.getElementById('scroll-btn').classList.add('hidden');
