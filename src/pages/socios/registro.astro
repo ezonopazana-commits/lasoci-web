@@ -751,7 +751,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
           document.getElementById('telefon')?.focus();
           return;
         }
-        const privacidad = document.getElementById('privacidad1')?.checked;
+        const privacidad = document.getElementById('rgpd')?.checked;
         if (!privacidad) {
           alert('Debes aceptar la información básica sobre protección de datos para continuar.');
           return;
@@ -760,7 +760,7 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
       const t = T[getLang()] || T.es;
       if (from === 1) {
         if (!document.getElementById('email').value.trim()) { alert(t.label_email); return; }
-        if (!privacyAccepted) { alert(t.err_rgpd); return; }
+        if (!document.getElementById('rgpd')?.checked) { alert(t.err_rgpd); return; }
       }
       if (from === 2) {
         const nombre = document.getElementById('nombre').value.trim();
