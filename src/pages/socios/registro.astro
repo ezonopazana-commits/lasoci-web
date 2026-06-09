@@ -998,40 +998,26 @@ const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
         iban_raw = null;
       }
 
-      const { data, error } = await db.auth.signUp({
-        email, password: pwd,
-        options: { data: { nombre, apellidos, dni, vinculacion, idioma } }
+      const res = await fetch('/api/registro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email, password: pwd, nombre, apellidos, dni,
+          telefono: telefon || null,
+          iban: iban_raw || null,
+          vinculacion,
+          titular_dni: titular_dni || null,
+          idioma: localStorage.getItem('lasoci_lang') || 'es'
+        })
       });
-
-      if (error) {
-        errDiv.textContent = t.err_generic + ' ' + error.message;
+      const result = await res.json();
+      if (!result.ok) {
+        errDiv.textContent = t.err_generic + ' ' + result.error;
         errDiv.classList.remove('hidden');
         btn.textContent = t.btn_crear;
         return;
       }
-
-      if (data.user) {
-        const res = await fetch('/api/registro', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email, password: pwd, nombre, apellidos, dni,
-            telefono: telefon || null,
-            iban: iban_raw || null,
-            vinculacion,
-            titular_dni,
-            idioma: localStorage.getItem('lasoci_lang') || 'es'
-          })
-        });
-        const result = await res.json();
-        if (!result.ok) {
-          errDiv.textContent = t.err_generic + ' ' + result.error;
-          errDiv.classList.remove('hidden');
-          btn.textContent = t.btn_crear;
-          return;
-        }
-        localStorage.setItem('lasoci_lang', idioma);
-      }
+      localStorage.setItem('lasoci_lang', idioma);
 
       okDiv.textContent = t.success;
       okDiv.classList.remove('hidden');
