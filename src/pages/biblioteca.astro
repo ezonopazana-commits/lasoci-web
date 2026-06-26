@@ -1,0 +1,59 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Biblioteca — la Soci">
+  <div class="bg-gradient-to-br from-blue-950 to-blue-800 text-white py-4 px-6 text-center">
+    <p class="text-orange-400 text-xs font-bold uppercase tracking-widest mb-2">la Soci</p>
+    <h1 class="text-2xl font-bold mb-4" data-i18n="bib_title">Biblioteca</h1>
+    <p class="text-blue-200 max-w-xl mx-auto" data-i18n="bib_sub">Libros, audiolibros y podcasts para asociados y sus familias</p>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 py-12">
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12">
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-md transition">
+        <div class="text-4xl mb-3">📚</div>
+        <h3 class="font-bold text-gray-800 mb-1" data-i18n="bib_libros">Libros y eBooks</h3>
+        <p class="text-gray-500 text-xs" data-i18n="bib_libros_desc">Novedades, clásicos y los más vendidos.</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-md transition">
+        <div class="text-4xl mb-3">🎧</div>
+        <h3 class="font-bold text-gray-800 mb-1" data-i18n="bib_audio">Audiolibros</h3>
+        <p class="text-gray-500 text-xs" data-i18n="bib_audio_desc">Escucha tus libros favoritos donde quieras.</p>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-md transition">
+        <div class="text-4xl mb-3">🎙️</div>
+        <h3 class="font-bold text-gray-800 mb-1" data-i18n="bib_podcast">Podcast la Soci</h3>
+        <p class="text-gray-500 text-xs" data-i18n="bib_podcast_desc">Contenido propio: entrevistas, agenda y vida asociativa.</p>
+      </div>
+    </div>
+
+    <h2 class="text-2xl font-bold text-gray-800 mb-6" data-i18n="bib_destacadas">Con quién trabajamos</h2>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition mb-6">
+      <div class="p-6 flex flex-col sm:flex-row items-center gap-5">
+        <div class="text-5xl">📖</div>
+        <div class="flex-1">
+          <h3 class="font-bold text-gray-800 mb-1">Casa del Libro · Grupo Planeta</h3>
+          <p class="text-gray-500 text-sm" data-i18n="bib_planeta_desc">Descuento en libros, eBooks y audiolibros. Acuerdo en negociación a través de su canal de empresas e instituciones.</p>
+        </div>
+        <span class="bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap" data-i18n="bib_proximamente">Próximamente</span>
+      </div>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
+      <p class="text-amber-800 text-sm mb-4" data-i18n="bib_login_info">Inicia sesión para que te avisemos en cuanto el acuerdo esté disponible.</p>
+      <a href="/socios/login" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition inline-block" data-i18n="bib_btn">Avísame cuando esté disponible</a>
+    </div>
+  </div>
+
+  <script>
+    const T = {
+      es: { bib_title:'Biblioteca', bib_sub:'Libros, audiolibros y podcasts para asociados y sus familias', bib_libros:'Libros y eBooks', bib_libros_desc:'Novedades, clásicos y los más vendidos.', bib_audio:'Audiolibros', bib_audio_desc:'Escucha tus libros favoritos donde quieras.', bib_podcast:'Podcast la Soci', bib_podcast_desc:'Contenido propio: entrevistas, agenda y vida asociativa.', bib_destacadas:'Con quién trabajamos', bib_planeta_desc:'Descuento en libros, eBooks y audiolibros. Acuerdo en negociación a través de su canal de empresas e instituciones.', bib_proximamente:'Próximamente', bib_login_info:'Inicia sesión para que te avisemos en cuanto el acuerdo esté disponible.', bib_btn:'Avísame cuando esté disponible' },
+      ca: { bib_title:'Biblioteca', bib_sub:'Llibres, audiollibres i podcasts per a associats i les seves famílies', bib_libros:'Llibres i eBooks', bib_libros_desc:'Novetats, clàssics i els més venuts.', bib_audio:'Audiollibres', bib_audio_desc:'Escolta els teus llibres preferits on vulguis.', bib_podcast:'Podcast la Soci', bib_podcast_desc:'Contingut propi: entrevistes, agenda i vida associativa.', bib_destacadas:'Amb qui treballem', bib_planeta_desc:'Descompte en llibres, eBooks i audiollibres. Acord en negociaci\u00f3 a trav\u00e9s del seu canal d\u2019empreses i institucions.', bib_proximamente:'Properament', bib_login_info:'Inicia sessi\u00f3 perqu\u00e8 t\u2019avisem quan l\u2019acord estigui disponible.', bib_btn:'Avisa\u2019m quan estigui disponible' },
+      en: { bib_title:'Library', bib_sub:'Books, audiobooks and podcasts for members and their families', bib_libros:'Books & eBooks', bib_libros_desc:'New releases, classics and bestsellers.', bib_audio:'Audiobooks', bib_audio_desc:'Listen to your favourite books anywhere.', bib_podcast:'la Soci Podcast', bib_podcast_desc:'Our own content: interviews, events and association life.', bib_destacadas:'Who we work with', bib_planeta_desc:'Discount on books, eBooks and audiobooks. Agreement being negotiated via their business and institutions channel.', bib_proximamente:'Coming soon', bib_login_info:'Sign in so we can notify you once the agreement is available.', bib_btn:'Notify me when available' }
+    };
+    function applyLang(lang) { const t=T[lang]||T.es; document.querySelectorAll('[data-i18n]').forEach(el => { const k=el.getAttribute('data-i18n'); if(t[k]) el.textContent=t[k]; }); }
+    applyLang(localStorage.getItem('lasoci_lang')||'es');
+    window.addEventListener('langchange', e => applyLang(e.detail.lang));
+  </script>
+</Layout>

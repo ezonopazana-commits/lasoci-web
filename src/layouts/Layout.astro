@@ -140,6 +140,9 @@ const { title, lang = 'es' } = Astro.props;
           <a href="/agenda" class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition whitespace-nowrap">Agenda</a>
           <a href="/viajes" class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition whitespace-nowrap" data-i18n="nav_viajes">Viajes</a>
           <a href="/ventajas" class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition whitespace-nowrap" data-i18n="nav_ventajas">Ventajas</a>
+          <a href="/tienda" class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition whitespace-nowrap" data-i18n="nav_tienda">Tienda</a>
+          <a href="/biblioteca" class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition whitespace-nowrap" data-i18n="nav_biblioteca">Biblioteca</a>
+          <a href="/videoteca" class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition whitespace-nowrap" data-i18n="nav_videoteca">Videoteca</a>
           <!-- Quiénes somos dropdown -->
           <div class="relative group">
             <button class="text-gray-300 hover:text-white hover:bg-white/10 px-3 py-2 rounded-lg transition flex items-center gap-1 whitespace-nowrap" data-i18n="nav_quienes">Quiénes somos
@@ -232,6 +235,9 @@ const { title, lang = 'es' } = Astro.props;
         <a href="/agenda" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition">Agenda</a>
         <a href="/viajes" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_viajes">Viajes</a>
         <a href="/ventajas" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_ventajas">Ventajas</a>
+        <a href="/tienda" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_tienda">Tienda</a>
+        <a href="/biblioteca" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_biblioteca">Biblioteca</a>
+        <a href="/videoteca" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_videoteca">Videoteca</a>
         <a href="/quienes-somos" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_quienes">Quiénes somos</a>
         <a href="/noticias" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_noticies">Noticias</a>
         <a href="/noticias/revista" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition ml-4 border-l border-white/10 pl-4" data-i18n="nav_revista">📖 Revista</a>
@@ -405,6 +411,9 @@ const { title, lang = 'es' } = Astro.props;
               <li><a href="/agenda" class="footer-link">Agenda</a></li>
               <li><a href="/viajes" class="footer-link" data-i18n="nav_viajes">Viajes</a></li>
               <li><a href="/ventajas" class="footer-link" data-i18n="nav_ventajas">Ventajas</a></li>
+              <li><a href="/tienda" class="footer-link" data-i18n="nav_tienda">Tienda</a></li>
+              <li><a href="/biblioteca" class="footer-link" data-i18n="nav_biblioteca">Biblioteca</a></li>
+              <li><a href="/videoteca" class="footer-link" data-i18n="nav_videoteca">Videoteca</a></li>
               <li><a href="/noticias" class="footer-link" data-i18n="nav_noticies">Noticias</a></li>
               <li><a href="/revista" class="footer-link" data-i18n="nav_revista">Revista</a></li>
             </ul>
@@ -571,7 +580,7 @@ const { title, lang = 'es' } = Astro.props;
           nav_contacte: 'Contacto', nav_area: 'Área socios', nav_login: 'Iniciar sesión',
           nav_registro: 'Registrarse', footer_links: 'Enlaces', footer_privat: 'Área privada',
           nav_asociate: '+Asóciate',
-          nav_viajes: 'Viajes', nav_ventajas: 'Ventajas', nav_quienes: 'Quiénes somos',
+          nav_viajes: 'Viajes', nav_ventajas: 'Ventajas', nav_tienda: 'Tienda', nav_biblioteca: 'Biblioteca', nav_videoteca: 'Videoteca', nav_quienes: 'Quiénes somos',
           qs_nav_nosotros: 'Nosotros', qs_nav_historia: 'Historia', qs_nav_org: 'Organización', qs_nav_faq: 'Preguntas frecuentes',
           footer_desc: 'Somos la Asociación de todos los trabajadores y trabajadoras de CaixaBank y la Fundación "la Caixa" y sus familias.',
           footer_sub: 'Todo un mundo de actividades, servicios y ventajas exclusivos.',
@@ -597,7 +606,7 @@ const { title, lang = 'es' } = Astro.props;
           nav_contacte: 'Contacte', nav_area: 'Àrea socis', nav_login: 'Iniciar sessió',
           nav_registro: 'Registrar-se', footer_links: 'Enllaços', footer_privat: 'Àrea privada',
           nav_asociate: '+Fes-te soci',
-          nav_viajes: 'Viatges', nav_ventajas: 'Avantatges', nav_quienes: 'Qui som',
+          nav_viajes: 'Viatges', nav_ventajas: 'Avantatges', nav_tienda: 'Botiga', nav_biblioteca: 'Biblioteca', nav_videoteca: 'Videoteca', nav_quienes: 'Qui som',
           qs_nav_nosotros: 'Nosaltres', qs_nav_historia: 'Història', qs_nav_org: 'Organització', qs_nav_faq: 'Preguntes freqüents',
           footer_desc: "Som l'Associació de tots els treballadors i treballadores de CaixaBank i la Fundació \"la Caixa\" i les seves famílies.",
           footer_sub: "Tot un món d'activitats, serveis i avantatges exclusius.",
@@ -623,7 +632,7 @@ const { title, lang = 'es' } = Astro.props;
           nav_contacte: 'Contact', nav_area: 'Members area', nav_login: 'Sign in',
           nav_registro: 'Register', footer_links: 'Links', footer_privat: 'Private area',
           nav_asociate: '+Join us',
-          nav_viajes: 'Travel', nav_ventajas: 'Benefits', nav_quienes: 'Who we are',
+          nav_viajes: 'Travel', nav_ventajas: 'Benefits', nav_tienda: 'Shop', nav_biblioteca: 'Library', nav_videoteca: 'Videos', nav_quienes: 'Who we are',
           qs_nav_nosotros: 'About us', qs_nav_historia: 'History', qs_nav_org: 'Organisation', qs_nav_faq: 'FAQ',
           footer_desc: 'We are the Association of all CaixaBank and Fundación "la Caixa" employees and their families.',
           footer_sub: 'A world of exclusive activities, services and benefits.',
