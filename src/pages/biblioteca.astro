@@ -11,33 +11,82 @@ import Layout from '../layouts/Layout.astro';
   <div class="max-w-5xl mx-auto px-6 py-12">
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12">
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-md transition">
-        <div class="text-4xl mb-3">📚</div>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
+        <svg class="w-9 h-9 mx-auto mb-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
         <h3 class="font-bold text-gray-800 mb-1" data-i18n="bib_libros">Libros y eBooks</h3>
         <p class="text-gray-500 text-xs" data-i18n="bib_libros_desc">Novedades, clásicos y los más vendidos.</p>
       </div>
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-md transition">
-        <div class="text-4xl mb-3">🎧</div>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
+        <svg class="w-9 h-9 mx-auto mb-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 18v-6a9 9 0 1118 0v6M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>
         <h3 class="font-bold text-gray-800 mb-1" data-i18n="bib_audio">Audiolibros</h3>
         <p class="text-gray-500 text-xs" data-i18n="bib_audio_desc">Escucha tus libros favoritos donde quieras.</p>
       </div>
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-md transition">
-        <div class="text-4xl mb-3">🎙️</div>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
+        <svg class="w-9 h-9 mx-auto mb-3 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg>
         <h3 class="font-bold text-gray-800 mb-1" data-i18n="bib_podcast">Podcast la Soci</h3>
         <p class="text-gray-500 text-xs" data-i18n="bib_podcast_desc">Contenido propio: entrevistas, agenda y vida asociativa.</p>
       </div>
     </div>
 
     <h2 class="text-2xl font-bold text-gray-800 mb-6" data-i18n="bib_destacadas">Con quién trabajamos</h2>
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition mb-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition mb-12">
       <div class="p-6 flex flex-col sm:flex-row items-center gap-5">
-        <div class="text-5xl">📖</div>
+        <svg class="w-14 h-14 text-blue-900/70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
         <div class="flex-1">
           <h3 class="font-bold text-gray-800 mb-1">Casa del Libro · Grupo Planeta</h3>
           <p class="text-gray-500 text-sm" data-i18n="bib_planeta_desc">Descuento en libros, eBooks y audiolibros. Acuerdo en negociación a través de su canal de empresas e instituciones.</p>
         </div>
         <span class="bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg whitespace-nowrap" data-i18n="bib_proximamente">Próximamente</span>
       </div>
+    </div>
+
+    <!-- DEMO interactiva -->
+    <div class="rounded-2xl border-2 border-dashed border-blue-200 bg-blue-50/40 p-6 mb-12">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full" data-i18n="bib_demo_badge">Demo</span>
+        <h2 class="text-xl font-bold text-gray-800" data-i18n="bib_demo_titulo">Así se verá la Biblioteca</h2>
+      </div>
+      <p class="text-gray-500 text-sm mb-6" data-i18n="bib_demo_sub">Prueba el lector y el reproductor de ejemplo.</p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+        <!-- Mini lector de eBook -->
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3" data-i18n="bib_demo_lector">Vista previa del lector</p>
+          <div id="ebook-page" class="bg-gray-50 rounded-lg border border-gray-100 p-4 h-40 overflow-hidden text-sm text-gray-700 leading-relaxed flex items-center">
+            <p data-i18n="bib_demo_p1">"Bienvenido a la Biblioteca de la Soci. Aquí encontrarás historias para leer en tus ratos libres, allá donde estés..."</p>
+          </div>
+          <div class="flex items-center justify-between mt-3">
+            <button id="ebook-prev" class="text-blue-900 hover:text-blue-700 transition disabled:opacity-30" disabled>
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <span id="ebook-page-num" class="text-xs text-gray-400">1 / 3</span>
+            <button id="ebook-next" class="text-blue-900 hover:text-blue-700 transition">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mini reproductor de audiolibro -->
+        <div class="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3" data-i18n="bib_demo_audio_titulo">Reproductor de ejemplo</p>
+          <div class="flex items-center gap-4">
+            <button id="audio-play" class="w-12 h-12 rounded-full bg-blue-900 hover:bg-blue-800 text-white flex items-center justify-center flex-shrink-0 transition">
+              <svg id="audio-play-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <div class="flex-1">
+              <p class="text-sm font-semibold text-gray-800" data-i18n="bib_demo_audio_cap">Capítulo 1 · Introducción</p>
+              <div class="h-1.5 bg-gray-100 rounded-full mt-2 overflow-hidden">
+                <div id="audio-progress" class="h-full bg-orange-500 rounded-full" style="width:0%"></div>
+              </div>
+              <div class="flex justify-between text-[11px] text-gray-400 mt-1">
+                <span id="audio-time">0:00</span><span>4:00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-[11px] text-gray-400 mt-4 text-center" data-i18n="bib_demo_nota">Texto y audio de ejemplo — el catálogo real llegará con el acuerdo editorial.</p>
     </div>
 
     <div class="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-center">
@@ -48,12 +97,53 @@ import Layout from '../layouts/Layout.astro';
 
   <script>
     const T = {
-      es: { bib_title:'Biblioteca', bib_sub:'Libros, audiolibros y podcasts para asociados y sus familias', bib_libros:'Libros y eBooks', bib_libros_desc:'Novedades, clásicos y los más vendidos.', bib_audio:'Audiolibros', bib_audio_desc:'Escucha tus libros favoritos donde quieras.', bib_podcast:'Podcast la Soci', bib_podcast_desc:'Contenido propio: entrevistas, agenda y vida asociativa.', bib_destacadas:'Con quién trabajamos', bib_planeta_desc:'Descuento en libros, eBooks y audiolibros. Acuerdo en negociación a través de su canal de empresas e instituciones.', bib_proximamente:'Próximamente', bib_login_info:'Inicia sesión para que te avisemos en cuanto el acuerdo esté disponible.', bib_btn:'Avísame cuando esté disponible' },
-      ca: { bib_title:'Biblioteca', bib_sub:'Llibres, audiollibres i podcasts per a associats i les seves famílies', bib_libros:'Llibres i eBooks', bib_libros_desc:'Novetats, clàssics i els més venuts.', bib_audio:'Audiollibres', bib_audio_desc:'Escolta els teus llibres preferits on vulguis.', bib_podcast:'Podcast la Soci', bib_podcast_desc:'Contingut propi: entrevistes, agenda i vida associativa.', bib_destacadas:'Amb qui treballem', bib_planeta_desc:'Descompte en llibres, eBooks i audiollibres. Acord en negociaci\u00f3 a trav\u00e9s del seu canal d\u2019empreses i institucions.', bib_proximamente:'Properament', bib_login_info:'Inicia sessi\u00f3 perqu\u00e8 t\u2019avisem quan l\u2019acord estigui disponible.', bib_btn:'Avisa\u2019m quan estigui disponible' },
-      en: { bib_title:'Library', bib_sub:'Books, audiobooks and podcasts for members and their families', bib_libros:'Books & eBooks', bib_libros_desc:'New releases, classics and bestsellers.', bib_audio:'Audiobooks', bib_audio_desc:'Listen to your favourite books anywhere.', bib_podcast:'la Soci Podcast', bib_podcast_desc:'Our own content: interviews, events and association life.', bib_destacadas:'Who we work with', bib_planeta_desc:'Discount on books, eBooks and audiobooks. Agreement being negotiated via their business and institutions channel.', bib_proximamente:'Coming soon', bib_login_info:'Sign in so we can notify you once the agreement is available.', bib_btn:'Notify me when available' }
+      es: { bib_title:'Biblioteca', bib_sub:'Libros, audiolibros y podcasts para asociados y sus familias', bib_libros:'Libros y eBooks', bib_libros_desc:'Novedades, clásicos y los más vendidos.', bib_audio:'Audiolibros', bib_audio_desc:'Escucha tus libros favoritos donde quieras.', bib_podcast:'Podcast la Soci', bib_podcast_desc:'Contenido propio: entrevistas, agenda y vida asociativa.', bib_destacadas:'Con quién trabajamos', bib_planeta_desc:'Descuento en libros, eBooks y audiolibros. Acuerdo en negociación a través de su canal de empresas e instituciones.', bib_proximamente:'Próximamente', bib_demo_badge:'Demo', bib_demo_titulo:'Así se verá la Biblioteca', bib_demo_sub:'Prueba el lector y el reproductor de ejemplo.', bib_demo_lector:'Vista previa del lector', bib_demo_audio_titulo:'Reproductor de ejemplo', bib_demo_audio_cap:'Capítulo 1 · Introducción', bib_demo_nota:'Texto y audio de ejemplo — el catálogo real llegará con el acuerdo editorial.', bib_demo_p1:'"Bienvenido a la Biblioteca de la Soci. Aquí encontrarás historias para leer en tus ratos libres, allá donde estés..."', bib_login_info:'Inicia sesión para que te avisemos en cuanto el acuerdo esté disponible.', bib_btn:'Avísame cuando esté disponible' },
+      ca: { bib_title:'Biblioteca', bib_sub:'Llibres, audiollibres i podcasts per a associats i les seves famílies', bib_libros:'Llibres i eBooks', bib_libros_desc:'Novetats, clàssics i els més venuts.', bib_audio:'Audiollibres', bib_audio_desc:'Escolta els teus llibres preferits on vulguis.', bib_podcast:'Podcast la Soci', bib_podcast_desc:'Contingut propi: entrevistes, agenda i vida associativa.', bib_destacadas:'Amb qui treballem', bib_planeta_desc:'Descompte en llibres, eBooks i audiollibres. Acord en negociaci\u00f3 a trav\u00e9s del seu canal d\u2019empreses i institucions.', bib_proximamente:'Properament', bib_demo_badge:'Demo', bib_demo_titulo:'Aix\u00ed es veur\u00e0 la Biblioteca', bib_demo_sub:'Prova el lector i el reproductor d\u2019exemple.', bib_demo_lector:'Vista pr\u00e8via del lector', bib_demo_audio_titulo:'Reproductor d\u2019exemple', bib_demo_audio_cap:'Cap\u00edtol 1 · Introducci\u00f3', bib_demo_nota:'Text i \u00e0udio d\u2019exemple — el cat\u00e0leg real arribar\u00e0 amb l\u2019acord editorial.', bib_demo_p1:'"Benvingut a la Biblioteca de la Soci. Aqu\u00ed trobar\u00e0s hist\u00f2ries per llegir en els teus moments lliures, allà on siguis..."', bib_login_info:'Inicia sessi\u00f3 perqu\u00e8 t\u2019avisem quan l\u2019acord estigui disponible.', bib_btn:'Avisa\u2019m quan estigui disponible' },
+      en: { bib_title:'Library', bib_sub:'Books, audiobooks and podcasts for members and their families', bib_libros:'Books & eBooks', bib_libros_desc:'New releases, classics and bestsellers.', bib_audio:'Audiobooks', bib_audio_desc:'Listen to your favourite books anywhere.', bib_podcast:'la Soci Podcast', bib_podcast_desc:'Our own content: interviews, events and association life.', bib_destacadas:'Who we work with', bib_planeta_desc:'Discount on books, eBooks and audiobooks. Agreement being negotiated via their business and institutions channel.', bib_proximamente:'Coming soon', bib_demo_badge:'Demo', bib_demo_titulo:'A preview of the Library', bib_demo_sub:'Try the sample reader and player.', bib_demo_lector:'Reader preview', bib_demo_audio_titulo:'Sample player', bib_demo_audio_cap:'Chapter 1 · Introduction', bib_demo_nota:'Sample text and audio — the real catalogue will arrive with the publishing agreement.', bib_demo_p1:'"Welcome to la Soci Library. Here you will find stories to read in your free time, wherever you are..."', bib_login_info:'Sign in so we can notify you once the agreement is available.', bib_btn:'Notify me when available' }
     };
     function applyLang(lang) { const t=T[lang]||T.es; document.querySelectorAll('[data-i18n]').forEach(el => { const k=el.getAttribute('data-i18n'); if(t[k]) el.textContent=t[k]; }); }
     applyLang(localStorage.getItem('lasoci_lang')||'es');
     window.addEventListener('langchange', e => applyLang(e.detail.lang));
+
+    // Demo lector eBook (3 páginas de ejemplo, sin contenido real con copyright)
+    const paginas = {
+      es: ['"Bienvenido a la Biblioteca de la Soci. Aquí encontrarás historias para leer en tus ratos libres, allá donde estés..."', '"Cada mes añadiremos nuevos títulos, pensados para ti y tu familia, con el sello de nuestros editores asociados."', '"Gracias por formar parte de la Soci. Esto es solo el principio de tu Biblioteca."'],
+      ca: ['"Benvingut a la Biblioteca de la Soci. Aquí trobaràs històries per llegir en els teus moments lliures, allà on siguis..."', '"Cada mes afegirem nous títols, pensats per a tu i la teva família, amb el segell dels nostres editors associats."', '"Gràcies per formar part de la Soci. Això és només el començament de la teva Biblioteca."'],
+      en: ['"Welcome to la Soci Library. Here you will find stories to read in your free time, wherever you are..."', '"Every month we will add new titles, chosen for you and your family, from our partner publishers."', '"Thank you for being part of la Soci. This is just the beginning of your Library."']
+    };
+    let pagina = 0;
+    function renderPagina() {
+      const lang = localStorage.getItem('lasoci_lang') || 'es';
+      document.getElementById('ebook-page').querySelector('p').textContent = paginas[lang][pagina];
+      document.getElementById('ebook-page-num').textContent = `${pagina + 1} / 3`;
+      document.getElementById('ebook-prev').disabled = pagina === 0;
+      document.getElementById('ebook-next').disabled = pagina === 2;
+    }
+    document.getElementById('ebook-prev').addEventListener('click', () => { if (pagina > 0) { pagina--; renderPagina(); } });
+    document.getElementById('ebook-next').addEventListener('click', () => { if (pagina < 2) { pagina++; renderPagina(); } });
+
+    // Demo reproductor audio (progreso simulado, sin archivo de audio real)
+    let reproduciendo = false, segundos = 0;
+    const DURACION = 240;
+    let intervalo;
+    document.getElementById('audio-play').addEventListener('click', () => {
+      reproduciendo = !reproduciendo;
+      const icon = document.getElementById('audio-play-icon');
+      if (reproduciendo) {
+        icon.innerHTML = '<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>';
+        intervalo = setInterval(() => {
+          segundos++;
+          if (segundos >= DURACION) { segundos = 0; reproduciendo = false; clearInterval(intervalo); icon.innerHTML = '<path d="M8 5v14l11-7z"/>'; }
+          const pct = (segundos / DURACION) * 100;
+          document.getElementById('audio-progress').style.width = pct + '%';
+          const m = Math.floor(segundos / 60), s = segundos % 60;
+          document.getElementById('audio-time').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+        }, 1000);
+      } else {
+        icon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+        clearInterval(intervalo);
+      }
+    });
+    renderPagina();
   </script>
 </Layout>

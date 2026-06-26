@@ -1,13 +1,26 @@
 @import "tailwindcss";
 
 .nav-link {
-  border: 1px solid transparent;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
 }
-.nav-link:hover {
-  border-color: #4ade80 !important;
-  background-color: rgba(74, 222, 128, 0.1) !important;
-  color: white !important;
+.nav-underline {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 4px;
+  height: 2px;
+  border-radius: 2px;
+  background: #f97316;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.25s ease;
+}
+.nav-link:hover .nav-underline,
+.nav-link.active .nav-underline {
+  transform: scaleX(1);
+}
+.nav-link.active {
+  color: #fff !important;
 }
 
 .form-input {
