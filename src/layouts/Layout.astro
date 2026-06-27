@@ -151,21 +151,30 @@ const { title, lang = 'es' } = Astro.props;
             <span>Viajes</span>
             <span class="nav-underline"></span>
           </a>
-          <a href="/ventajas" class="nav-link group relative flex items-center gap-1.5 text-gray-300 hover:text-white px-3 py-2 rounded-lg transition-colors whitespace-nowrap" data-i18n="nav_ventajas">
-            <svg class="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
-            <span>Ventajas</span>
-            <span class="nav-underline"></span>
-          </a>
-          <a href="/tienda" class="nav-link group relative flex items-center gap-1.5 text-gray-300 hover:text-white px-3 py-2 rounded-lg transition-colors whitespace-nowrap" data-i18n="nav_tienda">
-            <svg class="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-            <span>Tienda</span>
-            <span class="nav-underline"></span>
-          </a>
-          <a href="/biblioteca" class="nav-link group relative flex items-center gap-1.5 text-gray-300 hover:text-white px-3 py-2 rounded-lg transition-colors whitespace-nowrap" data-i18n="nav_biblioteca">
-            <svg class="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-            <span>Biblioteca</span>
-            <span class="nav-underline"></span>
-          </a>
+          <div class="relative group">
+            <a href="/ventajas" class="nav-link relative flex items-center gap-1.5 text-gray-300 hover:text-white px-3 py-2 rounded-lg transition-colors whitespace-nowrap" data-i18n="nav_ventajas">
+              <svg class="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+              <span>Ventajas</span>
+              <svg class="w-3 h-3 opacity-60 transition-transform duration-200 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              <span class="nav-underline"></span>
+            </a>
+            <div class="absolute top-full left-0 pt-2 w-52 opacity-0 invisible group-hover:opacity-100 group-hover:visible translate-y-1 group-hover:translate-y-0 transition-all duration-200 z-50">
+              <div class="bg-white rounded-xl shadow-2xl border border-gray-100 py-1.5 overflow-hidden">
+                <a href="/ventajas" class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors" data-i18n="nav_ventajas">
+                  <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                  Todas las ventajas
+                </a>
+                <a href="/tienda" class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors" data-i18n="nav_tienda">
+                  <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                  Tienda
+                </a>
+                <a href="/biblioteca" class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors" data-i18n="nav_biblioteca">
+                  <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                  Biblioteca
+                </a>
+              </div>
+            </div>
+          </div>
           <a href="/videoteca" class="nav-link group relative flex items-center gap-1.5 text-gray-300 hover:text-white px-3 py-2 rounded-lg transition-colors whitespace-nowrap" data-i18n="nav_videoteca">
             <svg class="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5L19.5 7.5v9l-3.75-3m-12 4.5h9a1.5 1.5 0 001.5-1.5v-7.5a1.5 1.5 0 00-1.5-1.5h-9A1.5 1.5 0 002.25 9v7.5a1.5 1.5 0 001.5 1.5z"/></svg>
             <span>Videoteca</span>
@@ -296,11 +305,11 @@ const { title, lang = 'es' } = Astro.props;
         <a href="/ventajas" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_ventajas">
           <svg class="w-4.5 h-4.5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
           Ventajas</a>
-        <a href="/tienda" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_tienda">
-          <svg class="w-4.5 h-4.5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+        <a href="/tienda" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2 px-3 rounded-xl text-sm transition ml-4 border-l border-white/10 pl-4" data-i18n="nav_tienda">
+          <svg class="w-4 h-4 opacity-60 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
           Tienda</a>
-        <a href="/biblioteca" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_biblioteca">
-          <svg class="w-4.5 h-4.5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+        <a href="/biblioteca" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2 px-3 rounded-xl text-sm transition ml-4 border-l border-white/10 pl-4" data-i18n="nav_biblioteca">
+          <svg class="w-4 h-4 opacity-60 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
           Biblioteca</a>
         <a href="/videoteca" class="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-white/10 py-2.5 px-3 rounded-xl text-sm transition" data-i18n="nav_videoteca">
           <svg class="w-4.5 h-4.5 opacity-70 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5L19.5 7.5v9l-3.75-3m-12 4.5h9a1.5 1.5 0 001.5-1.5v-7.5a1.5 1.5 0 00-1.5-1.5h-9A1.5 1.5 0 002.25 9v7.5a1.5 1.5 0 001.5 1.5z"/></svg>
