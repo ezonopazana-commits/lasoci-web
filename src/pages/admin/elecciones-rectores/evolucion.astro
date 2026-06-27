@@ -1,0 +1,199 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout title="Evolución Rectores (BD) — Panel Admin">
+  <div class="min-h-screen bg-gray-100">
+
+    <div class="bg-blue-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-10 shadow">
+      <div class="flex items-center gap-2">
+        <a href="/admin"><span class="text-lg font-bold text-orange-400">la</span><span class="text-lg font-bold text-white">Soci</span></a>
+        <span class="text-blue-400 text-xs hidden sm:block">| Evolución Rectores</span>
+      </div>
+      <a href="/admin/elecciones-rectores" class="text-xs text-blue-300 hover:text-white">&larr; Resumen</a>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-3 py-6">
+
+      <div id="loading" class="flex items-center justify-center py-20">
+        <div class="text-center">
+          <div class="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+          <p class="text-gray-500 text-sm">Cargando...</p>
+        </div>
+      </div>
+
+      <div id="access-denied" class="hidden text-center py-20">
+        <div class="text-5xl mb-4">🚫</div>
+        <h2 class="text-lg font-bold text-gray-800 mb-2">Acceso denegado</h2>
+        <a href="/socios/dashboard" class="bg-orange-500 text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-orange-600 transition">Ir al dashboard</a>
+      </div>
+
+      <div id="content" class="hidden space-y-5">
+
+        <!-- Situacion inicial -->
+        <div class="bg-white rounded-xl shadow-sm p-4">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-lg">📸</span>
+            <h2 class="font-bold text-gray-800 text-sm">Situación inicial — <span id="ini-fecha" class="text-gray-400 font-normal"></span></h2>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-gray-50 rounded-lg p-3 text-center">
+              <p class="text-xs text-gray-400">Activos</p>
+              <p class="text-xl font-bold text-blue-900" id="ini-activos">-</p>
+              <p class="text-xs text-gray-400" id="ini-activos-pct"></p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 text-center">
+              <p class="text-xs text-gray-400">Pendientes</p>
+              <p class="text-xl font-bold text-amber-500" id="ini-pendientes">-</p>
+              <p class="text-xs text-gray-400" id="ini-pendientes-pct"></p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 text-center">
+              <p class="text-xs text-gray-400">Total</p>
+              <p class="text-xl font-bold text-gray-700" id="ini-total">-</p>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3 text-center">
+              <p class="text-xs text-gray-400">Candidaturas</p>
+              <p class="text-xl font-bold text-teal-600" id="ini-candidaturas">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flecha -->
+        <div class="flex justify-center"><span class="text-3xl text-gray-300">↓</span></div>
+
+        <!-- Situacion actual -->
+        <div class="bg-white rounded-xl shadow-sm p-4 border-2 border-orange-200">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-lg">📍</span>
+            <h2 class="font-bold text-gray-800 text-sm">Situación actual — <span class="text-orange-500">en vivo</span></h2>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-orange-50 rounded-lg p-3 text-center">
+              <p class="text-xs text-gray-400">Activos</p>
+              <p class="text-xl font-bold text-blue-900" id="act-activos">-</p>
+              <p class="text-xs text-gray-400" id="act-activos-pct"></p>
+            </div>
+            <div class="bg-orange-50 rounded-lg p-3 text-center">
+              <p class="text-xs text-gray-400">Pendientes</p>
+              <p class="text-xl font-bold text-amber-500" id="act-pendientes">-</p>
+              <p class="text-xs text-gray-400" id="act-pendientes-pct"></p>
+            </div>
+            <div class="bg-orange-50 rounded-lg p-3 text-center">
+              <p class="text-xs text-gray-400">Total</p>
+              <p class="text-xl font-bold text-gray-700" id="act-total">-</p>
+            </div>
+            <div class="bg-orange-50 rounded-lg p-3 text-center">
+              <p class="text-xs text-gray-400">Candidaturas</p>
+              <p class="text-xl font-bold text-teal-600" id="act-candidaturas">-</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progreso por CCAA -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-gray-100">
+            <h2 class="font-bold text-gray-800 text-sm">Progreso por CCAA (inicial → actual)</h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-gray-50 text-left">
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">CCAA</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Activos inicial</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Activos actual</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Crecimiento</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-evol" class="divide-y divide-gray-50">
+                <tr><td colspan="4" class="px-4 py-6 text-center text-gray-400 text-sm">Cargando...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { supabase } from '../../../lib/supabase.ts';
+
+    async function init() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { window.location.href = '/socios/login'; return; }
+      const { data: socio } = await supabase.from('socios').select('rol').eq('id', user.id).single();
+      if (!socio || socio.rol !== 'admin') {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('access-denied').classList.remove('hidden');
+        return;
+      }
+      await loadData();
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('content').classList.remove('hidden');
+    }
+
+    async function loadData() {
+      const { data: snap } = await supabase.from('snapshots').select('*').order('fecha', { ascending: true }).limit(1).single();
+      const { data: snapCcaa } = await supabase.from('snapshots_ccaa').select('*, ccaa(codigo, nombre)').eq('snapshot_id', snap?.id);
+      const { data: ccaaList } = await supabase.from('ccaa').select('id, codigo, nombre');
+      const { data: territorios } = await supabase.from('territorios').select('id, ccaa_id, cuota_total');
+      const { data: candidaturas } = await supabase.from('candidaturas').select('estado, candidatura_presentada, territorio_id');
+
+      const cupoTotal = (territorios || []).reduce((s, t) => s + t.cuota_total, 0);
+      const activosAct = (candidaturas || []).filter(c => c.estado === 'ACTIVO').length;
+      const presentadasAct = (candidaturas || []).filter(c => c.candidatura_presentada).length;
+      const pendientesAct = Math.max(0, cupoTotal - activosAct);
+
+      document.getElementById('ini-fecha').textContent = snap ? new Date(snap.fecha).toLocaleDateString('es-ES') : '—';
+      document.getElementById('ini-activos').textContent = snap?.activos ?? '-';
+      document.getElementById('ini-pendientes').textContent = snap?.pendientes ?? '-';
+      document.getElementById('ini-total').textContent = snap ? (snap.activos + snap.pendientes) : '-';
+      document.getElementById('ini-candidaturas').textContent = snap?.candidaturas_total ?? '-';
+      if (snap) {
+        const t = snap.activos + snap.pendientes;
+        document.getElementById('ini-activos-pct').textContent = t ? Math.round(snap.activos / t * 100) + '%' : '';
+        document.getElementById('ini-pendientes-pct').textContent = t ? Math.round(snap.pendientes / t * 100) + '%' : '';
+      }
+
+      document.getElementById('act-activos').textContent = activosAct;
+      document.getElementById('act-pendientes').textContent = pendientesAct;
+      document.getElementById('act-total').textContent = cupoTotal;
+      document.getElementById('act-candidaturas').textContent = presentadasAct;
+      document.getElementById('act-activos-pct').textContent = cupoTotal ? Math.round(activosAct / cupoTotal * 100) + '%' : '';
+      document.getElementById('act-pendientes-pct').textContent = cupoTotal ? Math.round(pendientesAct / cupoTotal * 100) + '%' : '';
+
+      // Activos actuales por CCAA
+      const terrToCcaa = {};
+      (territorios || []).forEach(t => { terrToCcaa[t.id] = t.ccaa_id; });
+      const activosActPorCcaa = {};
+      (candidaturas || []).filter(c => c.estado === 'ACTIVO').forEach(c => {
+        const ccaaId = terrToCcaa[c.territorio_id];
+        activosActPorCcaa[ccaaId] = (activosActPorCcaa[ccaaId] || 0) + 1;
+      });
+
+      const inicialPorCcaa = {};
+      (snapCcaa || []).forEach(s => { inicialPorCcaa[s.ccaa.codigo] = s.activos; });
+
+      const filas = (ccaaList || []).map(c => {
+        const ini = inicialPorCcaa[c.codigo] || 0;
+        const act = activosActPorCcaa[c.id] || 0;
+        const delta = act - ini;
+        return { nombre: c.nombre, ini, act, delta };
+      }).sort((a, b) => b.act - a.act);
+
+      document.getElementById('tabla-evol').innerHTML = filas.map((f, i) => `
+        <tr class="${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
+          <td class="px-4 py-2.5 font-medium text-gray-700">${f.nombre}</td>
+          <td class="px-4 py-2.5 text-gray-500">${f.ini}</td>
+          <td class="px-4 py-2.5 text-gray-700 font-semibold">${f.act}</td>
+          <td class="px-4 py-2.5">
+            <span class="text-xs font-bold px-2 py-0.5 rounded-full ${f.delta > 0 ? 'bg-green-100 text-green-700' : f.delta < 0 ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-500'}">
+              ${f.delta > 0 ? '+' : ''}${f.delta}
+            </span>
+          </td>
+        </tr>`).join('');
+    }
+
+    init();
+  </script>
+</Layout>
