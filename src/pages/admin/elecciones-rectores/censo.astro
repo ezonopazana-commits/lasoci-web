@@ -1,0 +1,182 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout title="Censo Rectores (BD) — Panel Admin">
+  <div class="min-h-screen bg-gray-100">
+
+    <div class="bg-blue-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-10 shadow">
+      <div class="flex items-center gap-2">
+        <a href="/admin"><span class="text-lg font-bold text-orange-400">la</span><span class="text-lg font-bold text-white">Soci</span></a>
+        <span class="text-blue-400 text-xs hidden sm:block">| Censo Rectores</span>
+      </div>
+      <a href="/admin/elecciones-rectores" class="text-xs text-blue-300 hover:text-white">&larr; Resumen</a>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-3 py-6">
+
+      <div id="loading" class="flex items-center justify-center py-20">
+        <div class="text-center">
+          <div class="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+          <p class="text-gray-500 text-sm">Cargando...</p>
+        </div>
+      </div>
+
+      <div id="access-denied" class="hidden text-center py-20">
+        <div class="text-5xl mb-4">🚫</div>
+        <h2 class="text-lg font-bold text-gray-800 mb-2">Acceso denegado</h2>
+        <a href="/socios/dashboard" class="bg-orange-500 text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-orange-600 transition">Ir al dashboard</a>
+      </div>
+
+      <div id="content" class="hidden space-y-5">
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center border-t-2 border-blue-300">
+            <p class="text-xs text-gray-400 mb-1">Total socios censados</p>
+            <p class="text-2xl font-bold text-blue-900" id="stat-total">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center border-t-2 border-teal-300">
+            <p class="text-xs text-gray-400 mb-1">Territorios censados</p>
+            <p class="text-2xl font-bold text-teal-600" id="stat-territorios">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center border-t-2 border-purple-300">
+            <p class="text-xs text-gray-400 mb-1">Ratio medio socios/rector</p>
+            <p class="text-2xl font-bold text-purple-600" id="stat-ratio">-</p>
+          </div>
+        </div>
+
+        <!-- Por CCAA -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-gray-100">
+            <h2 class="font-bold text-gray-800 text-sm">Socios por CCAA</h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-gray-50 text-left">
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">CCAA</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Socios</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Cupo rectores</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Ratio socios/rector</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">% del total</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-ccaa" class="divide-y divide-gray-50">
+                <tr><td colspan="5" class="px-4 py-6 text-center text-gray-400 text-sm">Cargando...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Por territorio -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+            <h2 class="font-bold text-gray-800 text-sm">Socios por territorio</h2>
+            <select id="f-ccaa" class="form-input px-3 py-1.5 border-2 border-orange-300 rounded-xl text-xs bg-white"><option value="">Todas las CCAA</option></select>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-gray-50 text-left">
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">CCAA</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Territorio</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Socios censados</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Cupo rectores</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Ratio</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-terr" class="divide-y divide-gray-50">
+                <tr><td colspan="5" class="px-4 py-6 text-center text-gray-400 text-sm">Cargando...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { supabase } from '../../../lib/supabase.ts';
+
+    let porTerritorio = [];
+
+    async function init() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { window.location.href = '/socios/login'; return; }
+      const { data: socio } = await supabase.from('socios').select('rol').eq('id', user.id).single();
+      if (!socio || socio.rol !== 'admin') {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('access-denied').classList.remove('hidden');
+        return;
+      }
+      await loadData();
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('content').classList.remove('hidden');
+    }
+
+    async function loadData() {
+      const { data: censo } = await supabase.from('censo').select('n_socios, nombre, territorio_id, territorios(nombre, cuota_total, ccaa_id, ccaa(codigo, nombre))');
+      const { data: ccaaList } = await supabase.from('ccaa').select('id, codigo, nombre');
+
+      const totalSocios = (censo || []).reduce((s, c) => s + c.n_socios, 0);
+      const totalCupo = 200; // cupo nacional fijo
+
+      document.getElementById('stat-total').textContent = totalSocios.toLocaleString('es-ES');
+      document.getElementById('stat-territorios').textContent = (censo || []).length;
+      document.getElementById('stat-ratio').textContent = Math.round(totalSocios / totalCupo);
+
+      // Agregado por CCAA
+      const porCcaa = {};
+      (censo || []).forEach(c => {
+        const ccaaId = c.territorios?.ccaa_id;
+        const ccaaNombre = c.territorios?.ccaa?.nombre || '—';
+        if (!porCcaa[ccaaId]) porCcaa[ccaaId] = { nombre: ccaaNombre, socios: 0, cupo: 0 };
+        porCcaa[ccaaId].socios += c.n_socios;
+        porCcaa[ccaaId].cupo += c.territorios?.cuota_total || 0;
+      });
+
+      const filasCcaa = Object.values(porCcaa).sort((a, b) => b.socios - a.socios);
+      document.getElementById('tabla-ccaa').innerHTML = filasCcaa.map((f, i) => `
+        <tr class="${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
+          <td class="px-4 py-2.5 font-medium text-gray-700">${f.nombre}</td>
+          <td class="px-4 py-2.5 text-gray-600">${f.socios.toLocaleString('es-ES')}</td>
+          <td class="px-4 py-2.5 text-gray-600">${f.cupo}</td>
+          <td class="px-4 py-2.5 font-semibold text-blue-900">${f.cupo > 0 ? Math.round(f.socios / f.cupo) : '—'}</td>
+          <td class="px-4 py-2.5 text-xs text-gray-500">${((f.socios / totalSocios) * 100).toFixed(1)}%</td>
+        </tr>`).join('');
+
+      // Por territorio
+      porTerritorio = (censo || []).map(c => ({
+        ccaaId: c.territorios?.ccaa_id,
+        ccaaNombre: c.territorios?.ccaa?.nombre || '—',
+        territorio: c.territorios?.nombre || c.nombre,
+        socios: c.n_socios,
+        cupo: c.territorios?.cuota_total || 0,
+      })).sort((a, b) => b.socios - a.socios);
+
+      const ccaaUnicas = [...new Map((ccaaList || []).map(c => [c.id, c.nombre])).entries()];
+      const selCcaa = document.getElementById('f-ccaa');
+      ccaaUnicas.sort((a, b) => a[1].localeCompare(b[1])).forEach(([id, nombre]) => selCcaa.insertAdjacentHTML('beforeend', `<option value="${id}">${nombre}</option>`));
+      selCcaa.addEventListener('change', renderTerritorios);
+
+      renderTerritorios();
+    }
+
+    function renderTerritorios() {
+      const fCcaa = document.getElementById('f-ccaa').value;
+      const filtradas = porTerritorio.filter(t => !fCcaa || t.ccaaId === fCcaa);
+
+      document.getElementById('tabla-terr').innerHTML = filtradas.map((t, i) => `
+        <tr class="${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
+          <td class="px-4 py-2.5 text-xs text-gray-500">${t.ccaaNombre}</td>
+          <td class="px-4 py-2.5 font-medium text-gray-700">${t.territorio}</td>
+          <td class="px-4 py-2.5 text-gray-600">${t.socios.toLocaleString('es-ES')}</td>
+          <td class="px-4 py-2.5 text-gray-600">${t.cupo}</td>
+          <td class="px-4 py-2.5 font-semibold text-blue-900">${t.cupo > 0 ? Math.round(t.socios / t.cupo) : '—'}</td>
+        </tr>`).join('');
+    }
+
+    init();
+  </script>
+</Layout>
