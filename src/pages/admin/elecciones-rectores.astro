@@ -1,0 +1,158 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Elecciones Rectores (BD) — Panel Admin">
+  <div class="min-h-screen bg-gray-100">
+
+    <div class="bg-blue-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-10 shadow">
+      <div class="flex items-center gap-2">
+        <a href="/admin"><span class="text-lg font-bold text-orange-400">la</span><span class="text-lg font-bold text-white">Soci</span></a>
+        <span class="text-blue-400 text-xs hidden sm:block">| Elecciones Rectores</span>
+      </div>
+      <a href="/admin" class="text-xs text-blue-300 hover:text-white">&larr; Panel Admin</a>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-3 py-6">
+
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-5 flex items-start gap-3">
+        <svg class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <p class="text-sm text-blue-800">Esta vista lee de la <strong>base de datos relacional (Supabase)</strong>, la nueva fuente de datos. La gestión operativa del día a día (altas/bajas, notas, reorganización) sigue de momento en la app original:
+          <a href="https://jolly-hat-4d8d.ezonopazana.workers.dev" target="_blank" class="underline font-semibold">jolly-hat-4d8d.ezonopazana.workers.dev</a> (Google Sheets).</p>
+      </div>
+
+      <div id="loading" class="flex items-center justify-center py-20">
+        <div class="text-center">
+          <div class="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+          <p class="text-gray-500 text-sm">Cargando...</p>
+        </div>
+      </div>
+
+      <div id="access-denied" class="hidden text-center py-20">
+        <div class="text-5xl mb-4">🚫</div>
+        <h2 class="text-lg font-bold text-gray-800 mb-2">Acceso denegado</h2>
+        <a href="/socios/dashboard" class="bg-orange-500 text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-orange-600 transition">Ir al dashboard</a>
+      </div>
+
+      <div id="content" class="hidden space-y-5">
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center border-t-2 border-blue-300">
+            <p class="text-xs text-gray-400 mb-1">Cupo total</p>
+            <p class="text-2xl font-bold text-blue-900" id="stat-cupo">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center border-t-2 border-green-300">
+            <p class="text-xs text-gray-400 mb-1">Activos</p>
+            <p class="text-2xl font-bold text-green-600" id="stat-activos">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center border-t-2 border-amber-300">
+            <p class="text-xs text-gray-400 mb-1">Pendientes cupo</p>
+            <p class="text-2xl font-bold text-amber-500" id="stat-pendientes">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center border-t-2 border-purple-300">
+            <p class="text-xs text-gray-400 mb-1">CCAA con cobertura</p>
+            <p class="text-2xl font-bold text-purple-600" id="stat-ccaa">-</p>
+          </div>
+          <div class="bg-white rounded-xl shadow-sm p-4 text-center border-t-2 border-teal-300">
+            <p class="text-xs text-gray-400 mb-1">Candidaturas presentadas</p>
+            <p class="text-2xl font-bold text-teal-600" id="stat-presentadas">-</p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-gray-100 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+            <h2 class="font-bold text-gray-800 text-sm">Cobertura por CCAA</h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-gray-50 text-left">
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">CCAA</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Activos</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Cupo total</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Cobertura</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-ccaa" class="divide-y divide-gray-50">
+                <tr><td colspan="4" class="px-4 py-6 text-center text-gray-400 text-sm">Cargando...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { supabase } from '../../lib/supabase.ts';
+
+    async function init() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { window.location.href = '/socios/login'; return; }
+      const { data: socio } = await supabase.from('socios').select('rol').eq('id', user.id).single();
+      if (!socio || socio.rol !== 'admin') {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('access-denied').classList.remove('hidden');
+        return;
+      }
+      await loadData();
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('content').classList.remove('hidden');
+    }
+
+    async function loadData() {
+      const { data: ccaaList } = await supabase.from('ccaa').select('id, codigo, nombre');
+      const { data: territorios } = await supabase.from('territorios').select('id, ccaa_id, cuota_total');
+      const { data: candidaturas } = await supabase.from('candidaturas').select('estado, candidatura_presentada, territorio_id');
+
+      const cupoTotal = (territorios || []).reduce((s, t) => s + t.cuota_total, 0);
+      const activos = (candidaturas || []).filter(c => c.estado === 'ACTIVO').length;
+      const presentadas = (candidaturas || []).filter(c => c.candidatura_presentada).length;
+
+      document.getElementById('stat-cupo').textContent = cupoTotal;
+      document.getElementById('stat-activos').textContent = activos;
+      document.getElementById('stat-pendientes').textContent = Math.max(0, cupoTotal - activos);
+      document.getElementById('stat-presentadas').textContent = presentadas;
+
+      const terrByCcaa = {};
+      (territorios || []).forEach(t => { terrByCcaa[t.ccaa_id] = (terrByCcaa[t.ccaa_id] || 0) + t.cuota_total; });
+      const activosByTerr = {};
+      (candidaturas || []).filter(c => c.estado === 'ACTIVO').forEach(c => { activosByTerr[c.territorio_id] = (activosByTerr[c.territorio_id] || 0) + 1; });
+      const terrToCcaa = {};
+      (territorios || []).forEach(t => { terrToCcaa[t.id] = t.ccaa_id; });
+      const activosByCcaa = {};
+      Object.entries(activosByTerr).forEach(([terrId, n]) => {
+        const ccaaId = terrToCcaa[terrId];
+        activosByCcaa[ccaaId] = (activosByCcaa[ccaaId] || 0) + n;
+      });
+
+      let ccaaConCobertura = 0;
+      const filas = (ccaaList || []).map(c => {
+        const cupo = terrByCcaa[c.id] || 0;
+        const act = activosByCcaa[c.id] || 0;
+        const pct = cupo > 0 ? Math.round((act / cupo) * 100) : 0;
+        if (act > 0) ccaaConCobertura++;
+        return { nombre: c.nombre, act, cupo, pct };
+      }).sort((a, b) => b.cupo - a.cupo);
+
+      document.getElementById('stat-ccaa').textContent = `${ccaaConCobertura}/${(ccaaList || []).length}`;
+
+      document.getElementById('tabla-ccaa').innerHTML = filas.map((f, i) => `
+        <tr class="${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}">
+          <td class="px-4 py-2.5 font-medium text-gray-700">${f.nombre}</td>
+          <td class="px-4 py-2.5 text-gray-600">${f.act}</td>
+          <td class="px-4 py-2.5 text-gray-600">${f.cupo}</td>
+          <td class="px-4 py-2.5">
+            <div class="flex items-center gap-2">
+              <div class="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden"><div class="h-full bg-blue-500" style="width:${f.pct}%"></div></div>
+              <span class="text-xs text-gray-500">${f.pct}%</span>
+            </div>
+          </td>
+        </tr>`).join('');
+    }
+
+    init();
+  </script>
+</Layout>
