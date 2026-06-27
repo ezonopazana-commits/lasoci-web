@@ -1,0 +1,372 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout title="Candidaturas Rectores (BD) — Panel Admin">
+  <div class="min-h-screen bg-gray-100">
+
+    <div class="bg-blue-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-10 shadow">
+      <div class="flex items-center gap-2">
+        <a href="/admin"><span class="text-lg font-bold text-orange-400">la</span><span class="text-lg font-bold text-white">Soci</span></a>
+        <span class="text-blue-400 text-xs hidden sm:block">| Candidaturas Rectores</span>
+      </div>
+      <a href="/admin/elecciones-rectores" class="text-xs text-blue-300 hover:text-white">&larr; Resumen</a>
+    </div>
+
+    <div class="max-w-6xl mx-auto px-3 py-6">
+
+      <div id="loading" class="flex items-center justify-center py-20">
+        <div class="text-center">
+          <div class="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+          <p class="text-gray-500 text-sm">Cargando...</p>
+        </div>
+      </div>
+
+      <div id="access-denied" class="hidden text-center py-20">
+        <div class="text-5xl mb-4">🚫</div>
+        <h2 class="text-lg font-bold text-gray-800 mb-2">Acceso denegado</h2>
+        <a href="/socios/dashboard" class="bg-orange-500 text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-orange-600 transition">Ir al dashboard</a>
+      </div>
+
+      <div id="content" class="hidden space-y-4">
+
+        <!-- Filtros -->
+        <div class="bg-white rounded-xl shadow-sm p-3 flex flex-wrap gap-2 items-center">
+          <input id="f-buscar" type="text" placeholder="Buscar nombre/apellidos..." class="form-input px-3 py-2 border-2 border-orange-300 rounded-xl text-xs bg-white w-44" />
+          <select id="f-ccaa" class="form-input px-3 py-2 border-2 border-orange-300 rounded-xl text-xs bg-white"><option value="">Todas las CCAA</option></select>
+          <select id="f-territorio" class="form-input px-3 py-2 border-2 border-orange-300 rounded-xl text-xs bg-white"><option value="">Todos los territorios</option></select>
+          <select id="f-estado" class="form-input px-3 py-2 border-2 border-orange-300 rounded-xl text-xs bg-white">
+            <option value="">Todos los estados</option>
+            <option value="ACTIVO">Activo</option>
+            <option value="PENDIENTE">Pendiente</option>
+            <option value="INACTIVO">Inactivo</option>
+          </select>
+          <button id="btn-limpiar" class="text-xs text-gray-400 hover:text-gray-600">✕ Limpiar</button>
+          <button id="btn-nueva" class="ml-auto bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition">+ Añadir candidatura</button>
+        </div>
+
+        <!-- Tabla -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div class="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
+            <h2 class="font-bold text-gray-800 text-sm">Candidaturas <span id="contador" class="text-gray-400 font-normal"></span></h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-gray-50 text-left">
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Nombre</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500 hidden md:table-cell">Territorio</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500 hidden md:table-cell">Tipo</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500 hidden lg:table-cell">Sección</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Estado</th>
+                  <th class="px-4 py-2 text-xs font-semibold text-gray-500">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-cand" class="divide-y divide-gray-50">
+                <tr><td colspan="6" class="px-4 py-6 text-center text-gray-400 text-sm">Cargando...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal alta/edicion -->
+  <div id="modal-form" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div class="bg-blue-900 text-white px-5 py-4 rounded-t-2xl flex items-center justify-between sticky top-0">
+        <h3 class="font-bold" id="modal-titulo">Añadir candidatura</h3>
+        <button onclick="closeForm()" class="text-blue-200 hover:text-white text-xl leading-none">×</button>
+      </div>
+      <div class="p-5 space-y-3">
+        <input type="hidden" id="form-socio-id" />
+        <input type="hidden" id="form-cand-id" />
+        <div>
+          <label class="text-xs font-semibold text-gray-500 mb-1 block">Apellidos *</label>
+          <input id="form-apellidos" type="text" class="form-input w-full px-3 py-2 border-2 border-orange-300 rounded-xl text-sm bg-white" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-gray-500 mb-1 block">Nombre</label>
+          <input id="form-nombre" type="text" class="form-input w-full px-3 py-2 border-2 border-orange-300 rounded-xl text-sm bg-white" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-gray-500 mb-1 block">Email</label>
+          <input id="form-email" type="email" class="form-input w-full px-3 py-2 border-2 border-orange-300 rounded-xl text-sm bg-white" />
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-gray-500 mb-1 block">Territorio *</label>
+          <select id="form-territorio" class="form-input w-full px-3 py-2 border-2 border-orange-300 rounded-xl text-sm bg-white"></select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-semibold text-gray-500 mb-1 block">Estado</label>
+            <select id="form-estado" class="form-input w-full px-3 py-2 border-2 border-orange-300 rounded-xl text-sm bg-white">
+              <option value="ACTIVO">Activo</option>
+              <option value="PENDIENTE">Pendiente</option>
+              <option value="INACTIVO">Inactivo</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-gray-500 mb-1 block">Tipo</label>
+            <select id="form-tipo" class="form-input w-full px-3 py-2 border-2 border-orange-300 rounded-xl text-sm bg-white">
+              <option value="SOCIO">Socio</option>
+              <option value="DELEGADO">Delegado</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-gray-500 mb-1 block">Sección (si es delegado)</label>
+          <input id="form-seccion" type="text" class="form-input w-full px-3 py-2 border-2 border-orange-300 rounded-xl text-sm bg-white" />
+        </div>
+        <div class="flex gap-4 pt-1">
+          <label class="flex items-center gap-2 text-sm text-gray-600"><input id="form-interes" type="checkbox" class="w-4 h-4" /> Interés en ser rector</label>
+        </div>
+        <div class="flex gap-4">
+          <label class="flex items-center gap-2 text-sm text-gray-600"><input id="form-presentada" type="checkbox" class="w-4 h-4" /> Candidatura presentada</label>
+        </div>
+        <div id="form-error" class="hidden bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-700"></div>
+      </div>
+      <div class="px-5 pb-5 flex gap-2 justify-end border-t border-gray-100 pt-4">
+        <button onclick="closeForm()" class="px-4 py-2 text-sm text-gray-500 hover:text-gray-700">Cancelar</button>
+        <button id="btn-guardar" class="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-5 py-2 rounded-xl transition">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal confirmar borrado -->
+  <div id="modal-confirm" class="fixed inset-0 z-50 hidden bg-black/50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-5">
+      <h3 class="font-bold text-gray-800 mb-2">Eliminar candidatura</h3>
+      <p class="text-gray-500 text-sm mb-5" id="confirm-msg"></p>
+      <div class="flex gap-2 justify-end">
+        <button onclick="document.getElementById('modal-confirm').classList.add('hidden')" class="px-4 py-2 text-sm text-gray-500 hover:text-gray-700">Cancelar</button>
+        <button id="btn-confirmar-borrado" class="px-5 py-2 text-sm text-white font-semibold rounded-xl transition bg-red-500 hover:bg-red-600">Eliminar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    import { supabase } from '../../../lib/supabase.ts';
+
+    let territorios = [];
+    let ccaaList = [];
+    let candidaturas = [];
+    let pendingDeleteId = null;
+
+    async function init() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { window.location.href = '/socios/login'; return; }
+      const { data: socio } = await supabase.from('socios').select('rol').eq('id', user.id).single();
+      if (!socio || socio.rol !== 'admin') {
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('access-denied').classList.remove('hidden');
+        return;
+      }
+      await cargarMaestros();
+      await cargarCandidaturas();
+      document.getElementById('loading').classList.add('hidden');
+      document.getElementById('content').classList.remove('hidden');
+    }
+
+    async function cargarMaestros() {
+      const { data: c } = await supabase.from('ccaa').select('id, codigo, nombre').order('nombre');
+      ccaaList = c || [];
+      const { data: t } = await supabase.from('territorios').select('id, nombre, ccaa_id').order('nombre');
+      territorios = t || [];
+
+      const selCcaa = document.getElementById('f-ccaa');
+      ccaaList.forEach(c => selCcaa.insertAdjacentHTML('beforeend', `<option value="${c.id}">${c.nombre}</option>`));
+
+      const selFormTerr = document.getElementById('form-territorio');
+      territorios.forEach(t => selFormTerr.insertAdjacentHTML('beforeend', `<option value="${t.id}">${t.nombre}</option>`));
+    }
+
+    function refrescarTerritoriosFiltro() {
+      const ccaaId = document.getElementById('f-ccaa').value;
+      const selT = document.getElementById('f-territorio');
+      const actual = selT.value;
+      selT.innerHTML = '<option value="">Todos los territorios</option>';
+      territorios.filter(t => !ccaaId || t.ccaa_id === ccaaId).forEach(t => selT.insertAdjacentHTML('beforeend', `<option value="${t.id}">${t.nombre}</option>`));
+      if ([...selT.options].some(o => o.value === actual)) selT.value = actual;
+    }
+
+    async function cargarCandidaturas() {
+      const { data, error } = await supabase
+        .from('candidaturas')
+        .select('id, estado, tipo_asociado, seccion, interes_rector, candidatura_presentada, territorio_id, socio_id, socios(nombre, apellidos, email), territorios(nombre, ccaa_id)')
+        .order('created_at', { ascending: false });
+      if (error) { console.error(error); candidaturas = []; }
+      else candidaturas = data || [];
+      render();
+    }
+
+    function render() {
+      const buscar = document.getElementById('f-buscar').value.toLowerCase();
+      const fCcaa = document.getElementById('f-ccaa').value;
+      const fTerr = document.getElementById('f-territorio').value;
+      const fEstado = document.getElementById('f-estado').value;
+
+      const filtradas = candidaturas.filter(c => {
+        const nombreCompleto = `${c.socios?.nombre || ''} ${c.socios?.apellidos || ''}`.toLowerCase();
+        if (buscar && !nombreCompleto.includes(buscar)) return false;
+        if (fCcaa && c.territorios?.ccaa_id !== fCcaa) return false;
+        if (fTerr && c.territorio_id !== fTerr) return false;
+        if (fEstado && c.estado !== fEstado) return false;
+        return true;
+      });
+
+      document.getElementById('contador').textContent = `(${filtradas.length})`;
+      const tbody = document.getElementById('tabla-cand');
+      if (!filtradas.length) { tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-gray-400 text-sm">Sin resultados</td></tr>'; return; }
+
+      const badgeEstado = e => ({
+        ACTIVO: '<span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">Activo</span>',
+        PENDIENTE: '<span class="bg-amber-100 text-amber-700 text-xs px-2 py-0.5 rounded-full">Pendiente</span>',
+        INACTIVO: '<span class="bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded-full">Inactivo</span>',
+      }[e] || e);
+
+      tbody.innerHTML = filtradas.map((c, i) => `
+        <tr class="${i % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-orange-50 transition-colors">
+          <td class="px-4 py-3">
+            <p class="text-sm font-medium text-gray-800">${c.socios?.apellidos || ''} ${c.socios?.nombre || ''}</p>
+            <p class="text-xs text-gray-400">${c.socios?.email || '—'}</p>
+          </td>
+          <td class="px-4 py-3 text-xs text-gray-500 hidden md:table-cell">${c.territorios?.nombre || '—'}</td>
+          <td class="px-4 py-3 text-xs text-gray-500 hidden md:table-cell">${c.tipo_asociado || '—'}</td>
+          <td class="px-4 py-3 text-xs text-gray-500 hidden lg:table-cell">${c.seccion || '—'}</td>
+          <td class="px-4 py-3">${badgeEstado(c.estado)}</td>
+          <td class="px-4 py-3">
+            <div class="flex gap-2">
+              <button onclick="editarCandidatura('${c.id}')" class="text-xs text-blue-600 hover:underline">Editar</button>
+              <button onclick="confirmarBorrado('${c.id}', '${(c.socios?.apellidos || '').replace(/'/g, "\\'")}')" class="text-xs text-red-500 hover:underline">Eliminar</button>
+            </div>
+          </td>
+        </tr>`).join('');
+    }
+
+    window.abrirNueva = function () {
+      document.getElementById('modal-titulo').textContent = 'Añadir candidatura';
+      document.getElementById('form-socio-id').value = '';
+      document.getElementById('form-cand-id').value = '';
+      document.getElementById('form-apellidos').value = '';
+      document.getElementById('form-nombre').value = '';
+      document.getElementById('form-email').value = '';
+      document.getElementById('form-territorio').value = '';
+      document.getElementById('form-estado').value = 'PENDIENTE';
+      document.getElementById('form-tipo').value = 'SOCIO';
+      document.getElementById('form-seccion').value = '';
+      document.getElementById('form-interes').checked = false;
+      document.getElementById('form-presentada').checked = false;
+      document.getElementById('form-error').classList.add('hidden');
+      document.getElementById('modal-form').classList.remove('hidden');
+    };
+
+    window.editarCandidatura = function (id) {
+      const c = candidaturas.find(x => x.id === id);
+      if (!c) return;
+      document.getElementById('modal-titulo').textContent = 'Editar candidatura';
+      document.getElementById('form-socio-id').value = c.socio_id || '';
+      document.getElementById('form-cand-id').value = c.id;
+      document.getElementById('form-apellidos').value = c.socios?.apellidos || '';
+      document.getElementById('form-nombre').value = c.socios?.nombre || '';
+      document.getElementById('form-email').value = c.socios?.email || '';
+      document.getElementById('form-territorio').value = c.territorio_id || '';
+      document.getElementById('form-estado').value = c.estado;
+      document.getElementById('form-tipo').value = c.tipo_asociado || 'SOCIO';
+      document.getElementById('form-seccion').value = c.seccion || '';
+      document.getElementById('form-interes').checked = !!c.interes_rector;
+      document.getElementById('form-presentada').checked = !!c.candidatura_presentada;
+      document.getElementById('form-error').classList.add('hidden');
+      document.getElementById('modal-form').classList.remove('hidden');
+    };
+
+    window.closeForm = function () { document.getElementById('modal-form').classList.add('hidden'); };
+
+    document.getElementById('btn-guardar').addEventListener('click', async () => {
+      const apellidos = document.getElementById('form-apellidos').value.trim();
+      const territorioId = document.getElementById('form-territorio').value;
+      const errEl = document.getElementById('form-error');
+      if (!apellidos || !territorioId) {
+        errEl.textContent = 'Apellidos y Territorio son obligatorios.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      const btn = document.getElementById('btn-guardar');
+      btn.disabled = true; btn.textContent = 'Guardando...';
+
+      const nombre = document.getElementById('form-nombre').value.trim();
+      const emailInput = document.getElementById('form-email').value.trim();
+      let socioId = document.getElementById('form-socio-id').value || null;
+      const candId = document.getElementById('form-cand-id').value || null;
+
+      try {
+        if (socioId) {
+          await supabase.from('socios').update({ apellidos, nombre, email: emailInput || undefined }).eq('id', socioId);
+        } else {
+          const email = emailInput || `${(nombre + '.' + apellidos).toLowerCase().replace(/[^a-z0-9]+/g, '.')}.pendiente@pendiente.lasoci.org`;
+          const { data: nuevoSocio, error: errSocio } = await supabase
+            .from('socios').insert({ apellidos, nombre, email, rol: 'socio', activo: true }).select('id').single();
+          if (errSocio) throw errSocio;
+          socioId = nuevoSocio.id;
+        }
+
+        const payload = {
+          socio_id: socioId,
+          territorio_id: territorioId,
+          estado: document.getElementById('form-estado').value,
+          tipo_asociado: document.getElementById('form-tipo').value,
+          seccion: document.getElementById('form-seccion').value.trim() || null,
+          interes_rector: document.getElementById('form-interes').checked,
+          candidatura_presentada: document.getElementById('form-presentada').checked,
+        };
+
+        if (candId) {
+          const { error } = await supabase.from('candidaturas').update(payload).eq('id', candId);
+          if (error) throw error;
+        } else {
+          const { error } = await supabase.from('candidaturas').insert(payload);
+          if (error) throw error;
+        }
+
+        closeForm();
+        await cargarCandidaturas();
+      } catch (e) {
+        errEl.textContent = 'Error al guardar: ' + (e.message || e);
+        errEl.classList.remove('hidden');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Guardar';
+      }
+    });
+
+    window.confirmarBorrado = function (id, nombre) {
+      pendingDeleteId = id;
+      document.getElementById('confirm-msg').textContent = `¿Eliminar la candidatura de ${nombre}? Esta acción no se puede deshacer.`;
+      document.getElementById('modal-confirm').classList.remove('hidden');
+    };
+
+    document.getElementById('btn-confirmar-borrado').addEventListener('click', async () => {
+      if (!pendingDeleteId) return;
+      await supabase.from('candidaturas').delete().eq('id', pendingDeleteId);
+      document.getElementById('modal-confirm').classList.add('hidden');
+      pendingDeleteId = null;
+      await cargarCandidaturas();
+    });
+
+    document.getElementById('btn-nueva').addEventListener('click', () => window.abrirNueva());
+    document.getElementById('f-buscar').addEventListener('input', render);
+    document.getElementById('f-ccaa').addEventListener('change', () => { refrescarTerritoriosFiltro(); render(); });
+    document.getElementById('f-territorio').addEventListener('change', render);
+    document.getElementById('f-estado').addEventListener('change', render);
+    document.getElementById('btn-limpiar').addEventListener('click', () => {
+      document.getElementById('f-buscar').value = '';
+      document.getElementById('f-ccaa').value = '';
+      refrescarTerritoriosFiltro();
+      document.getElementById('f-territorio').value = '';
+      document.getElementById('f-estado').value = '';
+      render();
+    });
+
+    init();
+  </script>
+</Layout>
