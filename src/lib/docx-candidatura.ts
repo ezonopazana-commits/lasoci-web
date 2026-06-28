@@ -78,7 +78,7 @@ export async function generarDocumentoCandidatura(datos: DatosCandidatura): Prom
           alignment: AlignmentType.JUSTIFIED,
           spacing: { after: 240 },
           children: [
-            new TextRun({ text: `${t.tratamiento} ${datos.nombreCompleto}, con DNI nº ${datos.dni}, con domicilio en ${datos.direccion}, ${t.socio} de la Asociaci\u00F3n LA SOCI,`, font: FUENTE, size: 22 }),
+            new TextRun({ text: `${t.tratamiento} ${datos.nombreCompleto}, con DNI nº ${datos.dni}, con domicilio en ${datos.direccion}, ${t.socio} de la Associaci\u00F3 del Personal de La Caixa (LA SOCI),`, font: FUENTE, size: 22 }),
           ],
         }),
 
