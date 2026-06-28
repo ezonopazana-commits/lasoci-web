@@ -75,6 +75,12 @@ export async function generarDocumentoCandidatura(datos: DatosCandidatura): Prom
         }),
 
         new Paragraph({
+          alignment: AlignmentType.LEFT,
+          spacing: { after: 280 },
+          children: [new TextRun({ text: 'A LA COMISI\u00D3N ELECTORAL DE LA SOCI', bold: true, font: FUENTE, size: 22 })],
+        }),
+
+        new Paragraph({
           alignment: AlignmentType.JUSTIFIED,
           spacing: { after: 240 },
           children: [
