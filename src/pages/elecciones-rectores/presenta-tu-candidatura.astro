@@ -182,7 +182,7 @@ import Layout from '../../layouts/Layout.astro';
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Territorio *</label>
+                <label id="territorio-label" class="block text-sm font-semibold text-gray-700 mb-2">Territorio *</label>
                 <select id="f-territorio" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white">
                   <option value="">Selecciona primero la CCAA...</option>
                 </select>
@@ -480,6 +480,8 @@ import Layout from '../../layouts/Layout.astro';
         socioSel.direccion = data.direccion;
         socioSel.telefono = data.telefono;
         socioSel.genero = data.genero;
+        socioSel.territorio_id = data.territorio_id;
+        socioSel.territorio_nombre = data.territorio_nombre;
         err.classList.add('hidden');
         precargarPaso2();
         (window as any).irAPaso(2);
@@ -504,6 +506,23 @@ import Layout from '../../layouts/Layout.astro';
       const telInput = document.getElementById('f-telefono') as HTMLInputElement;
       telInput.value = socioSel.telefono || '';
       document.getElementById('genero-section')!.classList.toggle('hidden', !!socioSel.genero);
+
+      // Precargar territorio si ya consta en el censo (apellidos+nombre)
+      const terrLabel = document.getElementById('territorio-label')!;
+      if (socioSel.territorio_id) {
+        const terr = territorios.find((t: any) => t.id === socioSel.territorio_id);
+        if (terr) {
+          const selCcaa = document.getElementById('f-ccaa') as HTMLSelectElement;
+          selCcaa.value = terr.ccaa_id;
+          const selT = document.getElementById('f-territorio') as HTMLSelectElement;
+          selT.innerHTML = '<option value="">Selecciona...</option>';
+          territorios.filter((t: any) => t.ccaa_id === terr.ccaa_id).forEach((t: any) => selT.insertAdjacentHTML('beforeend', `<option value="${t.id}">${t.nombre}</option>`));
+          selT.value = terr.id;
+          terrLabel.textContent = 'Territorio (ya consta en el censo — corrígelo si no es correcto) *';
+          return;
+        }
+      }
+      terrLabel.textContent = 'Territorio *';
     }
 
     // ── STEP 2: Territorio ──

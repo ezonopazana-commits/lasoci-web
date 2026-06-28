@@ -16,7 +16,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const { data: socio, error } = await supabase
       .from('socios')
-      .select('dni, direccion, telefono, genero')
+      .select('dni, direccion, telefono, genero, territorio_id, territorios(nombre)')
       .eq('id', socio_id)
       .single();
 
@@ -34,6 +34,8 @@ export const POST: APIRoute = async ({ request }) => {
       direccion: socio.direccion || null,
       telefono: socio.telefono || null,
       genero: socio.genero || null,
+      territorio_id: socio.territorio_id || null,
+      territorio_nombre: (socio as any).territorios?.nombre || null,
     }), { status: 200 });
 
   } catch (e: any) {
