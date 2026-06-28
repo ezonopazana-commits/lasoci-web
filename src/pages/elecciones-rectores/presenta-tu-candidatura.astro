@@ -207,7 +207,7 @@ import Layout from '../../layouts/Layout.astro';
                 <div class="via-card border-2 border-gray-200 rounded-xl p-5 hover:border-orange-300 transition">
                   <div class="text-2xl mb-2">🖨️</div>
                   <p class="font-bold text-gray-800 text-sm mb-1">Vía física</p>
-                  <p class="text-xs text-gray-500">Descargas el documento, lo imprimes, lo firmas a mano y lo envías por correo. No necesitas DNI ni firma digital.</p>
+                  <p class="text-xs text-gray-500">Descargas el documento, lo imprimes, lo firmas a mano y lo envías por correo junto con una copia de tu DNI. No necesitas firma digital ni subir fotos aquí.</p>
                 </div>
               </label>
               <label class="cursor-pointer">
@@ -253,7 +253,11 @@ import Layout from '../../layouts/Layout.astro';
             <div id="fisica-ok" class="hidden bg-green-50 border-2 border-green-200 rounded-xl p-5 text-center">
               <p class="font-bold text-green-700 mb-2">✓ Documento generado</p>
               <a id="link-descarga" href="#" download class="inline-block bg-blue-900 hover:bg-blue-800 text-white text-sm font-semibold px-6 py-3 rounded-xl transition mb-3">⬇ Descargar documento</a>
-              <p class="text-xs text-gray-500">Imprímelo, fírmalo a mano y envíalo por correo postal a: <strong>Associació LA SOCI — C/ Sardenya, 521-523, 08024 Barcelona</strong>.</p>
+              <p class="text-xs text-gray-500">Imprímelo, fírmalo a mano, <strong>adjunta una copia de tu DNI</strong> y envíalo por:</p>
+              <ul class="text-xs text-gray-500 list-disc pl-4 mt-1 space-y-0.5">
+                <li>Correo postal: Associació LA SOCI — C/ Sardenya, 521-523, 08024 Barcelona</li>
+                <li>Servicio de Cartería de CaixaBank (centro 9099 — Associació del Personal)</li>
+              </ul>
             </div>
 
             <div class="mt-6 flex justify-start">
