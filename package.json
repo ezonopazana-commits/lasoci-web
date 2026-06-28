@@ -18,6 +18,7 @@
     "@supabase/supabase-js": "^2.106.1",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.6",
+    "docx": "^9.7.1",
     "tailwindcss": "^4.3.0",
     "wrangler": "^4.94.0"
   },

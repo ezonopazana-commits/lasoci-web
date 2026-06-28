@@ -1,0 +1,680 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="Presenta tu candidatura a Rector/a — la Soci">
+
+  <!-- Hero -->
+  <div class="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 text-white py-4 px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <a href="/" class="inline-block mb-3">
+        <span class="text-3xl font-bold text-orange-400">la</span><span class="text-3xl font-bold text-white">Soci</span>
+      </a>
+      <h1 class="text-2xl font-bold mb-2">Presenta tu candidatura a Rector/a</h1>
+      <div class="flex items-center justify-center gap-2 text-blue-200 text-sm">
+        <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+        </svg>
+        <span>Estás en un entorno 100% seguro</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="min-h-screen bg-gray-50 py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+
+      <!-- Cargando periodo electoral -->
+      <div id="loading-periodo" class="flex items-center justify-center py-20">
+        <div class="text-center">
+          <div class="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+          <p class="text-gray-500 text-sm">Cargando...</p>
+        </div>
+      </div>
+
+      <!-- Fuera de plazo / sin proceso activo -->
+      <div id="fuera-plazo" class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-10 text-center">
+        <div class="text-5xl mb-4">🗳️</div>
+        <h2 class="text-lg font-bold text-gray-800 mb-2" id="fuera-plazo-titulo">No hay un plazo de candidaturas abierto</h2>
+        <p class="text-gray-500 text-sm" id="fuera-plazo-texto">Vuelve a consultarlo cuando se abra un nuevo proceso electoral.</p>
+      </div>
+
+      <div id="wizard" class="hidden flex gap-6 items-start">
+
+        <!-- Sidebar pasos -->
+        <div class="hidden md:block w-60 bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sticky top-24 flex-shrink-0">
+          <h2 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Proceso</h2>
+          <div class="space-y-1" id="steps-sidebar"></div>
+        </div>
+
+        <div class="flex-1">
+
+          <!-- Barra de pasos móvil -->
+          <div id="steps-bar" class="flex items-center mb-5"></div>
+
+          <!-- STEP 1: Buscar socio -->
+          <div id="step-1" class="step-panel bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div class="flex items-center gap-3 mb-6 pb-5 border-b border-gray-100">
+              <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-lg font-bold text-gray-800">Identifícate como socio/a</h3>
+                <p class="text-sm text-gray-500 mt-0.5">Busca tu nombre o apellidos para recuperar tus datos</p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="relative">
+                <input id="buscar-socio" type="text" autocomplete="off"
+                  class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white"
+                  placeholder="Escribe tu nombre o apellidos..." />
+                <div id="socio-resultados" class="hidden absolute z-10 w-full bg-white border border-gray-200 rounded-xl shadow-lg mt-1 max-h-60 overflow-y-auto"></div>
+              </div>
+
+              <div id="socio-seleccionado" class="hidden bg-green-50 border-2 border-green-200 rounded-xl p-4 flex items-center justify-between">
+                <div>
+                  <p class="font-bold text-gray-800" id="sel-nombre"></p>
+                  <p class="text-xs text-gray-500" id="sel-dni"></p>
+                </div>
+                <button type="button" onclick="limpiarSocio()" class="text-xs text-gray-400 hover:text-red-500">Cambiar ✕</button>
+              </div>
+
+              <div id="dni-verifica-section" class="hidden">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Confirma tu DNI *</label>
+                <input id="f-dni-verifica" type="text" maxlength="9"
+                  class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white uppercase"
+                  placeholder="12345678A" />
+                <p class="text-xs text-gray-400 mt-1">Lo usamos para verificar que eres tú antes de continuar.</p>
+              </div>
+
+              <p id="socio-error" class="hidden text-xs text-red-500"></p>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+              <button type="button" onclick="irAPaso(2)"
+                class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm shadow-orange-200">
+                Continuar
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 2: Territorio, dirección, género -->
+          <div id="step-2" class="step-panel hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div class="flex items-center gap-3 mb-6 pb-5 border-b border-gray-100">
+              <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-lg font-bold text-gray-800">Territorio y datos de contacto</h3>
+                <p class="text-sm text-gray-500 mt-0.5">¿Por qué territorio te presentas?</p>
+              </div>
+            </div>
+
+            <div class="space-y-5">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Comunidad Autónoma *</label>
+                <select id="f-ccaa" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white">
+                  <option value="">Selecciona...</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Territorio *</label>
+                <select id="f-territorio" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white">
+                  <option value="">Selecciona primero la CCAA...</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Domicilio (figurará en el documento) *</label>
+                <input id="f-direccion" type="text" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" placeholder="Calle, número, ciudad" />
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Teléfono de contacto <span class="text-gray-400 font-normal">(opcional)</span></label>
+                <input id="f-telefono" type="tel" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" placeholder="666 000 000" />
+              </div>
+
+              <div id="genero-section" class="hidden bg-gray-50 rounded-xl p-4">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">¿Cómo prefieres que aparezca en el documento? *</label>
+                <div class="flex gap-4">
+                  <label class="flex items-center gap-2 text-sm text-gray-700"><input type="radio" name="genero" value="M" class="w-4 h-4 accent-orange-500" /> Candidato (Rector)</label>
+                  <label class="flex items-center gap-2 text-sm text-gray-700"><input type="radio" name="genero" value="F" class="w-4 h-4 accent-orange-500" /> Candidata (Rectora)</label>
+                </div>
+              </div>
+              <p id="step2-error" class="hidden text-xs text-red-500"></p>
+            </div>
+
+            <div class="mt-8 flex justify-between">
+              <button type="button" onclick="irAPaso(1)" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-3">Volver</button>
+              <button type="button" onclick="validarPaso2()" class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm shadow-orange-200">
+                Continuar
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Motivación -->
+          <div id="step-3" class="step-panel hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div class="flex items-center gap-3 mb-6 pb-5 border-b border-gray-100">
+              <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-lg font-bold text-gray-800">Motivación de tu candidatura</h3>
+                <p class="text-sm text-gray-500 mt-0.5">Explica brevemente por qué quieres ser Rector/a de tu territorio</p>
+              </div>
+            </div>
+
+            <textarea id="f-motivacion" rows="8" minlength="50"
+              class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white resize-none"
+              placeholder="Mínimo 50 caracteres..."></textarea>
+            <div class="flex justify-between mt-1">
+              <p id="motivacion-error" class="hidden text-xs text-red-500"></p>
+              <p class="text-xs text-gray-400 ml-auto"><span id="motivacion-count">0</span> caracteres</p>
+            </div>
+
+            <div class="mt-8 flex justify-between">
+              <button type="button" onclick="irAPaso(2)" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-3">Volver</button>
+              <button type="button" onclick="validarPaso3()" class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm shadow-orange-200">
+                Continuar
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 4: Vía de presentación -->
+          <div id="step-4" class="step-panel hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div class="flex items-center gap-3 mb-6 pb-5 border-b border-gray-100">
+              <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-lg font-bold text-gray-800">¿Cómo quieres presentarla?</h3>
+                <p class="text-sm text-gray-500 mt-0.5">Elige una de las dos vías</p>
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <label class="cursor-pointer">
+                <input type="radio" name="via" value="fisica" class="hidden via-radio" />
+                <div class="via-card border-2 border-gray-200 rounded-xl p-5 hover:border-orange-300 transition">
+                  <div class="text-2xl mb-2">🖨️</div>
+                  <p class="font-bold text-gray-800 text-sm mb-1">Vía física</p>
+                  <p class="text-xs text-gray-500">Descargas el documento, lo imprimes, lo firmas a mano y lo envías por correo. No necesitas DNI ni firma digital.</p>
+                </div>
+              </label>
+              <label class="cursor-pointer">
+                <input type="radio" name="via" value="email" class="hidden via-radio" />
+                <div class="via-card border-2 border-gray-200 rounded-xl p-5 hover:border-orange-300 transition">
+                  <div class="text-2xl mb-2">✍️</div>
+                  <p class="font-bold text-gray-800 text-sm mb-1">Vía email</p>
+                  <p class="text-xs text-gray-500">Firmas en pantalla y subes tu DNI (anverso y reverso). Se envía directamente a info@lasoci.org.</p>
+                </div>
+              </label>
+            </div>
+            <p id="via-error" class="hidden text-xs text-red-500 mt-3"></p>
+
+            <div class="mt-8 flex justify-between">
+              <button type="button" onclick="irAPaso(3)" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-3">Volver</button>
+              <button type="button" onclick="validarPaso4()" class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm shadow-orange-200">
+                Continuar
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 5a: Física -->
+          <div id="step-5-fisica" class="step-panel hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div class="flex items-center gap-3 mb-6 pb-5 border-b border-gray-100">
+              <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">🖨️</div>
+              <div class="flex-1">
+                <h3 class="text-lg font-bold text-gray-800">Generar y descargar documento</h3>
+                <p class="text-sm text-gray-500 mt-0.5">Revisa el resumen y genera tu candidatura</p>
+              </div>
+            </div>
+
+            <div id="resumen-fisica" class="bg-gray-50 rounded-xl p-4 text-sm text-gray-600 space-y-1 mb-6"></div>
+
+            <div id="fisica-pendiente">
+              <button type="button" onclick="generarFisica()" id="btn-generar-fisica"
+                class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm shadow-orange-200">
+                Generar documento
+              </button>
+              <p id="fisica-error" class="hidden text-xs text-red-500 mt-3"></p>
+            </div>
+
+            <div id="fisica-ok" class="hidden bg-green-50 border-2 border-green-200 rounded-xl p-5 text-center">
+              <p class="font-bold text-green-700 mb-2">✓ Documento generado</p>
+              <a id="link-descarga" href="#" download class="inline-block bg-blue-900 hover:bg-blue-800 text-white text-sm font-semibold px-6 py-3 rounded-xl transition mb-3">⬇ Descargar documento</a>
+              <p class="text-xs text-gray-500">Imprímelo, fírmalo a mano y envíalo por correo postal a la sede de LA SOCI (confirma la dirección exacta con tu delegado/a).</p>
+            </div>
+
+            <div class="mt-6 flex justify-start">
+              <button type="button" onclick="irAPaso(4)" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-3">Volver</button>
+            </div>
+          </div>
+
+          <!-- STEP 5b: Email -->
+          <div id="step-5-email" class="step-panel hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+            <div class="flex items-center gap-3 mb-6 pb-5 border-b border-gray-100">
+              <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">✍️</div>
+              <div class="flex-1">
+                <h3 class="text-lg font-bold text-gray-800">Firma y sube tu DNI</h3>
+                <p class="text-sm text-gray-500 mt-0.5">Se enviará junto al documento a info@lasoci.org</p>
+              </div>
+            </div>
+
+            <div class="space-y-5">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Firma *</label>
+                <canvas id="firma-canvas" width="600" height="180" class="w-full border-2 border-orange-300 rounded-xl bg-white touch-none" style="height:180px;"></canvas>
+                <button type="button" onclick="limpiarFirma()" class="text-xs text-gray-400 hover:text-red-500 mt-1">✕ Borrar y repetir</button>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2">DNI — anverso *</label>
+                  <input id="f-dni-anverso" type="file" accept="image/*" capture="environment" class="form-input w-full px-3 py-2 border-2 border-orange-300 rounded-xl text-xs bg-white" />
+                  <img id="preview-anverso" class="hidden mt-2 rounded-lg max-h-32" />
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2">DNI — reverso *</label>
+                  <input id="f-dni-reverso" type="file" accept="image/*" capture="environment" class="form-input w-full px-3 py-2 border-2 border-orange-300 rounded-xl text-xs bg-white" />
+                  <img id="preview-reverso" class="hidden mt-2 rounded-lg max-h-32" />
+                </div>
+              </div>
+              <p id="email-error" class="hidden text-xs text-red-500"></p>
+            </div>
+
+            <div id="email-pendiente" class="mt-8">
+              <button type="button" onclick="enviarEmail()" id="btn-enviar-email"
+                class="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm shadow-orange-200">
+                Firmar y enviar candidatura
+              </button>
+            </div>
+
+            <div id="email-ok" class="hidden bg-green-50 border-2 border-green-200 rounded-xl p-5 text-center mt-6">
+              <p class="font-bold text-green-700 mb-1">✓ Candidatura enviada</p>
+              <p class="text-xs text-gray-500" id="email-ok-texto">Se ha enviado correctamente a info@lasoci.org.</p>
+            </div>
+
+            <div class="mt-6 flex justify-start">
+              <button type="button" onclick="irAPaso(4)" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-3">Volver</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .via-card { transition: all .15s; }
+    .via-radio:checked + .via-card { border-color: #f97316; background: #fff7ed; }
+  </style>
+
+  <script>
+    import { supabase } from '../../lib/supabase.ts';
+
+    const STEP_NAMES = ['Identidad', 'Territorio', 'Motivación', 'Vía', 'Finalizar'];
+    let currentStep = 1;
+    let territorios: any[] = [];
+    let socioSel: any = null;
+    let viaElegida: string | null = null;
+    let generoSeleccionado: string | null = null;
+    let firmaDataUrl: string | null = null;
+    let dniAnversoB64: string | null = null;
+    let dniReversoB64: string | null = null;
+
+    function renderSidebar() {
+      const c = document.getElementById('steps-sidebar');
+      if (!c) return;
+      c.innerHTML = STEP_NAMES.map((name, i) => {
+        const step = i + 1;
+        const isActive = step === currentStep;
+        const isDone = step < currentStep;
+        return `<div class="flex items-center gap-3 py-2.5 px-3 rounded-xl ${isActive ? 'bg-orange-50 border-2 border-orange-400' : ''}">
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0 ${isDone ? 'bg-green-500 text-white' : isActive ? 'bg-orange-500 text-white' : 'border-2 border-gray-200 text-gray-400'}">${isDone ? '✓' : step}</div>
+          <span class="text-sm ${isActive ? 'font-bold text-orange-700' : isDone ? 'text-green-600 font-medium' : 'text-gray-400'}">${name}</span>
+        </div>`;
+      }).join('');
+    }
+    function renderStepsBar() {
+      const bar = document.getElementById('steps-bar');
+      if (!bar) return;
+      bar.innerHTML = STEP_NAMES.map((name, i) => {
+        const step = i + 1;
+        const isDone = step < currentStep;
+        const isActive = step === currentStep;
+        return `<div class="flex items-center ${i < STEP_NAMES.length - 1 ? 'flex-1' : ''}">
+          <div class="flex flex-col items-center gap-1 flex-shrink-0">
+            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold ${isDone ? 'bg-green-500 text-white' : isActive ? 'bg-orange-500 text-white ring-4 ring-orange-100' : 'bg-gray-100 text-gray-400 border-2 border-gray-200'}">${isDone ? '✓' : step}</div>
+            <span class="text-xs font-medium hidden sm:block ${isDone ? 'text-green-600' : isActive ? 'text-orange-600 font-semibold' : 'text-gray-400'}">${name}</span>
+          </div>
+          ${i < STEP_NAMES.length - 1 ? `<div class="flex-1 h-0.5 mx-2 mb-5 rounded-full ${isDone ? 'bg-green-400' : 'bg-gray-200'}"></div>` : ''}
+        </div>`;
+      }).join('');
+    }
+
+    function showPanel(id: string) {
+      document.querySelectorAll('.step-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById(id)?.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    (window as any).irAPaso = function(step: number) {
+      if (step === 2 && currentStep === 1) {
+        const err = document.getElementById('socio-error')!;
+        if (!socioSel) {
+          err.textContent = 'Selecciona tu ficha de socio antes de continuar.';
+          err.classList.remove('hidden');
+          return;
+        }
+        const dniInput = (document.getElementById('f-dni-verifica') as HTMLInputElement).value.trim().toUpperCase();
+        if (!/^\d{8}[A-Z]$/.test(dniInput)) {
+          err.textContent = 'Introduce tu DNI para verificar tu identidad (8 números y una letra).';
+          err.classList.remove('hidden');
+          return;
+        }
+        socioSel.dniVerificado = dniInput;
+        err.classList.add('hidden');
+      }
+      currentStep = step;
+      renderSidebar(); renderStepsBar();
+      if (step <= 4) showPanel('step-' + step);
+    };
+
+    // ── STEP 1: Buscar socio ──
+    let searchTimeout: any;
+    document.getElementById('buscar-socio')?.addEventListener('input', (e: any) => {
+      clearTimeout(searchTimeout);
+      const q = e.target.value.trim();
+      if (q.length < 2) { document.getElementById('socio-resultados')!.classList.add('hidden'); return; }
+      searchTimeout = setTimeout(() => buscarSocio(q), 300);
+    });
+    async function buscarSocio(q: string) {
+      const { data } = await supabase.from('socios')
+        .select('id, nombre, apellidos, genero')
+        .eq('activo', true)
+        .or(`apellidos.ilike.%${q}%,nombre.ilike.%${q}%`)
+        .limit(8);
+      const cont = document.getElementById('socio-resultados')!;
+      if (!data || data.length === 0) {
+        cont.innerHTML = '<p class="px-4 py-3 text-sm text-gray-500">No se han encontrado socios</p>';
+      } else {
+        cont.innerHTML = data.map((s: any) => `
+          <button type="button" data-id="${s.id}" class="resultado-socio w-full text-left px-4 py-3 hover:bg-orange-50 text-sm border-b border-gray-100 last:border-0">
+            <span class="font-medium text-gray-800">${s.apellidos}, ${s.nombre}</span>
+          </button>`).join('');
+        cont.querySelectorAll('.resultado-socio').forEach(btn => {
+          btn.addEventListener('click', () => seleccionarSocio(data.find((s: any) => s.id === (btn as HTMLElement).dataset.id)));
+        });
+      }
+      cont.classList.remove('hidden');
+    }
+    function seleccionarSocio(s: any) {
+      socioSel = s;
+      document.getElementById('sel-nombre')!.textContent = `${s.nombre} ${s.apellidos}`;
+      document.getElementById('sel-dni')!.textContent = 'Confirma tu DNI para verificar tu identidad';
+      document.getElementById('socio-seleccionado')!.classList.remove('hidden');
+      document.getElementById('dni-verifica-section')!.classList.remove('hidden');
+      document.getElementById('socio-resultados')!.classList.add('hidden');
+      (document.getElementById('buscar-socio') as HTMLInputElement).value = '';
+      document.getElementById('genero-section')!.classList.toggle('hidden', !!s.genero);
+    }
+    (window as any).limpiarSocio = function() {
+      socioSel = null;
+      document.getElementById('socio-seleccionado')!.classList.add('hidden');
+      document.getElementById('dni-verifica-section')!.classList.add('hidden');
+      (document.getElementById('f-dni-verifica') as HTMLInputElement).value = '';
+    };
+
+    // ── STEP 2: Territorio ──
+    async function cargarTerritorios() {
+      const { data: ccaaList } = await supabase.from('ccaa').select('id, nombre').order('nombre');
+      const { data: terrList } = await supabase.from('territorios').select('id, nombre, ccaa_id').eq('activo', true).order('nombre');
+      territorios = terrList || [];
+      const selCcaa = document.getElementById('f-ccaa')!;
+      (ccaaList || []).forEach((c: any) => selCcaa.insertAdjacentHTML('beforeend', `<option value="${c.id}">${c.nombre}</option>`));
+    }
+    document.getElementById('f-ccaa')?.addEventListener('change', (e: any) => {
+      const ccaaId = e.target.value;
+      const selT = document.getElementById('f-territorio') as HTMLSelectElement;
+      selT.innerHTML = '<option value="">Selecciona...</option>';
+      territorios.filter(t => t.ccaa_id === ccaaId).forEach(t => selT.insertAdjacentHTML('beforeend', `<option value="${t.id}">${t.nombre}</option>`));
+    });
+
+    (window as any).validarPaso2 = function() {
+      const ccaa = (document.getElementById('f-ccaa') as HTMLSelectElement).value;
+      const terr = (document.getElementById('f-territorio') as HTMLSelectElement).value;
+      const dir = (document.getElementById('f-direccion') as HTMLInputElement).value.trim();
+      const err = document.getElementById('step2-error')!;
+      if (!ccaa || !terr || !dir) {
+        err.textContent = 'Completa Comunidad Autónoma, Territorio y Domicilio.';
+        err.classList.remove('hidden');
+        return;
+      }
+      const generoVisible = !document.getElementById('genero-section')!.classList.contains('hidden');
+      if (generoVisible) {
+        const g = document.querySelector('input[name="genero"]:checked') as HTMLInputElement;
+        if (!g) { err.textContent = 'Indica cómo prefieres que aparezca en el documento.'; err.classList.remove('hidden'); return; }
+        generoSeleccionado = g.value;
+      } else {
+        generoSeleccionado = socioSel?.genero || null;
+      }
+      err.classList.add('hidden');
+      (window as any).irAPaso(3);
+    };
+
+    // ── STEP 3: Motivación ──
+    document.getElementById('f-motivacion')?.addEventListener('input', (e: any) => {
+      document.getElementById('motivacion-count')!.textContent = e.target.value.length;
+    });
+    (window as any).validarPaso3 = function() {
+      const val = (document.getElementById('f-motivacion') as HTMLTextAreaElement).value.trim();
+      const err = document.getElementById('motivacion-error')!;
+      if (val.length < 50) {
+        err.textContent = 'Escribe al menos 50 caracteres explicando tu motivación.';
+        err.classList.remove('hidden');
+        return;
+      }
+      err.classList.add('hidden');
+      (window as any).irAPaso(4);
+    };
+
+    // ── STEP 4: Vía ──
+    document.querySelectorAll('input[name="via"]').forEach(r => {
+      r.addEventListener('change', (e: any) => { viaElegida = e.target.value; });
+    });
+    (window as any).validarPaso4 = function() {
+      const err = document.getElementById('via-error')!;
+      if (!viaElegida) { err.textContent = 'Elige una de las dos vías para continuar.'; err.classList.remove('hidden'); return; }
+      err.classList.add('hidden');
+      currentStep = 5;
+      renderSidebar(); renderStepsBar();
+      if (viaElegida === 'fisica') {
+        renderResumenFisica();
+        showPanel('step-5-fisica');
+      } else {
+        initFirmaCanvas();
+        showPanel('step-5-email');
+      }
+    };
+
+    function datosComunes() {
+      const terrSel = document.getElementById('f-territorio') as HTMLSelectElement;
+      return {
+        socio_id: socioSel.id,
+        territorio_id: terrSel.value,
+        territorio_nombre: terrSel.options[terrSel.selectedIndex]?.text || '',
+        nombre_completo: `${socioSel.nombre} ${socioSel.apellidos}`,
+        dni: socioSel.dniVerificado,
+        direccion: (document.getElementById('f-direccion') as HTMLInputElement).value.trim(),
+        telefono_contacto: (document.getElementById('f-telefono') as HTMLInputElement).value.trim() || null,
+        motivacion: (document.getElementById('f-motivacion') as HTMLTextAreaElement).value.trim(),
+        genero: generoSeleccionado,
+      };
+    }
+
+    function renderResumenFisica() {
+      const d = datosComunes();
+      document.getElementById('resumen-fisica')!.innerHTML = `
+        <p><strong>Nombre:</strong> ${d.nombre_completo}</p>
+        <p><strong>DNI:</strong> ${d.dni}</p>
+        <p><strong>Territorio:</strong> ${d.territorio_nombre}</p>
+        <p><strong>Domicilio:</strong> ${d.direccion}</p>`;
+    }
+
+    (window as any).generarFisica = async function() {
+      const btn = document.getElementById('btn-generar-fisica') as HTMLButtonElement;
+      const err = document.getElementById('fisica-error')!;
+      err.classList.add('hidden');
+      btn.disabled = true; btn.textContent = 'Generando...';
+      try {
+        const res = await fetch('/api/postulacion-rector', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...datosComunes(), tipo_presentacion: 'fisica' }),
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || 'Error al generar el documento');
+        const link = document.getElementById('link-descarga') as HTMLAnchorElement;
+        link.href = `data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,${data.docx_base64}`;
+        link.download = data.filename;
+        document.getElementById('fisica-pendiente')!.classList.add('hidden');
+        document.getElementById('fisica-ok')!.classList.remove('hidden');
+      } catch (e: any) {
+        err.textContent = e.message;
+        err.classList.remove('hidden');
+        btn.disabled = false; btn.textContent = 'Generar documento';
+      }
+    };
+
+    // ── STEP 5b: Firma + DNI ──
+    function initFirmaCanvas() {
+      const canvas = document.getElementById('firma-canvas') as HTMLCanvasElement;
+      const ctx = canvas.getContext('2d')!;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let drawing = false;
+      function pos(e: any) {
+        const rect = canvas.getBoundingClientRect();
+        const cx = e.touches ? e.touches[0].clientX : e.clientX;
+        const cy = e.touches ? e.touches[0].clientY : e.clientY;
+        return { x: (cx - rect.left) * (canvas.width / rect.width), y: (cy - rect.top) * (canvas.height / rect.height) };
+      }
+      function start(e: any) { drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); e.preventDefault(); }
+      function move(e: any) { if (!drawing) return; const p = pos(e); ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#1e293b'; ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }
+      function end() { drawing = false; }
+      canvas.onmousedown = start; canvas.onmousemove = move; canvas.onmouseup = end; canvas.onmouseleave = end;
+      canvas.ontouchstart = start; canvas.ontouchmove = move; canvas.ontouchend = end;
+    }
+    (window as any).limpiarFirma = function() {
+      const canvas = document.getElementById('firma-canvas') as HTMLCanvasElement;
+      canvas.getContext('2d')!.clearRect(0, 0, canvas.width, canvas.height);
+    };
+
+    function comprimirImagen(file: File, maxW = 1200): Promise<string> {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const img = new Image();
+          img.onload = () => {
+            const scale = Math.min(1, maxW / img.width);
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width * scale; canvas.height = img.height * scale;
+            const ctx = canvas.getContext('2d')!;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL('image/jpeg', 0.8));
+          };
+          img.onerror = reject;
+          img.src = reader.result as string;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+    document.getElementById('f-dni-anverso')?.addEventListener('change', async (e: any) => {
+      if (!e.target.files[0]) return;
+      dniAnversoB64 = await comprimirImagen(e.target.files[0]);
+      const img = document.getElementById('preview-anverso') as HTMLImageElement;
+      img.src = dniAnversoB64; img.classList.remove('hidden');
+    });
+    document.getElementById('f-dni-reverso')?.addEventListener('change', async (e: any) => {
+      if (!e.target.files[0]) return;
+      dniReversoB64 = await comprimirImagen(e.target.files[0]);
+      const img = document.getElementById('preview-reverso') as HTMLImageElement;
+      img.src = dniReversoB64; img.classList.remove('hidden');
+    });
+
+    (window as any).enviarEmail = async function() {
+      const canvas = document.getElementById('firma-canvas') as HTMLCanvasElement;
+      const ctx = canvas.getContext('2d')!;
+      const blank = !ctx.getImageData(0, 0, canvas.width, canvas.height).data.some(v => v !== 0);
+      const err = document.getElementById('email-error')!;
+      if (blank) { err.textContent = 'Dibuja tu firma en el recuadro.'; err.classList.remove('hidden'); return; }
+      if (!dniAnversoB64 || !dniReversoB64) { err.textContent = 'Sube las dos fotos del DNI (anverso y reverso).'; err.classList.remove('hidden'); return; }
+      err.classList.add('hidden');
+
+      const btn = document.getElementById('btn-enviar-email') as HTMLButtonElement;
+      btn.disabled = true; btn.textContent = 'Enviando...';
+      firmaDataUrl = canvas.toDataURL('image/png');
+      try {
+        const res = await fetch('/api/postulacion-rector', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...datosComunes(), tipo_presentacion: 'email',
+            firma_base64: firmaDataUrl, dni_anverso_base64: dniAnversoB64, dni_reverso_base64: dniReversoB64,
+          }),
+        });
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || 'Error al enviar la candidatura');
+        document.getElementById('email-pendiente')!.classList.add('hidden');
+        if (data.aviso) document.getElementById('email-ok-texto')!.textContent = data.aviso;
+        document.getElementById('email-ok')!.classList.remove('hidden');
+      } catch (e: any) {
+        err.textContent = e.message;
+        err.classList.remove('hidden');
+        btn.disabled = false; btn.textContent = 'Firmar y enviar candidatura';
+      }
+    };
+
+    // ── Init ──
+    async function init() {
+      const { data: periodo } = await supabase
+        .from('periodo_electoral')
+        .select('activo, fecha_inicio_candidaturas, fecha_fin_candidaturas, descripcion')
+        .eq('activo', true).maybeSingle();
+
+      const hoy = new Date().toISOString().slice(0, 10);
+      const abierto = periodo && periodo.activo
+        && (!periodo.fecha_inicio_candidaturas || hoy >= periodo.fecha_inicio_candidaturas)
+        && (!periodo.fecha_fin_candidaturas || hoy <= periodo.fecha_fin_candidaturas);
+
+      document.getElementById('loading-periodo')!.classList.add('hidden');
+      if (!abierto) {
+        if (periodo && periodo.fecha_inicio_candidaturas && hoy < periodo.fecha_inicio_candidaturas) {
+          document.getElementById('fuera-plazo-titulo')!.textContent = 'El plazo de candidaturas aún no ha comenzado';
+          document.getElementById('fuera-plazo-texto')!.textContent = `Podrás presentar tu candidatura a partir del ${periodo.fecha_inicio_candidaturas}.`;
+        } else if (periodo && periodo.fecha_fin_candidaturas && hoy > periodo.fecha_fin_candidaturas) {
+          document.getElementById('fuera-plazo-titulo')!.textContent = 'El plazo de candidaturas ha finalizado';
+          document.getElementById('fuera-plazo-texto')!.textContent = `El plazo se cerró el ${periodo.fecha_fin_candidaturas}.`;
+        }
+        document.getElementById('fuera-plazo')!.classList.remove('hidden');
+        return;
+      }
+
+      document.getElementById('wizard')!.classList.remove('hidden');
+      await cargarTerritorios();
+      renderSidebar();
+      renderStepsBar();
+      showPanel('step-1');
+    }
+    init();
+  </script>
+
+</Layout>
