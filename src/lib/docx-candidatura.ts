@@ -9,7 +9,6 @@ export interface DatosCandidatura {
   direccion: string;
   territorioNombre: string;
   ccaaNombre: string;
-  motivacion: string;
   genero: 'M' | 'F';
   periodoDescripcion: string;
 }
@@ -29,16 +28,6 @@ const FUENTE = 'Arial';
 export async function generarDocumentoCandidatura(datos: DatosCandidatura): Promise<Uint8Array> {
   const t = terminos(datos.genero);
   const fecha = new Date().toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-
-  const parrafosMotivacion = datos.motivacion
-    .split('\n')
-    .map(l => l.trim())
-    .filter(Boolean)
-    .map(linea => new Paragraph({
-      children: [new TextRun({ text: linea, font: FUENTE, size: 22 })],
-      spacing: { after: 160 },
-      alignment: AlignmentType.JUSTIFIED,
-    }));
 
   const doc = new Document({
     styles: {
@@ -102,12 +91,6 @@ export async function generarDocumentoCandidatura(datos: DatosCandidatura): Prom
             }),
           ],
         }),
-
-        new Paragraph({
-          children: [new TextRun({ text: 'MOTIVACI\u00D3N DE LA CANDIDATURA', bold: true, font: FUENTE, size: 22 })],
-          spacing: { after: 160 },
-        }),
-        ...parrafosMotivacion,
 
         new Paragraph({
           children: [new TextRun({ text: 'SOLICITA:', bold: true, font: FUENTE, size: 22 })],

@@ -23,12 +23,12 @@ export const POST: APIRoute = async ({ request }) => {
     const body = await request.json();
     const {
       socio_id, territorio_id, nombre_completo, dni, direccion,
-      motivacion, genero, telefono_contacto,
+      genero, telefono_contacto,
       tipo_presentacion, // 'fisica' | 'email'
       firma_base64, dni_anverso_base64, dni_reverso_base64,
     } = body;
 
-    if (!socio_id || !territorio_id || !nombre_completo || !dni || !direccion || !motivacion || !genero || !tipo_presentacion) {
+    if (!socio_id || !territorio_id || !nombre_completo || !dni || !direccion || !genero || !tipo_presentacion) {
       return new Response(JSON.stringify({ ok: false, error: 'Faltan datos obligatorios.' }), { status: 400 });
     }
     if (tipo_presentacion === 'email' && (!firma_base64 || !dni_anverso_base64 || !dni_reverso_base64)) {
@@ -71,7 +71,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // 2b. Verificación de identidad: el DNI introducido debe coincidir con el real de esa ficha
     const { data: socioReal, error: errSocioReal } = await supabase
-      .from('socios').select('dni, genero').eq('id', socio_id).single();
+      .from('socios').select('dni, genero, direccion, telefono').eq('id', socio_id).single();
     if (errSocioReal || !socioReal) {
       return new Response(JSON.stringify({ ok: false, error: 'Socio no encontrado.' }), { status: 404 });
     }
@@ -81,9 +81,13 @@ export const POST: APIRoute = async ({ request }) => {
     }
     const dniVerificado = socioReal.dni;
 
-    // 3. Si el socio no tenía género guardado, lo fijamos ahora
-    if (!socioReal.genero) {
-      await supabase.from('socios').update({ genero }).eq('id', socio_id);
+    // 3. Guardamos en la ficha del socio lo que falte o haya cambiado (género, dirección, teléfono)
+    const actualizarSocio: Record<string, any> = {};
+    if (!socioReal.genero) actualizarSocio.genero = genero;
+    if (direccion && direccion !== socioReal.direccion) actualizarSocio.direccion = direccion;
+    if (telefono_contacto && telefono_contacto !== socioReal.telefono) actualizarSocio.telefono = telefono_contacto;
+    if (Object.keys(actualizarSocio).length > 0) {
+      await supabase.from('socios').update(actualizarSocio).eq('id', socio_id);
     }
 
     // 4. Generar el documento Word
@@ -93,7 +97,6 @@ export const POST: APIRoute = async ({ request }) => {
       direccion,
       territorioNombre: territorio.nombre,
       ccaaNombre,
-      motivacion,
       genero,
       periodoDescripcion: periodo.descripcion || 'Elecciones Rectores',
     });
@@ -129,7 +132,7 @@ export const POST: APIRoute = async ({ request }) => {
     const { data: inserted, error: errInsert } = await supabase
       .from('postulaciones_rector')
       .insert({
-        socio_id, territorio_id, motivacion,
+        socio_id, territorio_id,
         telefono_contacto: telefono_contacto || null,
         estado: 'pendiente',
         tipo_presentacion,

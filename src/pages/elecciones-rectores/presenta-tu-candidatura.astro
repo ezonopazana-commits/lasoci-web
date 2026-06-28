@@ -23,6 +23,65 @@ import Layout from '../../layouts/Layout.astro';
   <div class="min-h-screen bg-gray-50 py-8 px-4">
     <div class="max-w-4xl mx-auto">
 
+      <!-- Información del proceso electoral -->
+      <details class="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 group">
+        <summary class="cursor-pointer list-none flex items-center justify-between p-5 select-none">
+          <div class="flex items-center gap-3">
+            <span class="text-xl">ℹ️</span>
+            <span class="font-bold text-gray-800">Información sobre el proceso electoral</span>
+          </div>
+          <svg class="w-4 h-4 text-gray-400 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-5 pb-6 pt-1 text-sm text-gray-600 space-y-4 border-t border-gray-100">
+          <p class="pt-4">Cada cuatro años se renuevan los miembros de la <strong>Junta Rectora</strong>, el máximo órgano de gobierno de la Associació. Este año corresponde llevar a cabo ese proceso.</p>
+
+          <div>
+            <p class="font-semibold text-gray-800 mb-1.5">Funciones de la Junta Rectora</p>
+            <ul class="list-disc pl-5 space-y-0.5">
+              <li>Aprobar el informe de gestión de la Junta Directiva y nombrar a sus integrantes.</li>
+              <li>Aprobar el plan de actividades y el presupuesto anual.</li>
+              <li>Recoger y trasladar las propuestas de los asociados de su demarcación.</li>
+              <li>Representar, impulsar y dinamizar las actividades y servicios de la Associació.</li>
+              <li>Mantener el contacto con los delegados de sección de su demarcación.</li>
+            </ul>
+          </div>
+
+          <div>
+            <p class="font-semibold text-gray-800 mb-1.5">¿Quién puede presentarse?</p>
+            <p>Cualquier persona asociada incluida en el censo electoral cerrado el 8 de junio de 2026, para representar a los asociados de su demarcación de residencia.</p>
+          </div>
+
+          <div>
+            <p class="font-semibold text-gray-800 mb-1.5">Cómo se presenta</p>
+            <p>Mediante escrito dirigido a la Comisión Electoral (indicando nombre, apellidos y demarcación), firmado y acompañado de una copia vigente del DNI. Puede enviarse por correo postal, por Cartería de CaixaBank o por correo electrónico a info@lasoci.org. Este formulario te ayuda a generar y enviar ese escrito.</p>
+          </div>
+
+          <div>
+            <p class="font-semibold text-gray-800 mb-1.5">Plazo</p>
+            <p>La recepción de candidaturas finaliza el <strong>5 de julio de 2026</strong> (incluido).</p>
+          </div>
+
+          <div>
+            <p class="font-semibold text-gray-800 mb-1.5">Documento de promoción (opcional)</p>
+            <p>Si quieres adjuntar un escrito de presentación personal, puede tener un máximo de un DIN A4 a doble cara. Se adjunta al documento de candidatura y la Comisión Electoral lo distribuirá, si procede, entre los asociados de tu demarcación. Puedes enviarlo junto con tu candidatura por cualquiera de las vías indicadas.</p>
+          </div>
+
+          <div>
+            <p class="font-semibold text-gray-800 mb-1.5">Calendario previsto</p>
+            <ul class="list-disc pl-5 space-y-0.5">
+              <li>10/06/2026 — Apertura del plazo de candidaturas</li>
+              <li>05/07/2026 — Cierre del plazo de candidaturas</li>
+              <li>14/07/2026 — Proclamación de candidaturas</li>
+              <li>09/10/2026 — Apertura del plazo de votaciones</li>
+              <li>03/11/2026 — Escrutinio</li>
+              <li>06/11/2026 — Proclamación de resultados</li>
+            </ul>
+          </div>
+
+          <p class="text-xs text-gray-400 pt-1">Fuente: <a href="https://www.lasoci.org/es/elecciones-junta-rectora-2026/" target="_blank" class="underline hover:text-orange-600">lasoci.org — Elecciones Junta Rectora 2026</a></p>
+        </div>
+      </details>
+
       <!-- Cargando periodo electoral -->
       <div id="loading-periodo" class="flex items-center justify-center py-20">
         <div class="text-center">
@@ -93,7 +152,7 @@ import Layout from '../../layouts/Layout.astro';
             </div>
 
             <div class="mt-8 flex justify-end">
-              <button type="button" onclick="irAPaso(2)"
+              <button type="button" onclick="validarPaso1()" id="btn-continuar-1"
                 class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm shadow-orange-200">
                 Continuar
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -129,7 +188,7 @@ import Layout from '../../layouts/Layout.astro';
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Domicilio (figurará en el documento) *</label>
+                <label id="direccion-label" class="block text-sm font-semibold text-gray-700 mb-2">Domicilio (figurará en el documento) *</label>
                 <input id="f-direccion" type="text" class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white" placeholder="Calle, número, ciudad" />
               </div>
               <div>
@@ -156,39 +215,8 @@ import Layout from '../../layouts/Layout.astro';
             </div>
           </div>
 
-          <!-- STEP 3: Motivación -->
+          <!-- STEP 3: Vía de presentación -->
           <div id="step-3" class="step-panel hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-            <div class="flex items-center gap-3 mb-6 pb-5 border-b border-gray-100">
-              <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                </svg>
-              </div>
-              <div class="flex-1">
-                <h3 class="text-lg font-bold text-gray-800">Motivación de tu candidatura</h3>
-                <p class="text-sm text-gray-500 mt-0.5">Explica brevemente por qué quieres ser Rector/a de tu territorio</p>
-              </div>
-            </div>
-
-            <textarea id="f-motivacion" rows="8" minlength="50"
-              class="form-input w-full px-4 py-3 border-2 border-orange-300 rounded-xl text-sm bg-white resize-none"
-              placeholder="Mínimo 50 caracteres..."></textarea>
-            <div class="flex justify-between mt-1">
-              <p id="motivacion-error" class="hidden text-xs text-red-500"></p>
-              <p class="text-xs text-gray-400 ml-auto"><span id="motivacion-count">0</span> caracteres</p>
-            </div>
-
-            <div class="mt-8 flex justify-between">
-              <button type="button" onclick="irAPaso(2)" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-3">Volver</button>
-              <button type="button" onclick="validarPaso3()" class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm shadow-orange-200">
-                Continuar
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- STEP 4: Vía de presentación -->
-          <div id="step-4" class="step-panel hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
             <div class="flex items-center gap-3 mb-6 pb-5 border-b border-gray-100">
               <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
                 <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -222,16 +250,16 @@ import Layout from '../../layouts/Layout.astro';
             <p id="via-error" class="hidden text-xs text-red-500 mt-3"></p>
 
             <div class="mt-8 flex justify-between">
-              <button type="button" onclick="irAPaso(3)" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-3">Volver</button>
-              <button type="button" onclick="validarPaso4()" class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm shadow-orange-200">
+              <button type="button" onclick="irAPaso(2)" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-3">Volver</button>
+              <button type="button" onclick="validarPaso3()" class="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-xl transition shadow-sm shadow-orange-200">
                 Continuar
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
               </button>
             </div>
           </div>
 
-          <!-- STEP 5a: Física -->
-          <div id="step-5-fisica" class="step-panel hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+          <!-- STEP 4a: Física -->
+          <div id="step-4-fisica" class="step-panel hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
             <div class="flex items-center gap-3 mb-6 pb-5 border-b border-gray-100">
               <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">🖨️</div>
               <div class="flex-1">
@@ -261,12 +289,12 @@ import Layout from '../../layouts/Layout.astro';
             </div>
 
             <div class="mt-6 flex justify-start">
-              <button type="button" onclick="irAPaso(4)" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-3">Volver</button>
+              <button type="button" onclick="irAPaso(3)" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-3">Volver</button>
             </div>
           </div>
 
-          <!-- STEP 5b: Email -->
-          <div id="step-5-email" class="step-panel hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+          <!-- STEP 4b: Email -->
+          <div id="step-4-email" class="step-panel hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
             <div class="flex items-center gap-3 mb-6 pb-5 border-b border-gray-100">
               <div class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">✍️</div>
               <div class="flex-1">
@@ -309,7 +337,7 @@ import Layout from '../../layouts/Layout.astro';
             </div>
 
             <div class="mt-6 flex justify-start">
-              <button type="button" onclick="irAPaso(4)" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-3">Volver</button>
+              <button type="button" onclick="irAPaso(3)" class="text-gray-500 hover:text-gray-700 font-medium text-sm px-4 py-3">Volver</button>
             </div>
           </div>
 
@@ -326,7 +354,7 @@ import Layout from '../../layouts/Layout.astro';
   <script>
     import { supabase } from '../../lib/supabase.ts';
 
-    const STEP_NAMES = ['Identidad', 'Territorio', 'Motivación', 'Vía', 'Finalizar'];
+    const STEP_NAMES = ['Identidad', 'Territorio', 'Vía', 'Finalizar'];
     let currentStep = 1;
     let territorios: any[] = [];
     let socioSel: any = null;
@@ -373,25 +401,9 @@ import Layout from '../../layouts/Layout.astro';
     }
 
     (window as any).irAPaso = function(step: number) {
-      if (step === 2 && currentStep === 1) {
-        const err = document.getElementById('socio-error')!;
-        if (!socioSel) {
-          err.textContent = 'Selecciona tu ficha de socio antes de continuar.';
-          err.classList.remove('hidden');
-          return;
-        }
-        const dniInput = (document.getElementById('f-dni-verifica') as HTMLInputElement).value.trim().toUpperCase();
-        if (!/^\d{8}[A-Z]$/.test(dniInput)) {
-          err.textContent = 'Introduce tu DNI para verificar tu identidad (8 números y una letra).';
-          err.classList.remove('hidden');
-          return;
-        }
-        socioSel.dniVerificado = dniInput;
-        err.classList.add('hidden');
-      }
       currentStep = step;
       renderSidebar(); renderStepsBar();
-      if (step <= 4) showPanel('step-' + step);
+      if (step <= 3) showPanel('step-' + step);
     };
 
     // ── STEP 1: Buscar socio ──
@@ -404,7 +416,7 @@ import Layout from '../../layouts/Layout.astro';
     });
     async function buscarSocio(q: string) {
       const { data } = await supabase.from('socios')
-        .select('id, nombre, apellidos, genero')
+        .select('id, nombre, apellidos')
         .eq('activo', true)
         .or(`apellidos.ilike.%${q}%,nombre.ilike.%${q}%`)
         .limit(8);
@@ -430,7 +442,6 @@ import Layout from '../../layouts/Layout.astro';
       document.getElementById('dni-verifica-section')!.classList.remove('hidden');
       document.getElementById('socio-resultados')!.classList.add('hidden');
       (document.getElementById('buscar-socio') as HTMLInputElement).value = '';
-      document.getElementById('genero-section')!.classList.toggle('hidden', !!s.genero);
     }
     (window as any).limpiarSocio = function() {
       socioSel = null;
@@ -438,6 +449,62 @@ import Layout from '../../layouts/Layout.astro';
       document.getElementById('dni-verifica-section')!.classList.add('hidden');
       (document.getElementById('f-dni-verifica') as HTMLInputElement).value = '';
     };
+
+    (window as any).validarPaso1 = async function() {
+      const err = document.getElementById('socio-error')!;
+      if (!socioSel) {
+        err.textContent = 'Selecciona tu ficha de socio antes de continuar.';
+        err.classList.remove('hidden');
+        return;
+      }
+      const dniInput = (document.getElementById('f-dni-verifica') as HTMLInputElement).value.trim().toUpperCase();
+      if (!/^\d{8}[A-Z]$/.test(dniInput)) {
+        err.textContent = 'Introduce tu DNI para verificar tu identidad (8 números y una letra).';
+        err.classList.remove('hidden');
+        return;
+      }
+      const btn = document.getElementById('btn-continuar-1') as HTMLButtonElement;
+      btn.disabled = true; btn.textContent = 'Verificando...';
+      try {
+        const res = await fetch('/api/verificar-socio', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ socio_id: socioSel.id, dni: dniInput }),
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          err.textContent = data.error || 'No se ha podido verificar tu identidad.';
+          err.classList.remove('hidden');
+          return;
+        }
+        socioSel.dniVerificado = dniInput;
+        socioSel.direccion = data.direccion;
+        socioSel.telefono = data.telefono;
+        socioSel.genero = data.genero;
+        err.classList.add('hidden');
+        precargarPaso2();
+        (window as any).irAPaso(2);
+      } catch (e: any) {
+        err.textContent = 'Error de conexión al verificar tu identidad.';
+        err.classList.remove('hidden');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Continuar';
+      }
+    };
+
+    function precargarPaso2() {
+      const dirInput = document.getElementById('f-direccion') as HTMLInputElement;
+      const dirLabel = document.getElementById('direccion-label')!;
+      if (socioSel.direccion) {
+        dirInput.value = socioSel.direccion;
+        dirLabel.textContent = 'Domicilio (ya en tu ficha — corrígelo si ha cambiado) *';
+      } else {
+        dirInput.value = '';
+        dirLabel.textContent = 'Domicilio (no lo tenemos registrado, indícalo) *';
+      }
+      const telInput = document.getElementById('f-telefono') as HTMLInputElement;
+      telInput.value = socioSel.telefono || '';
+      document.getElementById('genero-section')!.classList.toggle('hidden', !!socioSel.genero);
+    }
 
     // ── STEP 2: Territorio ──
     async function cargarTerritorios() {
@@ -476,38 +543,22 @@ import Layout from '../../layouts/Layout.astro';
       (window as any).irAPaso(3);
     };
 
-    // ── STEP 3: Motivación ──
-    document.getElementById('f-motivacion')?.addEventListener('input', (e: any) => {
-      document.getElementById('motivacion-count')!.textContent = e.target.value.length;
-    });
-    (window as any).validarPaso3 = function() {
-      const val = (document.getElementById('f-motivacion') as HTMLTextAreaElement).value.trim();
-      const err = document.getElementById('motivacion-error')!;
-      if (val.length < 50) {
-        err.textContent = 'Escribe al menos 50 caracteres explicando tu motivación.';
-        err.classList.remove('hidden');
-        return;
-      }
-      err.classList.add('hidden');
-      (window as any).irAPaso(4);
-    };
-
-    // ── STEP 4: Vía ──
+    // ── STEP 3: Vía ──
     document.querySelectorAll('input[name="via"]').forEach(r => {
       r.addEventListener('change', (e: any) => { viaElegida = e.target.value; });
     });
-    (window as any).validarPaso4 = function() {
+    (window as any).validarPaso3 = function() {
       const err = document.getElementById('via-error')!;
       if (!viaElegida) { err.textContent = 'Elige una de las dos vías para continuar.'; err.classList.remove('hidden'); return; }
       err.classList.add('hidden');
-      currentStep = 5;
+      currentStep = 4;
       renderSidebar(); renderStepsBar();
       if (viaElegida === 'fisica') {
         renderResumenFisica();
-        showPanel('step-5-fisica');
+        showPanel('step-4-fisica');
       } else {
         initFirmaCanvas();
-        showPanel('step-5-email');
+        showPanel('step-4-email');
       }
     };
 
@@ -521,7 +572,6 @@ import Layout from '../../layouts/Layout.astro';
         dni: socioSel.dniVerificado,
         direccion: (document.getElementById('f-direccion') as HTMLInputElement).value.trim(),
         telefono_contacto: (document.getElementById('f-telefono') as HTMLInputElement).value.trim() || null,
-        motivacion: (document.getElementById('f-motivacion') as HTMLTextAreaElement).value.trim(),
         genero: generoSeleccionado,
       };
     }
