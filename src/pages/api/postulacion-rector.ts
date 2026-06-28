@@ -147,7 +147,8 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ ok: false, error: 'Error al registrar la postulación: ' + errInsert.message }), { status: 500 });
     }
 
-    // 6. Vía email: enviar a info@lasoci.org con adjuntos
+    // 6. Vía email: TEMPORAL PARA PRUEBAS -> envía a espyweb@gmail.com en vez de info@lasoci.org
+    //    ⚠️ Recordar volver a poner 'info@lasoci.org' antes de que se use con candidaturas reales.
     if (tipo_presentacion === 'email') {
       const attachments = [
         { filename: 'candidatura.docx', content: uint8ToBase64(docxBytes) },
@@ -164,7 +165,7 @@ export const POST: APIRoute = async ({ request }) => {
         },
         body: JSON.stringify({
           from: 'La Soci <onboarding@resend.dev>',
-          to: ['info@lasoci.org'],
+          to: ['espyweb@gmail.com'], // TEMPORAL PARA PRUEBAS — volver a 'info@lasoci.org' luego
           subject: `Candidatura a Rector/a — ${nombre_completo} (${territorio.nombre})`,
           html: `
             <h2>Nueva candidatura a Rector/a</h2>
