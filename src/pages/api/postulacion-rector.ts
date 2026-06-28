@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
+import { env } from 'cloudflare:workers';
 import { generarDocumentoCandidatura } from '../../lib/docx-candidatura';
 
 const BUCKET = 'postulaciones-rector-docs';
@@ -37,7 +38,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const supabase = createClient(
       import.meta.env.PUBLIC_SUPABASE_URL,
-      import.meta.env.SUPABASE_SERVICE_ROLE_KEY
+      env.SUPABASE_SERVICE_ROLE_KEY
     );
 
     // 1. Comprobar periodo electoral activo y ventana de candidaturas
@@ -164,7 +165,7 @@ export const POST: APIRoute = async ({ request }) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.RESEND_API_KEY}`,
+          'Authorization': `Bearer ${env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
           from: 'La Soci <onboarding@resend.dev>',

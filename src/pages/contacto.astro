@@ -185,14 +185,6 @@ import Layout from '../layouts/Layout.astro';
 </div>
 
 <script>
-  import { createClient } from '@supabase/supabase-js';
-  const supabase = createClient(
-    import.meta.env.PUBLIC_SUPABASE_URL,
-    import.meta.env.PUBLIC_SUPABASE_ANON_KEY
-  );
-
-  const RESEND_API_KEY = import.meta.env.PUBLIC_RESEND_API_KEY;
-
   function validateContactEmail() {
     const val = document.getElementById('f-email')?.value || '';
     const err = document.getElementById('f-email-error');
@@ -240,33 +232,14 @@ import Layout from '../layouts/Layout.astro';
     const btn = document.getElementById('btn-enviar');
     btn.textContent = 'Enviando...'; btn.disabled = true;
 
-    // Guardar en Supabase
-    const { error: dbError } = await supabase.from('contactos').insert({
-      nombre, apellidos, email, telefono, asunto, mensaje
+    // Guardar y enviar email (servidor)
+    const res = await fetch('/api/contacto', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nombre, apellidos, email, telefono, asunto, mensaje }),
     });
-
-    // Enviar email con Resend
-    try {
-      await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.PUBLIC_RESEND_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          from: 'La Soci <noreply@lasoci.org>',
-          to: ['info@lasoci.org'],
-          subject: `Contacto web: ${asunto}`,
-          html: `<h2>Nuevo mensaje de contacto</h2>
-            <p><strong>Nombre:</strong> ${nombre} ${apellidos}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Teléfono:</strong> ${telefono || '—'}</p>
-            <p><strong>Asunto:</strong> ${asunto}</p>
-            <hr/>
-            <p>${mensaje.replace(/\n/g,'<br>')}</p>`
-        })
-      });
-    } catch(e) { console.error('Email error:', e); }
+    const result = await res.json();
+    const dbError = !result.ok;
 
     btn.textContent = 'Enviar mensaje'; btn.disabled = false;
 

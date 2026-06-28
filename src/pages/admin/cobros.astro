@@ -2,7 +2,6 @@
 import Layout from '../../layouts/Layout.astro';
 const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL ?? '';
 const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY ?? '';
-const resendKey   = import.meta.env.RESEND_API_KEY ?? '';
 ---
 
 <Layout title="Módulo Cobros/Abonos — Admin la Soci">
@@ -243,10 +242,9 @@ const resendKey   = import.meta.env.RESEND_API_KEY ?? '';
   </div>
 </div>
 
-<script define:vars={{ supabaseUrl, supabaseKey, resendKey }}>
+<script define:vars={{ supabaseUrl, supabaseKey }}>
   window.__SB_URL = supabaseUrl;
   window.__SB_KEY = supabaseKey;
-  window.__RESEND = resendKey;
 </script>
 <script type="module">
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
@@ -433,40 +431,15 @@ const resendKey   = import.meta.env.RESEND_API_KEY ?? '';
 
   // ── EMAIL ──
   async function enviarEmailsMasivo(rows, socios, tipo, importe, descripcion) {
-    const promises = socios.filter(s => s.email && s.iban).map(s =>
-      enviarEmailNotificacion(s.email, s.nombre, tipo, importe, descripcion)
-    );
-    await Promise.allSettled(promises);
-  }
-
-  async function enviarEmailNotificacion(email, nombre, tipo, importe, descripcion) {
+    const destinatarios = socios.filter(s => s.email && s.iban).map(s => ({ email: s.email, nombre: s.nombre }));
+    if (destinatarios.length === 0) return;
     try {
-      await fetch('https://api.resend.com/emails', {
+      await fetch('/api/cobros-notificar', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${window.__RESEND}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          from: 'la Soci <noreply@lasoci.pages.dev>',
-          to: [email],
-          subject: tipo === 'cargo' ? `la Soci — Cargo por ${descripcion}` : `la Soci — Abono subvención: ${descripcion}`,
-          html: `<div style="font-family:Arial,sans-serif;max-width:520px;margin:0 auto;padding:24px;">
-            <div style="background:#1e3a8a;color:white;padding:20px 24px;border-radius:12px 12px 0 0;">
-              <span style="font-size:20px;font-weight:bold;color:#fb923c;">la</span>
-              <span style="font-size:20px;font-weight:bold;">Soci</span>
-            </div>
-            <div style="background:white;border:1px solid #e5e7eb;padding:24px;border-radius:0 0 12px 12px;">
-              <p style="color:#374151;">Hola <strong>${nombre}</strong>,</p>
-              <p style="color:#374151;">Te informamos de la siguiente operación en tu cuenta:</p>
-              <div style="background:${tipo === 'cargo' ? '#fef2f2' : '#f0fdf4'};border:1px solid ${tipo === 'cargo' ? '#fecaca' : '#bbf7d0'};border-radius:8px;padding:16px;margin:16px 0;text-align:center;">
-                <p style="font-size:24px;font-weight:bold;color:${tipo === 'cargo' ? '#dc2626' : '#16a34a'};margin:0;">${tipo === 'cargo' ? '−' : '+'}${Number(importe).toFixed(2)} €</p>
-                <p style="color:#6b7280;margin:4px 0 0;">${tipo === 'cargo' ? '💳 Cargo' : '💰 Abono subvención'}</p>
-              </div>
-              <p style="color:#374151;"><strong>Concepto:</strong> ${descripcion}</p>
-              <p style="color:#9ca3af;font-size:12px;margin-top:24px;">Este es un mensaje automático de la Soci. Por favor no respondas a este email.</p>
-            </div>
-          </div>`
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ socios: destinatarios, tipo, importe, descripcion }),
       });
-    } catch(e) { console.error('Email error:', e); }
+    } catch (e) { console.error('Email error:', e); }
   }
 
   window.enviarEmailUno = async function(id) {
